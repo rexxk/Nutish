@@ -19,6 +19,10 @@ namespace Nut
 
 	};
 
+	struct RenderContextParameters
+	{
+		bool Wireframe = false;
+	};
 
 	class RenderContext
 	{
@@ -27,6 +31,8 @@ namespace Nut
 
 		virtual ~RenderContext() {}
 
+		virtual const RenderContextCapabilites& GetCapabilites() const = 0;
+		virtual const RenderContextParameters& GetParameters() const = 0;
 	};
 
 

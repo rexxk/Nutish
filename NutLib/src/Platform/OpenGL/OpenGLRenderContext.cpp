@@ -3,6 +3,8 @@
 
 #include <glad/glad.h>
 
+
+
 namespace Nut
 {
 
@@ -22,6 +24,9 @@ namespace Nut
 		LOG_CORE_TRACE("  Renderer          : {0}", m_Capabilities.Renderer.c_str());
 		LOG_CORE_TRACE("  Shader version    : {0}", m_Capabilities.ShaderVersion.c_str());
 		LOG_CORE_TRACE("  Max texture count : {0}", m_Capabilities.MaxTextureUnits);
+
+
+		m_Parameters.Wireframe = false;
 	}
 
 	OpenGLRenderContext::~OpenGLRenderContext()

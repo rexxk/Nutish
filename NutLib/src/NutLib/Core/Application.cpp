@@ -26,22 +26,21 @@ namespace Nut
 
 		m_Window = Window::Create(windowProps);
 
+		m_Window->EnableVSync(false);
+
 		m_IsRunning = true;
 
 
 		SubscribeToEvent<WindowClosedEvent>([&](WindowClosedEvent& event)
 			{
-				LOG_CORE_TRACE("Window closed event received");
-
 				m_IsRunning = false;
-
 				return true;
 			});
 	}
 
 	Application::~Application()
 	{
-
+		Shutdown();
 	}
 
 	void Application::Shutdown()
@@ -61,8 +60,6 @@ namespace Nut
 		uint32_t fpsCount = 0;
 		uint32_t upsCount = 0;
 
-
-
 		SubscribeToEvent<TimerTimeoutEvent>([&](TimerTimeoutEvent& event)
 			{
 				if (event.Id() == runTimer.Id())
@@ -71,13 +68,10 @@ namespace Nut
 
 					fpsCount = 0;
 					upsCount = 0;
+
+					return true;
 				}
 
-				return false;
-			});
-
-		SubscribeToEvent<TimerTimeoutEvent>([&](TimerTimeoutEvent& event)
-			{
 				if (event.Id() == updateTimer.Id())
 				{
 					timestep.Update(event.Timeout());
@@ -88,12 +82,13 @@ namespace Nut
 					}
 
 					upsCount++;
+
+					return true;
 				}
 
 				return false;
 			});
 
-		m_Window->EnableVSync(false);
 
 		while (m_IsRunning)
 		{
