@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="NutLib">
+      <UniqueIdentifier>{F38557C6-DF27-829C-C8E2-95F0B42309ED}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NutLib\Core">
+      <UniqueIdentifier>{2B5A21CD-970F-9AC2-2004-94998CB890C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NutLib\Event">
+      <UniqueIdentifier>{84717471-70D4-0316-195A-3CCC059CCF98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NutLib\Renderer">
+      <UniqueIdentifier>{F92A30A2-65B6-9D66-6EC7-205BDAD1F966}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NutLib\Scene">
+      <UniqueIdentifier>{505D6772-3CC0-F616-E545-2FCDD187C299}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\OpenGL">
+      <UniqueIdentifier>{1E7D2C1D-8A08-9AE1-9319-1DD6FF23F6E1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\NutLib.h" />
+    <ClInclude Include="src\NutLib\Core\Application.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Core\Base.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Core\Entrypoint.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Core\Hash.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Core\Input.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Core\Keycodes.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Core\Layer.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Core\LayerStack.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Core\Log.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Core\Timer.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Core\Timestep.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Core\UUID.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Core\Window.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Event\Event.h">
+      <Filter>NutLib\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Event\EventHandler.h">
+      <Filter>NutLib\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Event\Events.h">
+      <Filter>NutLib\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Event\KeyEvents.h">
+      <Filter>NutLib\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Event\MouseEvents.h">
+      <Filter>NutLib\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Event\TimerEvents.h">
+      <Filter>NutLib\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Event\WindowEvents.h">
+      <Filter>NutLib\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Renderer\RenderContext.h">
+      <Filter>NutLib\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Renderer\Renderer.h">
+      <Filter>NutLib\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Scene\Components.h">
+      <Filter>NutLib\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Scene\Entity.h">
+      <Filter>NutLib\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Scene\Scene.h">
+      <Filter>NutLib\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRenderContext.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\nutpch.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRenderer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\NutLib\Core\Application.cpp">
+      <Filter>NutLib\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Core\Entrypoint.cpp">
+      <Filter>NutLib\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Core\Hash.cpp">
+      <Filter>NutLib\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Core\Input.cpp">
+      <Filter>NutLib\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Core\Layer.cpp">
+      <Filter>NutLib\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Core\LayerStack.cpp">
+      <Filter>NutLib\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Core\Log.cpp">
+      <Filter>NutLib\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Core\UUID.cpp">
+      <Filter>NutLib\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Event\EventHandler.cpp">
+      <Filter>NutLib\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Renderer\RenderContext.cpp">
+      <Filter>NutLib\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Scene\Scene.cpp">
+      <Filter>NutLib\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRenderContext.cpp">
+      <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nutpch.cpp" />
+    <ClCompile Include="src\NutLib\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRenderer.cpp" />
+  </ItemGroup>
+</Project>
