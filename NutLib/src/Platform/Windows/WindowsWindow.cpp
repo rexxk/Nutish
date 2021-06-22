@@ -82,7 +82,7 @@ namespace Nut
 
 		SetWindowPos(m_Window, NULL, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, SWP_NOMOVE);
 
-		m_RenderContext = RenderContext::Create();
+		m_RenderContext = RenderContext::Create(wglGetCurrentContext());
 
 		wglSwapInterval = (PFNWGLSWAPINTERVALEXT)wglGetProcAddress("wglSwapIntervalEXT");
 

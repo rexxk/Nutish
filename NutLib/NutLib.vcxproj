@@ -115,11 +115,14 @@
     <ClInclude Include="src\NutLib\Event\MouseEvents.h" />
     <ClInclude Include="src\NutLib\Event\TimerEvents.h" />
     <ClInclude Include="src\NutLib\Event\WindowEvents.h" />
+    <ClInclude Include="src\NutLib\Renderer\Buffer.h" />
+    <ClInclude Include="src\NutLib\Renderer\RenderCommandQueue.h" />
     <ClInclude Include="src\NutLib\Renderer\RenderContext.h" />
     <ClInclude Include="src\NutLib\Renderer\Renderer.h" />
     <ClInclude Include="src\NutLib\Scene\Components.h" />
     <ClInclude Include="src\NutLib\Scene\Entity.h" />
     <ClInclude Include="src\NutLib\Scene\Scene.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderer.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
@@ -135,9 +138,11 @@
     <ClCompile Include="src\NutLib\Core\Log.cpp" />
     <ClCompile Include="src\NutLib\Core\UUID.cpp" />
     <ClCompile Include="src\NutLib\Event\EventHandler.cpp" />
+    <ClCompile Include="src\NutLib\Renderer\Buffer.cpp" />
     <ClCompile Include="src\NutLib\Renderer\RenderContext.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Renderer.cpp" />
     <ClCompile Include="src\NutLib\Scene\Scene.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />

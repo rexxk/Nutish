@@ -26,6 +26,8 @@ namespace Nut
 		virtual std::pair<uint32_t, uint32_t> GetWindowSize() override { return std::make_pair(m_Properties.Width, m_Properties.Height); }
 		virtual void* GetNativeHandle() override { return (void*)m_Window; }
 
+		virtual Ref<RenderContext>& GetRenderContext() override { return m_RenderContext; }
+
 	private:
 		void Create();
 

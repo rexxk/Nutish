@@ -5,6 +5,7 @@
 #include "Timestep.h"
 
 #include "NutLib/Renderer/Renderer.h"
+#include "NutLib/Renderer/RenderCommandQueue.h"
 
 
 namespace Nut
@@ -26,7 +27,7 @@ namespace Nut
 
 		m_Window = Window::Create(windowProps);
 
-		m_Window->EnableVSync(false);
+		m_Window->EnableVSync(true);
 
 		m_IsRunning = true;
 
@@ -102,7 +103,13 @@ namespace Nut
 			for (auto& layer : m_LayerStack)
 			{
 				layer->OnRender();
+
+				RenderCommandQueue::Execute();
 			}
+
+#ifdef _WIN32
+			SwapBuffers(GetDC(static_cast<HWND>(Application::Get().GetWindow()->GetNativeHandle())));
+#endif
 
 			fpsCount++;
 		}

@@ -29,6 +29,8 @@ namespace Nut
 		~Timer()
 		{
 			m_Running = false;
+
+			m_TimerThread->join();
 		}
 
 		void ThreadFunc()
@@ -47,7 +49,6 @@ namespace Nut
 			m_Running = true;
 
 			m_TimerThread = new std::thread(&Timer::ThreadFunc, this);
-			m_TimerThread->detach();
 		}
 
 		void Update()

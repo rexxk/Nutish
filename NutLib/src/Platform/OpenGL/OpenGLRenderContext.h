@@ -9,8 +9,10 @@ namespace Nut
 	class OpenGLRenderContext : public RenderContext
 	{
 	public:
-		OpenGLRenderContext();
+		OpenGLRenderContext(void* handle = nullptr);
 		virtual ~OpenGLRenderContext();
+
+		virtual void Bind() override;
 
 		virtual const RenderContextCapabilites& GetCapabilites() const override { return m_Capabilities; }
 		virtual const RenderContextParameters& GetParameters() const override { return m_Parameters; }
@@ -18,6 +20,8 @@ namespace Nut
 	private:
 		RenderContextCapabilites m_Capabilities;
 		RenderContextParameters m_Parameters;
+
+		void* m_ContextHandle = nullptr;
 	};
 
 

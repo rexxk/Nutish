@@ -29,14 +29,17 @@ void MainWindow::OnAttach()
 		LOG_TRACE("Tag: {0} (UUID: {1})", Entity::GetComponent<TagComponent>(t).Tag.c_str(), t);
 	}
 
-}
 
+	Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(nullptr, 0);
+	Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(nullptr, 0);
+
+	
+}
 
 void MainWindow::OnDetach()
 {
-	LOG_TRACE("Detaching layer");
+//	LOG_TRACE("Detaching layer");
 }
-
 
 void MainWindow::OnUpdate(Timestep ts)
 {

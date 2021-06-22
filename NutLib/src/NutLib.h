@@ -17,6 +17,7 @@
 #include <NutLib/Event/Events.h>
 
 #include <NutLib/Renderer/Renderer.h>
+#include <NutLib/Renderer/Buffer.h>
 
 #include <NutLib/Scene/Scene.h>
 

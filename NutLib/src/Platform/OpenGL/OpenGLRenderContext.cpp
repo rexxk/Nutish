@@ -1,6 +1,8 @@
 #include "nutpch.h"
 #include "OpenGLRenderContext.h"
 
+#include "NutLib/Core/Application.h"
+
 #include <glad/glad.h>
 
 
@@ -8,7 +10,8 @@
 namespace Nut
 {
 
-	OpenGLRenderContext::OpenGLRenderContext()
+	OpenGLRenderContext::OpenGLRenderContext(void* handle)
+		: m_ContextHandle(handle)
 	{
 	
 		m_Capabilities.ContextVersion = (const char*)glGetString(GL_VERSION);
@@ -34,5 +37,9 @@ namespace Nut
 
 	}
 
+	void OpenGLRenderContext::Bind()
+	{
+		wglMakeCurrent(GetDC(static_cast<HWND>(Application::Get().GetWindow()->GetNativeHandle())), static_cast<HGLRC>(m_ContextHandle));
+	}
 
 }

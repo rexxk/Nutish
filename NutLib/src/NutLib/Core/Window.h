@@ -3,6 +3,7 @@
 
 #include "nutpch.h"
 
+#include "NutLib/Renderer/RenderContext.h"
 
 
 namespace Nut
@@ -34,6 +35,8 @@ namespace Nut
 		virtual std::pair<uint32_t, uint32_t> GetWindowSize() = 0;
 
 		virtual void* GetNativeHandle() = 0;
+
+		virtual Ref<RenderContext>& GetRenderContext() = 0;
 	};
 
 

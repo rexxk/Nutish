@@ -27,9 +27,11 @@ namespace Nut
 	class RenderContext
 	{
 	public:
-		static Ref<RenderContext> Create();
+		static Ref<RenderContext> Create(void* handle = nullptr);
 
 		virtual ~RenderContext() {}
+
+		virtual void Bind() = 0;
 
 		virtual const RenderContextCapabilites& GetCapabilites() const = 0;
 		virtual const RenderContextParameters& GetParameters() const = 0;
