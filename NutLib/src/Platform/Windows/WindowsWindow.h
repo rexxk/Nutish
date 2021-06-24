@@ -20,6 +20,8 @@ namespace Nut
 
 		virtual void Update() override;
 
+		virtual void Present() override;
+
 		virtual bool VSync() const override;
 		virtual void EnableVSync(bool value) override;
 

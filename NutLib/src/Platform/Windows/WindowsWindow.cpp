@@ -90,6 +90,7 @@ namespace Nut
 
 		ShowWindow(m_Window, SW_SHOW);
 
+		wglMakeCurrent(NULL, NULL);
 	}
 
 	void WindowsWindow::Update()
@@ -102,6 +103,11 @@ namespace Nut
 			DispatchMessage(&msg);
 		}
 
+	}
+
+	void WindowsWindow::Present()
+	{
+		SwapBuffers(GetDC(m_Window));
 	}
 
 	bool WindowsWindow::VSync() const

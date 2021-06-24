@@ -9,7 +9,7 @@ namespace Nut
 
 	enum class EventType
 	{
-		WindowClose, WindowResize, WindowMinimize, WindowMaximize, WindowRestore,
+		WindowClose, WindowResize, WindowMinimize, WindowMaximize, WindowRestore, WindowRender,
 		KeyPress, KeyRelease, KeyType,
 		MouseButtonPress, MouseButtonRelease, MouseMove, MouseWheel,
 		TimerTimeout,

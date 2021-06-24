@@ -36,4 +36,14 @@ namespace Nut
 		uint32_t m_Height;
 	};
 
+	class WindowRenderEvent : public Event
+	{
+	public:
+		WindowRenderEvent()
+			: Event(EventType::WindowRender)
+		{
+
+		}
+	};
+
 }

@@ -17,6 +17,7 @@ namespace Nut
 		virtual void BeginSceneImplementation() override;
 		virtual void EndSceneImplementation() override;
 
+		virtual void PresentImplementation() override;
 	};
 
 
