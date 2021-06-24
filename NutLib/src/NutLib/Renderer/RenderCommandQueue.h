@@ -43,17 +43,15 @@ namespace Nut
 			s_Thread.join();
 		}
 
-		static void Execute(bool present = false)
+		static void Execute()
 		{
-			std::lock_guard<std::mutex> lock(s_UpdateMutex);
-			s_Update = true;
-
-			s_Present = present;
+			std::lock_guard<std::mutex> lock(s_ExecuteMutex);
+			s_Executing = true;
 		}
 
 		static bool Idle()
 		{
-			return !s_Update;
+			return !s_Executing;
 		}
 
 		static void IncreaseFPS()
@@ -70,56 +68,70 @@ namespace Nut
 
 		static uint32_t FPS()
 		{
+			std::lock_guard<std::mutex> lock(s_FpsMutex);
 			return s_FPS;
 		}
 
 		static void ClearBuffer()
 		{
-//			LOG_CORE_ERROR("Clearing buffer");
+			LOG_CORE_ERROR("Clearing buffer");
 			std::lock_guard<std::mutex> lock(s_CommandMutex);
 			RenderCommandQueue::s_Commands.clear();
 		}
 
+		static void Present()
+		{
+			std::lock_guard<std::mutex> lock(s_PresentMutex);
+			s_Present = true;
+		}
+
 		static void RenderFunc(Ref<Window> window)
 		{
-//			Application::Get().GetWindow()->GetRenderContext()->Bind();
 			window->GetRenderContext()->Bind();
+			
+#if _WIN32
+			HDC deviceContext = GetDC(static_cast<HWND>(window->GetNativeHandle()));
+#endif
 
 
 			while (s_Running)
 			{
-				if (s_Update)
+				if (s_Executing)
 				{
 //					std::lock_guard<std::mutex> lock(s_CommandMutex);
 					s_CommandMutex.lock();
 
-					for (auto& command : s_Commands)
+					auto commands = s_Commands;
+
+					s_Commands.clear();
+					s_CommandMutex.unlock();
+
+//					RenderCommandQueue::ClearBuffer();
+
+//					LOG_CORE_TRACE("Buffer size: {0}", commands.size());
+
+					for (auto& command : commands)
 					{
 						command();
 					}
-					
-					s_CommandMutex.unlock();
 
-
-					RenderCommandQueue::ClearBuffer();
-
-					std::lock_guard<std::mutex> updateLock(s_UpdateMutex);
-					s_Update = false;
-
+					std::lock_guard<std::mutex> lock(s_ExecuteMutex);
+					s_Executing = false;
 				}
 
 				if (s_Present)
 				{
-//					AddEvent(MakeEvent<WindowRenderEvent>());
-					window->Present();
+#if _WIN32
+					SwapBuffers(deviceContext);
+#endif
 
-					std::lock_guard<std::mutex> updateLock(s_UpdateMutex);
+					std::lock_guard<std::mutex> presentLock(s_PresentMutex);
 					s_Present = false;
+
+					IncreaseFPS();
 				}
 
 			}
-
-			wglMakeCurrent(NULL, NULL);
 		}
 
 	public:
@@ -128,11 +140,12 @@ namespace Nut
 	private:
 		static inline std::thread s_Thread;
 		static inline std::mutex s_CommandMutex;
-		static inline std::mutex s_UpdateMutex;
+		static inline std::mutex s_ExecuteMutex;
 		static inline std::mutex s_FpsMutex;
+		static inline std::mutex s_PresentMutex;
 
 		static inline std::atomic<bool> s_Running = true;
-		static inline std::atomic<bool> s_Update = false;
+		static inline std::atomic<bool> s_Executing = false;
 		static inline std::atomic<bool> s_Present = false;
 
 		static inline uint32_t s_FPS = 0;

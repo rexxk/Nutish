@@ -27,6 +27,8 @@ namespace Nut
 
 		m_Window = Window::Create(windowProps);
 
+		RenderCommandQueue::Run();
+
 		m_Window->EnableVSync(false);
 
 		m_IsRunning = true;
@@ -65,7 +67,7 @@ namespace Nut
 			{
 				if (event.Id() == runTimer.Id())
 				{
-					LOG_CORE_TRACE("FPS: {0}, UPS: {1}", fpsCount, upsCount); //fpsCount, upsCount);
+					LOG_CORE_TRACE("FPS: {0} ({1}), UPS: {2}", RenderCommandQueue::FPS(), fpsCount, upsCount); //fpsCount, upsCount);
 
 					RenderCommandQueue::ResetFPS();
 					fpsCount = 0;
@@ -91,10 +93,10 @@ namespace Nut
 				return false;
 			});
 
-		RenderCommandQueue::Run();
 
 		while (m_IsRunning)
 		{
+			RenderCommandQueue::Execute();
 
 			m_Window->Update();
 
@@ -109,10 +111,12 @@ namespace Nut
 			}
 
 
+			while (!RenderCommandQueue::Idle())
+			{
 
-			RenderCommandQueue::Execute(true);
+			}
 
-//			m_Window->Present();
+			RenderCommandQueue::Present();
 
 			fpsCount++;
 		}
