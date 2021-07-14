@@ -54,7 +54,6 @@ namespace Nut
 		{
 			return !s_Executing;
 		}
-<<<<<<< HEAD
 
 		static void IncreaseFPS()
 		{
@@ -96,49 +95,6 @@ namespace Nut
 #endif
 
 
-=======
-
-		static void IncreaseFPS()
-		{
-			std::lock_guard<std::mutex> lock(s_FpsMutex);
-			s_FPS++;
-		}
-
-		static void ResetFPS()
-		{
-			std::lock_guard<std::mutex> lock(s_FpsMutex);
-			s_FPS = 0;
-		}
-
-		static uint32_t FPS()
-		{
-			std::lock_guard<std::mutex> lock(s_FpsMutex);
-			return s_FPS;
-		}
-
-		static void ClearBuffer()
-		{
-			LOG_CORE_ERROR("Clearing buffer");
-			std::lock_guard<std::mutex> lock(s_CommandMutex);
-			RenderCommandQueue::s_Commands.clear();
-		}
-
-		static void Present()
-		{
-			std::lock_guard<std::mutex> lock(s_PresentMutex);
-			s_Present = true;
-		}
-
-		static void RenderFunc(Ref<Window> window)
-		{
-			window->GetRenderContext()->Bind();
-			
-#if _WIN32
-			HDC deviceContext = GetDC(static_cast<HWND>(window->GetNativeHandle()));
-#endif
-
-
->>>>>>> bbc7c3d822c46acdf3de98c0031f5c1669b0935f
 			while (s_Running)
 			{
 				if (s_Executing)
@@ -163,7 +119,6 @@ namespace Nut
 					std::lock_guard<std::mutex> lock(s_ExecuteMutex);
 					s_Executing = false;
 				}
-<<<<<<< HEAD
 
 				if (s_Present)
 				{
@@ -171,15 +126,6 @@ namespace Nut
 					SwapBuffers(deviceContext);
 #endif
 
-=======
-
-				if (s_Present)
-				{
-#if _WIN32
-					SwapBuffers(deviceContext);
-#endif
-
->>>>>>> bbc7c3d822c46acdf3de98c0031f5c1669b0935f
 					std::lock_guard<std::mutex> presentLock(s_PresentMutex);
 					s_Present = false;
 
