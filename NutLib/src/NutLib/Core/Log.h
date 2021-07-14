@@ -52,8 +52,8 @@ namespace Nut
 	#define LOG_ERROR(x, ...) Nut::Log::GetClientLogger()->error(x, ##__VA_ARGS__);
 	#define LOG_CRITICAL(x, ...) Nut::Log::GetClientLogger()->critical(x, ##__VA_ARGS__);
 
-	#define NUT_CORE_ASSERT(condition, x, ...) if (!condition) { LOG_CORE_ERROR(x, ##__VA_ARGS__); __debugbreak(); }
-	#define NUT_ASSERT(condition, x, ...) if (!condition) { LOG_ERROR(x, ##__VA_ARGS__); __debugbreak(); }
+	#define NUT_CORE_ASSERT(condition, x, ...) if (!condition) { LOG_CORE_ERROR(x, ##__VA_ARGS__); }
+	#define NUT_ASSERT(condition, x, ...) if (!condition) { LOG_ERROR(x, ##__VA_ARGS__); }
 
 #endif
 

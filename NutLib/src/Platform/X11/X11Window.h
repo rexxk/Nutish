@@ -7,6 +7,7 @@
 
 #ifdef __linux__
 #include "X11/Xlib.h"
+#include "GL/glx.h"
 #endif
 
 
@@ -33,12 +34,21 @@ namespace Nut
 		virtual Ref<RenderContext>& GetRenderContext() override { return m_RenderContext; }
 
     private:
+        void Create();
+
+    private:
         WindowProperties m_Properties;
 
         void* m_Window;
 
         Ref<RenderContext> m_RenderContext = nullptr;
-    }
+
+
+        Display* m_Display = nullptr;
+        unsigned long m_RootWindow;
+
+        XVisualInfo* m_VisualInfo = nullptr;
+    };
 
 #endif
 

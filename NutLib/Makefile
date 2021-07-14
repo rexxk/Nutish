@@ -85,6 +85,7 @@ GENERATED += $(OBJDIR)/Renderer.o
 GENERATED += $(OBJDIR)/Scene.o
 GENERATED += $(OBJDIR)/UUID.o
 GENERATED += $(OBJDIR)/WindowsWindow.o
+GENERATED += $(OBJDIR)/X11Window.o
 GENERATED += $(OBJDIR)/nutpch.o
 OBJECTS += $(OBJDIR)/Application.o
 OBJECTS += $(OBJDIR)/Buffer.o
@@ -103,6 +104,7 @@ OBJECTS += $(OBJDIR)/Renderer.o
 OBJECTS += $(OBJDIR)/Scene.o
 OBJECTS += $(OBJDIR)/UUID.o
 OBJECTS += $(OBJDIR)/WindowsWindow.o
+OBJECTS += $(OBJDIR)/X11Window.o
 OBJECTS += $(OBJDIR)/nutpch.o
 
 # Rules
@@ -216,6 +218,9 @@ $(OBJDIR)/OpenGLRenderer.o: src/Platform/OpenGL/OpenGLRenderer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/WindowsWindow.o: src/Platform/Windows/WindowsWindow.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/X11Window.o: src/Platform/X11/X11Window.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/nutpch.o: src/nutpch.cpp
