@@ -5,15 +5,20 @@
 
 #include "NutLib/Renderer/RenderContext.h"
 
+#ifdef __linux__
+#include "X11/Xlib.h"
+#endif
+
 
 namespace Nut
 {
 
-    class LinuxWindow : public Window
+#ifdef __linux__
+    class X11Window : public Window
     {
     public:
-        LinuxWindow(const WindowProperties& props);
-        virtual ~LinuxWindow();
+        X11Window(const WindowProperties& props);
+        virtual ~X11Window();
 
 		virtual void Update() override;
 
@@ -35,6 +40,7 @@ namespace Nut
         Ref<RenderContext> m_RenderContext = nullptr;
     }
 
+#endif
 
 }
 
