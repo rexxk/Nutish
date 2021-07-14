@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __NUTLIB_KEYEVENTS_H
+#define __NUTLIB_KEYEVENTS_H
+
 
 #include "Event.h"
 
@@ -38,3 +40,6 @@ namespace Nut
 	};
 
 }
+
+
+#endif

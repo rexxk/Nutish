@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_LAYERSTACK_H
+#define __NUTLIB_LAYERSTACK_H
 
 #include "Layer.h"
 
@@ -29,3 +30,6 @@ namespace Nut
 
 
 }
+
+
+#endif

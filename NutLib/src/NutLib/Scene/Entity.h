@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_ENTITY_H
+#define __NUTLIB_ENTITY_H
 
 #include "nutpch.h"
 
@@ -8,6 +9,12 @@
 
 namespace Nut
 {
+
+	template<typename T>
+	class ComponentContainer;
+
+	template<typename T>
+	class View;
 
 	class Registry
 	{
@@ -192,3 +199,6 @@ namespace Nut
 		std::vector<UUID> m_Entities;
 	};
 }
+
+
+#endif

@@ -6,6 +6,7 @@
 #include "NutLib/Core/Keycodes.h"
 
 #include "NutLib/Renderer/Renderer.h"
+#include "NutLib/Renderer/RenderCommandQueue.h"
 
 #include <glad/glad.h>
 
@@ -13,15 +14,13 @@
 namespace Nut
 {
 
-
+#ifdef _WIN32
 	LRESULT WINAPI WndProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-#ifdef _WIN32
 	Ref<Window> Window::Create(const WindowProperties& props)
 	{
 		return CreateRef<WindowsWindow>(props);
 	}
-#endif
 
 	WindowsWindow::WindowsWindow(const WindowProperties& props)
 		: m_Properties(props)
@@ -90,6 +89,7 @@ namespace Nut
 
 		ShowWindow(m_Window, SW_SHOW);
 
+		wglMakeCurrent(NULL, NULL);
 	}
 
 	void WindowsWindow::Update()
@@ -104,6 +104,11 @@ namespace Nut
 
 	}
 
+	void WindowsWindow::Present()
+	{
+		SwapBuffers(GetDC(m_Window));
+	}
+
 	bool WindowsWindow::VSync() const
 	{
 		return m_Properties.VSync;
@@ -113,10 +118,21 @@ namespace Nut
 	{
 		m_Properties.VSync = value;
 
-		if (VSync())
+		RenderCommandQueue::Submit([&]()
+			{
+				if (value == true)
+					wglSwapInterval(1);
+				else
+					wglSwapInterval(0);
+
+			});
+
+/*	
+	if (VSync())
 			wglSwapInterval(1);
 		else
 			wglSwapInterval(0);
+*/
 	}
 
 
@@ -273,6 +289,8 @@ namespace Nut
 		return DefWindowProc(wnd, msg, wParam, lParam);
 	}
 
-}
 
+#endif
+
+}
 

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_MOUSEEVENTS_H
+#define __NUTLIB_MOUSEEVENTS_H
 
 
 #include "Event.h"
@@ -98,3 +99,6 @@ namespace Nut
 	};
 
 }
+
+
+#endif

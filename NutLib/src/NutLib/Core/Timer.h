@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __NUTLIB_TIMER_H
+#define __NUTLIB_TIMER_H
+
 
 #include <chrono>
 #include <thread>
@@ -59,6 +61,7 @@ namespace Nut
 
 			if (timeoutTime >= m_TriggerTime)
 			{
+				std::lock_guard<std::mutex> lock(m_TimerMutex);
 				m_TimeoutTime = t;
 
 				AddEvent(MakeEvent<TimerTimeoutEvent>(m_Id, timeoutTime));
@@ -79,15 +82,19 @@ namespace Nut
 	private:
 		std::chrono::steady_clock::time_point m_StartTime;
 		std::chrono::steady_clock::time_point m_TimeoutTime;
-
+	
 		double m_TriggerTime = 0.0;
 
 		UUID m_Id;
 
 		std::thread* m_TimerThread = nullptr;
+		std::mutex m_TimerMutex;
 
 		bool m_Running = false;
 	};
 
 
 }
+
+
+#endif

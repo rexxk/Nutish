@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_RENDERCONTEXT_H
+#define __NUTLIB_RENDERCONTEXT_H
 
 
 
@@ -39,3 +40,6 @@ namespace Nut
 
 
 }
+
+
+#endif

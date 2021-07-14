@@ -27,7 +27,9 @@ namespace Nut
 
 		m_Window = Window::Create(windowProps);
 
-		m_Window->EnableVSync(true);
+		RenderCommandQueue::Run();
+
+		m_Window->EnableVSync(false);
 
 		m_IsRunning = true;
 
@@ -65,8 +67,9 @@ namespace Nut
 			{
 				if (event.Id() == runTimer.Id())
 				{
-					LOG_CORE_TRACE("FPS: {0}, UPS: {1}", fpsCount, upsCount);
+					LOG_CORE_TRACE("FPS: {0} ({1}), UPS: {2}", RenderCommandQueue::FPS(), fpsCount, upsCount); //fpsCount, upsCount);
 
+					RenderCommandQueue::ResetFPS();
 					fpsCount = 0;
 					upsCount = 0;
 
@@ -93,6 +96,8 @@ namespace Nut
 
 		while (m_IsRunning)
 		{
+			RenderCommandQueue::Execute();
+
 			m_Window->Update();
 
 			while (m_EventQueue->Size() > 0)
@@ -103,16 +108,21 @@ namespace Nut
 			for (auto& layer : m_LayerStack)
 			{
 				layer->OnRender();
-
-				RenderCommandQueue::Execute();
 			}
 
-#ifdef _WIN32
-			SwapBuffers(GetDC(static_cast<HWND>(Application::Get().GetWindow()->GetNativeHandle())));
-#endif
+
+			while (!RenderCommandQueue::Idle())
+			{
+
+			}
+
+			RenderCommandQueue::Present();
 
 			fpsCount++;
 		}
+
+		RenderCommandQueue::Stop();
+		RenderCommandQueue::Join();
 	}
 
 	void Application::AttachLayer(const Ref<Layer>& layer)

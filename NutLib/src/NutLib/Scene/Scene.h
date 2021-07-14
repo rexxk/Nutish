@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_SCENE_H
+#define __NUTLIB_SCENE_H
 
 #include "Entity.h"
 
@@ -24,3 +25,6 @@ namespace Nut
 	};
 
 }
+
+
+#endif

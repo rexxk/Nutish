@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_OPENGL_BUFFER_H
+#define __NUTLIB_OPENGL_BUFFER_H
 
 #include "NutLib/Renderer/Buffer.h"
 
@@ -46,3 +47,6 @@ namespace Nut
 	};
 
 }
+
+
+#endif

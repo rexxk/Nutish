@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_WINDOWS_WINDOWSWINDOW_H
+#define __NUTLIB_WINDOWS_WINDOWSWINDOW_H
 
 #include "NutLib/Core/Window.h"
 
@@ -9,6 +10,7 @@
 namespace Nut
 {
 
+#ifdef _WIN32
 
 	class WindowsWindow : public Window
 	{
@@ -19,6 +21,8 @@ namespace Nut
 		virtual ~WindowsWindow();
 
 		virtual void Update() override;
+
+		virtual void Present() override;
 
 		virtual bool VSync() const override;
 		virtual void EnableVSync(bool value) override;
@@ -42,4 +46,9 @@ namespace Nut
 	};
 
 
+#endif
+
 }
+
+
+#endif

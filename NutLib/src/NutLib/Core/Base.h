@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_BASE_H
+#define __NUTLIB_BASE_H
 
 
 #include <memory>
@@ -25,3 +26,9 @@ Scope<T> CreateScope(Args ... args)
 
 
 using RendererID = uint32_t;
+
+
+
+
+
+#endif

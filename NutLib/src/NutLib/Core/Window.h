@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_WINDOW_H
+#define __NUTLIB_WINDOW_H
 
 
 #include "nutpch.h"
@@ -29,6 +30,8 @@ namespace Nut
 
 		virtual void Update() = 0;
 
+		virtual void Present() = 0;
+
 		virtual bool VSync() const = 0;
 		virtual void EnableVSync(bool value) = 0;
 
@@ -41,3 +44,6 @@ namespace Nut
 
 
 }
+
+
+#endif

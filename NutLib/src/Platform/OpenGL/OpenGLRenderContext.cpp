@@ -39,7 +39,11 @@ namespace Nut
 
 	void OpenGLRenderContext::Bind()
 	{
+		#ifdef _WIN32
 		wglMakeCurrent(GetDC(static_cast<HWND>(Application::Get().GetWindow()->GetNativeHandle())), static_cast<HGLRC>(m_ContextHandle));
+		#elif __linux__
+
+		#endif
 	}
 
 }

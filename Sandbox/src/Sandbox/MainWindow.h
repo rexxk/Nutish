@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <NutLib.h>
 
@@ -21,3 +22,5 @@ private:
 
 };
 
+
+#endif

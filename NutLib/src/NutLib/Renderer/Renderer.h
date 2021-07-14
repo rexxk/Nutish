@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_RENDERER_H
+#define __NUTLIB_RENDERER_H
 
 
 
@@ -27,9 +28,13 @@ namespace Nut
 		static void BeginScene();
 		static void EndScene();
 
+		static void Present();
+
 	private:
 		virtual void BeginSceneImplementation() = 0;
 		virtual void EndSceneImplementation() = 0;
+
+		virtual void PresentImplementation() = 0;
 
 	private:
 
@@ -41,3 +46,6 @@ namespace Nut
 
 
 }
+
+
+#endif

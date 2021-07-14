@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_HASH_H
+#define __NUTLIB_HASH_H
 
 
 
@@ -13,3 +14,6 @@ namespace Nut
 	};
 
 }
+
+
+#endif

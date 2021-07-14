@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_COMPONENTS_H
+#define __NUTLIB_COMPONENTS_H
 
 
 
@@ -27,3 +28,6 @@ namespace Nut
 
 
 }
+
+
+#endif

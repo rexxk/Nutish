@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_INPUT_H
+#define __NUTLIB_INPUT_H
 
 
 namespace Nut
@@ -21,3 +22,6 @@ namespace Nut
 	};
 
 }
+
+
+#endif

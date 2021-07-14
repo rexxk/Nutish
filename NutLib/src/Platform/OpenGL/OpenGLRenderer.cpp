@@ -22,19 +22,36 @@ namespace Nut
 
 	}
 
+	void OpenGLRenderer::PresentImplementation()
+	{
+		RenderCommandQueue::Submit([]()
+			{
+//#ifdef _WIN32
+//				SwapBuffers(GetDC(static_cast<HWND>(Application::Get().GetWindow()->GetNativeHandle())));
+//#endif
+
+//				RenderCommandQueue::IncreaseFPS();
+
+			});
+
+	}
+
 	void OpenGLRenderer::BeginSceneImplementation()
 	{
 		RenderCommandQueue::Submit([]()
 			{
-				Application::Get().GetWindow()->GetRenderContext()->Bind();
-
-				glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+				glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 				glClear(GL_COLOR_BUFFER_BIT);
 			});
+
 	}
 
 	void OpenGLRenderer::EndSceneImplementation()
 	{
+		RenderCommandQueue::Submit([]()
+			{
+
+			});
 
 
 	}

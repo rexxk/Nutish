@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_EVENT_H
+#define __NUTLIB_EVENT_H
 
 #include "nutpch.h"
 
@@ -9,7 +10,7 @@ namespace Nut
 
 	enum class EventType
 	{
-		WindowClose, WindowResize, WindowMinimize, WindowMaximize, WindowRestore,
+		WindowClose, WindowResize, WindowMinimize, WindowMaximize, WindowRestore, WindowRender,
 		KeyPress, KeyRelease, KeyType,
 		MouseButtonPress, MouseButtonRelease, MouseMove, MouseWheel,
 		TimerTimeout,
@@ -44,3 +45,5 @@ namespace Nut
 
 }
 
+
+#endif

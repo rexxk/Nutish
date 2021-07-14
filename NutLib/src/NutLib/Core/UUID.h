@@ -1,6 +1,5 @@
-#pragma once
-
-#include <xhash>
+#ifndef __NUTLIB_UUID_H
+#define __NUTLIB_UUID_H
 
 
 namespace Nut
@@ -36,3 +35,6 @@ namespace std
 	};
 
 }
+
+
+#endif
