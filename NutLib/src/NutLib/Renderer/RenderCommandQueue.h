@@ -14,7 +14,6 @@ namespace Nut
 	{
 		enum class QueueCommand
 		{
-			Clear,
 			Execute,
 			Present,
 		};
@@ -24,11 +23,7 @@ namespace Nut
 		template<typename Fn>
 		static void Submit(Fn fn)
 		{
-			std::lock_guard<std::mutex> lock(s_CommandMutex);
 			s_CommandQueue.push(fn);
-//			s_Commands.emplace_back(fn);
-
-//			LOG_CORE_TRACE("size: {0}", RenderCommandQueue::s_Commands.size());
 		}
 
 		static void Run()
@@ -54,18 +49,25 @@ namespace Nut
 
 		static void Execute()
 		{
-//			std::lock_guard<std::mutex> lock(s_ExecuteMutex);
-//			s_Executing = true;
 
-//			if (std::find(s_QueueCommands.begin(), s_QueueCommands.end(), QueueCommand::Execute) == s_QueueCommands.end())
-//				s_QueueCommands.push_back(QueueCommand::Execute);
+			{
+				s_FrameDone = false;
+
+				std::lock_guard<std::mutex> lock(s_CommandMutex);
+				s_ExecQueue.swap(s_CommandQueue);
+			}
 
 			s_QueueCommands.push(QueueCommand::Execute);
 		}
 
 		static bool Idle()
 		{
-			return !s_Executing;
+			return !(s_Executing || s_Present);
+		}
+
+		static bool IsFrameDone()
+		{
+			return s_FrameDone;
 		}
 
 		static void IncreaseFPS()
@@ -86,86 +88,48 @@ namespace Nut
 			return s_FPS;
 		}
 
-		static void ClearBuffer()
-		{
-//			LOG_CORE_ERROR("Clearing buffer");
-//			std::lock_guard<std::mutex> lock(s_CommandMutex);
-//			RenderCommandQueue::s_Commands.clear();
-
-//			s_QueueCommands.push_back(QueueCommand::Clear);
-
-			s_QueueCommands.push(QueueCommand::Clear);
-		}
-
 		static void Present()
 		{
-//			std::lock_guard<std::mutex> lock(s_PresentMutex);
-//			s_Present = true;
-
-//			if (std::find(s_QueueCommands.begin(), s_QueueCommands.end(), QueueCommand::Present) == s_QueueCommands.end())
-//				s_QueueCommands.push_back(QueueCommand::Present);
-
+			std::lock_guard<std::mutex> lock(s_CommandMutex);
 			s_QueueCommands.push(QueueCommand::Present);
 		}
 
 		static void RenderFunc(Ref<Window> window)
 		{
 			window->GetRenderContext()->Bind();
-			
+
 #if _WIN32
 			HDC deviceContext = GetDC(static_cast<HWND>(window->GetNativeHandle()));
 #endif
-
 
 			while (s_Running)
 			{
 				if (!s_QueueCommands.empty())
 				{
 					QueueCommand queueCommand = s_QueueCommands.front();
-					s_QueueCommands.pop();
+
+					{
+						std::lock_guard<std::mutex> lock(s_CommandMutex);
+						s_QueueCommands.pop();
+					}
 
 					switch (queueCommand)
 					{
-						case QueueCommand::Clear:
-						{
-//							s_Commands.clear();
-//							s_CommandQueue.
-							LOG_CORE_WARN("Cannot clear a queue");
-							break;
-						}
 
 						case QueueCommand::Execute:
 						{
-//							LOG_CORE_WARN("Execute");
-
 							s_Executing = true;
 
-//							std::queue<std::function<void()>> commands;
+							auto& execQueue = s_ExecQueue;
 
-//							{
-//								std::lock_guard<std::mutex> lock(s_CommandMutex);
-//								commands = s_Commands;
-//								s_Commands.clear();
-//							}
-
-//							if (commands.size() > 0)
-
-							while (!s_CommandQueue.empty())
+							while (!execQueue.empty())
 							{
-								auto& command = s_CommandQueue.front();
-								s_CommandQueue.pop();
+								auto command = execQueue.front();
+								execQueue.pop();
 
 								command();
 							}
 							
-/*							{
-								LOG_CORE_WARN("Command size: {0}", commands.size());
-								for (auto& command : commands)
-								{
-									command();
-								}
-							}
-*/
 							s_Executing = false;
 
 							break;
@@ -173,11 +137,8 @@ namespace Nut
 
 						case QueueCommand::Present:
 						{
-//							LOG_CORE_WARN("Present");
-
 							s_Present = true;
 
-//							std::lock_guard<std::mutex> presentLock(s_PresentMutex);
 							if (s_Present && !s_Executing)
 							{
 #if _WIN32
@@ -191,65 +152,23 @@ namespace Nut
 
 							s_Present = false;
 
+							s_FrameDone = true;
+
 							break;
 						}
 
 					}
 				}
 
-				/*
-								{
-									std::lock_guard<std::mutex> lock(s_ExecuteMutex);
-
-									if (s_Executing)
-									{
-										s_Executing = false;
-
-										//					std::lock_guard<std::mutex> lock(s_CommandMutex);
-										s_CommandMutex.lock();
-
-										auto commands = s_Commands;
-
-										s_Commands.clear();
-										s_CommandMutex.unlock();
-
-										//					RenderCommandQueue::ClearBuffer();
-
-										//					LOG_CORE_TRACE("Buffer size: {0}", commands.size());
-										if (commands.size() > 0)
-										{
-											for (auto& command : commands)
-											{
-												command();
-											}
-										}
-									}
-								}
-
-								{
-									std::lock_guard<std::mutex> presentLock(s_PresentMutex);
-									if (s_Present && !s_Executing)
-									{
-										s_Present = false;
-
-				#if _WIN32
-										SwapBuffers(deviceContext);
-				#endif
-
-										IncreaseFPS();
-									}
-									else
-										LOG_CORE_WARN("Present and execute, not valid!");
-
-								}
-								*/
-
-				}
-			
 			}
+	
+		}
 
 	public:
 		static inline std::queue<std::function<void()>> s_CommandQueue;
+
+	private:
+		static inline std::queue<std::function<void()>> s_ExecQueue;
 
 	private:
 		static inline std::thread s_Thread;
@@ -261,6 +180,7 @@ namespace Nut
 		static inline std::atomic<bool> s_Running = true;
 		static inline std::atomic<bool> s_Executing = false;
 		static inline std::atomic<bool> s_Present = false;
+		static inline std::atomic<bool> s_FrameDone = false;
 
 		static inline uint32_t s_FPS = 0;
 

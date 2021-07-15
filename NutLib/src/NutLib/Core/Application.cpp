@@ -110,13 +110,13 @@ namespace Nut
 				layer->OnRender();
 			}
 
+			RenderCommandQueue::Present();
 
-			while (!RenderCommandQueue::Idle())
+
+			while (!RenderCommandQueue::IsFrameDone())
 			{
 
 			}
-
-			RenderCommandQueue::Present();
 
 			fpsCount++;
 		}

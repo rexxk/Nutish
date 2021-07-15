@@ -3,6 +3,7 @@
 
 #include <NutLib.h>
 
+#include "Platform/OpenGL/OpenGLVertexArray.h"
 
 
 class MainWindow : public Nut::Layer
@@ -21,6 +22,12 @@ private:
 	Ref<Nut::Scene> m_Scene;
 
 	Ref<Nut::Shader> m_BasicShader;
+
+	Ref<Nut::OpenGLVertexArray> m_TriangleVA;
+
+	Ref<Nut::VertexBuffer> m_TriangleVB;
+	Ref<Nut::IndexBuffer> m_TriangleIB;
+
 };
 
 
