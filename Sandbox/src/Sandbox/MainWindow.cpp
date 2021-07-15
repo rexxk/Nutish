@@ -12,6 +12,17 @@ using namespace Nut;
 MainWindow::MainWindow(const std::string& name)
 	: Layer(name)
 {
+	SubscribeToEvent<KeyReleasedEvent>([&](KeyReleasedEvent& event)
+		{
+			if (event.Key() == KEY_SPACE)
+			{
+				LOG_TRACE("Space pressed - reloading shader");
+
+				m_BasicShader->Reload();
+			}
+
+			return false;
+		});
 
 }
 

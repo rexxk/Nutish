@@ -16,7 +16,7 @@ namespace Nut
 		OpenGLShader(const std::string& shaderFile);
 		virtual ~OpenGLShader();
 
-		virtual void Reload(const std::string& shaderFile) override;
+		virtual void Reload() override;
 
 		virtual RendererID ID() const override { return m_ID; }
 
@@ -34,6 +34,8 @@ namespace Nut
 		std::unordered_map<ShaderType, std::string> m_ShaderSources;
 
 		RendererID m_ID = 0;
+
+		std::string m_ShaderPath;
 
 		std::vector<RendererID>* m_ShaderIDs = nullptr;
 	};

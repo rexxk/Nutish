@@ -10,8 +10,9 @@ namespace Nut
 {
 
 	OpenGLShader::OpenGLShader(const std::string& shaderFile)
+		: m_ShaderPath(shaderFile)
 	{
-		Reload(shaderFile);
+		Reload();
 	}
 
 	OpenGLShader::~OpenGLShader()
@@ -28,9 +29,11 @@ namespace Nut
 		{
 			for (auto it = m_ShaderIDs->begin(); it != m_ShaderIDs->end(); it++)
 			{
+				RendererID id = (*it);
+
 				RenderCommandQueue::Submit([=]()
 					{
-						glDeleteShader((*it));
+						glDeleteShader(id);
 					});
 			}
 
@@ -49,9 +52,9 @@ namespace Nut
 
 	}
 
-	void OpenGLShader::Reload(const std::string& shaderFile)
+	void OpenGLShader::Reload()
 	{
-		m_ShaderSources = GetShaderSourcesFromFile(shaderFile);
+		m_ShaderSources = GetShaderSourcesFromFile(m_ShaderPath);
 
 		if (m_ID)
 		{

@@ -14,7 +14,7 @@ namespace Nut
 
 		virtual ~Shader() {}
 
-		virtual void Reload(const std::string& shaderFile) = 0;
+		virtual void Reload() = 0;
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
