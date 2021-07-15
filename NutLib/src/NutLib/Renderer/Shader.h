@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_RENDERER_SHADER_H
+#define __NUTLIB_RENDERER_SHADER_H
 
 
 
@@ -24,3 +25,6 @@ namespace Nut
 
 
 }
+
+
+#endif

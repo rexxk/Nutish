@@ -2,6 +2,7 @@
 #include "OpenGLRenderContext.h"
 
 #include "NutLib/Core/Application.h"
+#include "NutLib/Renderer/RenderCommandQueue.h"
 
 #include <glad/glad.h>
 
@@ -28,8 +29,18 @@ namespace Nut
 		LOG_CORE_TRACE("  Shader version    : {0}", m_Capabilities.ShaderVersion.c_str());
 		LOG_CORE_TRACE("  Max texture count : {0}", m_Capabilities.MaxTextureUnits);
 
-
 		m_Parameters.Wireframe = false;
+
+
+		SubscribeToEvent<WindowResizedEvent>([](WindowResizedEvent& event)
+			{
+				RenderCommandQueue::Submit([=]()
+					{
+						glViewport(0, 0, event.Width(), event.Height());
+					});
+
+				return false;
+			});
 	}
 
 	OpenGLRenderContext::~OpenGLRenderContext()
@@ -44,6 +55,7 @@ namespace Nut
 		#elif __linux__
 
 		#endif
+
 	}
 
 }

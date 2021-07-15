@@ -1,6 +1,8 @@
 #include "nutpch.h"
 #include "OpenGLBuffer.h"
 
+#include "NutLib/Renderer/RenderCommandQueue.h"
+
 #include <glad/glad.h>
 
 
@@ -18,24 +20,42 @@ namespace Nut
 	{
 		if (m_ID != 0)
 		{
-			glDeleteBuffers(1, &m_ID);
+			RenderCommandQueue::Submit([=]()
+				{
+					glDeleteBuffers(1, &m_ID);
+				});
 		}
 	}
 
 	void OpenGLVertexBuffer::Bind() const
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
+		RenderCommandQueue::Submit([=]()
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, m_ID);
+			});
 	}
 
 	void OpenGLVertexBuffer::Unbind() const
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		RenderCommandQueue::Submit([]()
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+			});
 	}
 
 	void OpenGLVertexBuffer::CreateBuffer(void* data, uint32_t size)
 	{
-		glGenBuffers(1, &m_ID);
-		glNamedBufferData(m_ID, size, data, GL_STATIC_DRAW);
+		RendererID& id = m_ID;
+		std::vector<float> vec(size / sizeof(float));
+		memcpy(vec.data(), data, size);
+
+		RenderCommandQueue::Submit([=, &id]()
+			{
+				glGenBuffers(1, &id);
+				glBindBuffer(GL_ARRAY_BUFFER, id);
+				glBufferData(GL_ARRAY_BUFFER, size, vec.data(), GL_STATIC_DRAW);
+//				glNamedBufferData(id, size, vec.data(), GL_STATIC_DRAW);
+			});
 	}
 
 
@@ -44,31 +64,51 @@ namespace Nut
 	OpenGLIndexBuffer::OpenGLIndexBuffer(void* data, uint32_t count)
 	{
 		LOG_CORE_TRACE("Creating OpenGL index buffer");
+
+		CreateBuffer(data, count);
 	}
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
 		if (m_ID != 0)
 		{
-			glDeleteBuffers(1, &m_ID);
+			RenderCommandQueue::Submit([=]()
+				{
+					glDeleteBuffers(1, &m_ID);
+				});
 		}
 	}
 
 	void OpenGLIndexBuffer::Bind() const
 	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID);
+		RenderCommandQueue::Submit([=]()
+			{
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID);
+			});
 	}
 
 	void OpenGLIndexBuffer::Unbind() const
 	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		RenderCommandQueue::Submit([]()
+			{
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			});
 	}
 
 	void OpenGLIndexBuffer::CreateBuffer(void* data, uint32_t count)
 	{
 		m_IndexCount = count;
 
-		glGenBuffers(1, &m_ID);
-		glNamedBufferData(m_ID, sizeof(uint32_t) * count, data, GL_STATIC_DRAW);
+		RendererID& id = m_ID;
+		std::vector<uint32_t> vec(count);
+		memcpy(vec.data(), data, sizeof(uint32_t) * count);
+
+		RenderCommandQueue::Submit([=, &id]()
+			{
+				glGenBuffers(1, &id);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * count, vec.data(), GL_STATIC_DRAW);
+//				glNamedBufferData(id, sizeof(uint32_t) * count, vec.data(), GL_STATIC_DRAW);
+			});
 	}
 }

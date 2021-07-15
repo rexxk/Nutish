@@ -128,6 +128,7 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\nutpch.h" />
   </ItemGroup>
@@ -151,6 +152,7 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\nutpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

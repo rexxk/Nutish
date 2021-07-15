@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __NUTLIB_OPENGL_SHADER_H
+#define __NUTLIB_OPENGL_SHADER_H
+
 
 #include "NutLib/Renderer/Shader.h"
 
@@ -38,3 +40,6 @@ namespace Nut
 
 
 }
+
+
+#endif
