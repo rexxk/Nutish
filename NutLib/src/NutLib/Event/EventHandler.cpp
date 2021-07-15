@@ -11,6 +11,9 @@ namespace Nut
 
 	void ProcessEvent(Ref<Event> event)
 	{
+		if (event == nullptr)
+			return;
+
 		switch (event->Type())
 		{
 		case EventType::WindowClose: EventCallback<WindowClosedEvent>::Execute(std::dynamic_pointer_cast<WindowClosedEvent>(event)); return;

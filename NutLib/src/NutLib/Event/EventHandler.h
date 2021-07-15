@@ -56,10 +56,15 @@ namespace Nut
 
 		Ref<Event> GetEvent()
 		{
-			auto event = m_Events.front();
-			m_Events.pop();
+			if (m_Events.size() > 0)
+			{
+				auto event = m_Events.front();
+				m_Events.pop();
 
-			return event;
+				return event;
+			}
+
+			return nullptr;
 		}
 
 		size_t Size() const { return m_Events.size(); }
