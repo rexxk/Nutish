@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __NUTLIB_WINDOWEVENTS_H
+#define __NUTLIB_WINDOWEVENTS_H
+
 
 #include "Event.h"
 
@@ -47,3 +49,6 @@ namespace Nut
 	};
 
 }
+
+
+#endif

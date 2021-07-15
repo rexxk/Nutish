@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_BUFFER_H
+#define __NUTLIB_BUFFER_H
 
 
 namespace Nut
@@ -35,3 +36,6 @@ namespace Nut
 	};
 
 }
+
+
+#endif

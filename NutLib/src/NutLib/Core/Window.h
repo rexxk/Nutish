@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_WINDOW_H
+#define __NUTLIB_WINDOW_H
 
 
 #include "nutpch.h"
@@ -43,3 +44,6 @@ namespace Nut
 
 
 }
+
+
+#endif

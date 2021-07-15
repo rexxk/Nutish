@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_TIMESTEP_H
+#define __NUTLIB_TIMESTEP_H
 
 
 namespace Nut
@@ -34,3 +35,6 @@ namespace Nut
 
 
 }
+
+
+#endif

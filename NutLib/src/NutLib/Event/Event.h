@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_EVENT_H
+#define __NUTLIB_EVENT_H
 
 #include "nutpch.h"
 
@@ -44,3 +45,5 @@ namespace Nut
 
 }
 
+
+#endif

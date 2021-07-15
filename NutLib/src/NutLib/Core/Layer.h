@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __NUTLIB_LAYER_H
+#define __NUTLIB_LAYER_H
+
 
 #include "Timestep.h"
 
@@ -24,3 +26,6 @@ namespace Nut
 	};
 
 }
+
+
+#endif

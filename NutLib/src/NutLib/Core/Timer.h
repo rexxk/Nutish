@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __NUTLIB_TIMER_H
+#define __NUTLIB_TIMER_H
+
 
 #include <chrono>
 #include <thread>
@@ -93,3 +95,6 @@ namespace Nut
 
 
 }
+
+
+#endif

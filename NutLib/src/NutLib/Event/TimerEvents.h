@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_TIMEREVENTS_H
+#define __NUTLIB_TIMEREVENTS_H
 
 #include "Event.h"
 
@@ -25,3 +26,6 @@ namespace Nut
 	};
 
 }
+
+
+#endif

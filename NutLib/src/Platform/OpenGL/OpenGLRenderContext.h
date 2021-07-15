@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_OPENGL_RENDERCONTEXT_H
+#define __NUTLIB_OPENGL_RENDERCONTEXT_H
 
 #include "NutLib/Renderer/RenderContext.h"
 
@@ -26,3 +27,6 @@ namespace Nut
 
 
 }
+
+
+#endif

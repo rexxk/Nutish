@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_RENDERCOMMANDQUEUE_H
+#define __NUTLIB_RENDERCOMMANDQUEUE_H
 
 #include "nutpch.h"
 
@@ -152,3 +153,7 @@ namespace Nut
 	};
 
 }
+
+
+
+#endif

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __NUTLIB_EVENTHANDLER_H
+#define __NUTLIB_EVENTHANDLER_H
+
 
 #include "Event.h"
 
@@ -84,3 +86,6 @@ namespace Nut
 	void ProcessEvent(Ref<Event> event);
 
 }
+
+
+#endif

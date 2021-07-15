@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_KEYCODES_H
+#define __NUTLIB_KEYCODES_H
 
 #include "nutpch.h"
 
@@ -107,3 +108,6 @@ const uint16_t KEY_RIGHT_ALT = 0xA5;
 const uint16_t KEY_VOLUME_MUTE = 0xAD;
 const uint16_t KEY_VOLUME_DOWN = 0xAE;
 const uint16_t KEY_VOLUME_UP = 0xAF;
+
+
+#endif

@@ -14,15 +14,13 @@
 namespace Nut
 {
 
-
+#ifdef _WIN32
 	LRESULT WINAPI WndProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-#ifdef _WIN32
 	Ref<Window> Window::Create(const WindowProperties& props)
 	{
 		return CreateRef<WindowsWindow>(props);
 	}
-#endif
 
 	WindowsWindow::WindowsWindow(const WindowProperties& props)
 		: m_Properties(props)
@@ -291,6 +289,8 @@ namespace Nut
 		return DefWindowProc(wnd, msg, wParam, lParam);
 	}
 
-}
 
+#endif
+
+}
 

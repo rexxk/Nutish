@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __NUTLIB_NUTPCH_H
+#define __NUTLIB_NUTPCH_H
 
 
 #include <functional>
@@ -26,5 +27,7 @@
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+
+#endif
 
 #endif
