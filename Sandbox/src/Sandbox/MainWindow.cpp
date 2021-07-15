@@ -33,7 +33,8 @@ void MainWindow::OnAttach()
 	Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(nullptr, 0);
 	Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(nullptr, 0);
 
-	
+	m_BasicShader = Shader::Create("assets/shaders/Basic.shader");
+
 }
 
 void MainWindow::OnDetach()
@@ -56,5 +57,6 @@ void MainWindow::OnRender()
 
 
 	Renderer::EndScene();
+
 
 }

@@ -8,6 +8,7 @@
 #include <mutex>
 #include <thread>
 
+#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>

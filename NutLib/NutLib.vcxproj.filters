@@ -114,6 +114,9 @@
     <ClInclude Include="src\NutLib\Renderer\Buffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\NutLib\Renderer\RenderCommandQueue.h" />
+    <ClInclude Include="src\NutLib\Renderer\Shader.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
+    <ClInclude Include="src\NutLib\Tools\ShaderFile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NutLib\Core\Application.cpp">
@@ -160,5 +163,8 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
+    <ClCompile Include="src\NutLib\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
+    <ClCompile Include="src\NutLib\Tools\ShaderFile.cpp" />
   </ItemGroup>
 </Project>

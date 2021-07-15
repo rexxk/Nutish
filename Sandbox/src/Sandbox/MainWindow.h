@@ -19,5 +19,6 @@ private:
 
 	Ref<Nut::Scene> m_Scene;
 
+	Ref<Nut::Shader> m_BasicShader;
 };
 

@@ -18,6 +18,9 @@
 
 #include <NutLib/Renderer/Renderer.h>
 #include <NutLib/Renderer/Buffer.h>
+#include <NutLib/Renderer/Shader.h>
+
+#include <NutLib/Renderer/RenderCommandQueue.h>
 
 #include <NutLib/Scene/Scene.h>
 

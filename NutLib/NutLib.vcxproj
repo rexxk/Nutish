@@ -119,12 +119,15 @@
     <ClInclude Include="src\NutLib\Renderer\RenderCommandQueue.h" />
     <ClInclude Include="src\NutLib\Renderer\RenderContext.h" />
     <ClInclude Include="src\NutLib\Renderer\Renderer.h" />
+    <ClInclude Include="src\NutLib\Renderer\Shader.h" />
     <ClInclude Include="src\NutLib\Scene\Components.h" />
     <ClInclude Include="src\NutLib\Scene\Entity.h" />
     <ClInclude Include="src\NutLib\Scene\Scene.h" />
+    <ClInclude Include="src\NutLib\Tools\ShaderFile.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\nutpch.h" />
   </ItemGroup>
@@ -141,10 +144,13 @@
     <ClCompile Include="src\NutLib\Renderer\Buffer.cpp" />
     <ClCompile Include="src\NutLib\Renderer\RenderContext.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\NutLib\Renderer\Shader.cpp" />
     <ClCompile Include="src\NutLib\Scene\Scene.cpp" />
+    <ClCompile Include="src\NutLib\Tools\ShaderFile.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\nutpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
