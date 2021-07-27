@@ -20,7 +20,7 @@ uniform sampler2D m_Texture;
 
 void main()
 {
-//	o_Color = u_Color;
+	o_Color = u_Color;
 
-	o_Color = vec4(0.2, 0.35, 0.75, 1.0);
+//	o_Color = vec4(0.2, 0.35, 0.75, 1.0);
 }

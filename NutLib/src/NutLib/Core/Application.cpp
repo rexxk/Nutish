@@ -121,7 +121,7 @@ namespace Nut
 		}
 
 		RenderCommandQueue::Stop();
-//		RenderCommandQueue::Join();
+		RenderCommandQueue::Join();
 
 	}
 

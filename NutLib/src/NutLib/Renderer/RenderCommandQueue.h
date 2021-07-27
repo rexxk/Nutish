@@ -32,20 +32,18 @@ namespace Nut
 
 		static void Run()
 		{
+			LOG_CORE_TRACE("Starting rendering thread");
 
 			s_Thread = new std::thread(&RenderCommandQueue::RenderFunc, Application::Get().GetWindow());
 
 			NUT_CORE_ASSERT(s_Thread, "Unable to create render thread");
 
-			s_Thread->detach();
+//			s_Thread->detach();
 
-			LOG_CORE_TRACE("Starting rendering thread");
 		}
 
 		static void Stop()
 		{
-			LOG_CORE_TRACE("Stopping rendering thread");
-
 			{
 				std::lock_guard<std::mutex> lock(s_ExecuteMutex);
 				s_Running = false;
@@ -57,14 +55,17 @@ namespace Nut
 
 			}
 
-
-			delete s_Thread;
+			LOG_CORE_TRACE("Stopping rendering thread");
 		}
 
 		static void Join()
 		{
+			s_Thread->join();
+
 			LOG_CORE_TRACE("Joining render thread");
-//			s_Thread.join();
+
+//			delete s_Thread;
+//			s_Thread = nullptr;
 
 //			s_Thread.detach();
 		}
@@ -77,7 +78,9 @@ namespace Nut
 			}
 
 			{
-				std::lock_guard<std::mutex> lock(s_CommandMutex);
+				std::lock_guard<std::mutex> execLock(s_ExecQueueMutex);
+				std::lock_guard<std::mutex> commandLock(s_CommandMutex);
+
 				s_ExecQueue.swap(s_CommandQueue);
 			}
 
@@ -108,7 +111,7 @@ namespace Nut
 
 		static uint32_t FPS()
 		{
-			std::lock_guard<std::mutex> lock(s_FpsMutex);
+//			std::lock_guard<std::mutex> lock(s_FpsMutex);
 			return s_FPS;
 		}
 
@@ -127,6 +130,8 @@ namespace Nut
 #if _WIN32
 			HDC deviceContext = GetDC(static_cast<HWND>(window->GetNativeHandle()));
 #endif
+
+//			LOG_CORE_TRACE("RenderCommandQueue loop starting");
 
 			while (s_Running)
 			{
@@ -154,7 +159,11 @@ namespace Nut
 							while (!execQueue.empty())
 							{
 								auto command = execQueue.front();
-								execQueue.pop();
+
+								{
+									std::lock_guard<std::mutex> lock(s_ExecQueueMutex);
+									execQueue.pop();
+								}
 
 								command();
 							}
@@ -205,13 +214,13 @@ namespace Nut
 
 			{
 
-				LOG_CORE_TRACE("RenderThread stopped running");
+//				LOG_CORE_WARN("Command queue size: {0}", s_CommandQueue.size());
+//				LOG_CORE_WARN("Queue command size: {0}", s_QueueCommands.size());
+
+//				LOG_CORE_TRACE("RenderThread stopped running");
 
 				std::lock_guard<std::mutex> lock(s_FinishedMutex);
 				s_ThreadFinished = true;
-
-				LOG_CORE_WARN("Command queue size: {0}", s_CommandQueue.size());
-				LOG_CORE_WARN("Queue command size: {0}", s_QueueCommands.size());
 			}
 
 		}
@@ -226,6 +235,7 @@ namespace Nut
 		static inline std::thread* s_Thread = nullptr;
 		static inline std::mutex s_CommandMutex;
 		static inline std::mutex s_ExecuteMutex;
+		static inline std::mutex s_ExecQueueMutex;
 		static inline std::mutex s_FpsMutex;
 		static inline std::mutex s_PresentMutex;
 		static inline std::mutex s_FinishedMutex;

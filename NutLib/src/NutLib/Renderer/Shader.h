@@ -56,6 +56,7 @@ namespace Nut
 
 		virtual RendererID ID() const = 0;
 
+		virtual void SetFloat4(const std::string& name, float x, float y, float z, float w) = 0;
 
 		virtual std::vector<ShaderMaterialDescriptor>& GetShaderDescriptors() = 0;
 

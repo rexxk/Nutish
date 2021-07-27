@@ -82,6 +82,9 @@ void MainWindow::OnUpdate(Timestep ts)
 {
 //	LOG_TRACE("Timestep: {0}", (double)ts);
 
+	m_BasicShader->SetFloat4("u_Color", 1.0f, 0.0f, 0.0f, 1.0f);
+
+
 }
 
 void MainWindow::OnRender()

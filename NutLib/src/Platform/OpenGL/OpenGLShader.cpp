@@ -269,4 +269,21 @@ namespace Nut
 
 	}
 
+	void OpenGLShader::SetFloat4(const std::string& name, float x, float y, float z, float w)
+	{
+		for (auto& desc : m_MaterialDescriptors)
+		{
+			if ((desc.Name == name) && (desc.Location != -1))
+			{
+				RenderCommandQueue::Submit([=]()
+					{
+						glUniform4f(desc.Location, x, y, z, w);
+					});
+
+				break;
+			}
+		}
+
+	}
+
 }

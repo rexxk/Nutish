@@ -23,6 +23,8 @@ namespace Nut
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
+		virtual void SetFloat4(const std::string& name, float x, float y, float z, float w) override;
+
 
 		virtual std::vector<ShaderMaterialDescriptor>& GetShaderDescriptors() override { return m_MaterialDescriptors; }
 
