@@ -196,6 +196,7 @@ namespace Nut
 				AddEvent(MakeEvent<WindowClosedEvent>());
 
 				PostQuitMessage(0);
+
 				return 0;
 			}
 

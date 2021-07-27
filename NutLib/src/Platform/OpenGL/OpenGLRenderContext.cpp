@@ -58,4 +58,13 @@ namespace Nut
 
 	}
 
+	void OpenGLRenderContext::Unbind()
+	{
+#ifdef _WIN32
+		wglMakeCurrent(NULL, NULL);
+#elif __linux__
+
+#endif
+	}
+
 }

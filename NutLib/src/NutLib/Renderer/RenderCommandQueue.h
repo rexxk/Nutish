@@ -23,6 +23,7 @@ namespace Nut
 		template<typename Fn>
 		static void Submit(Fn fn)
 		{
+			if (s_Running)
 			{
 				std::lock_guard<std::mutex> lock(s_CommandMutex);
 				s_CommandQueue.push(fn);
@@ -31,35 +32,51 @@ namespace Nut
 
 		static void Run()
 		{
-			LOG_CORE_TRACE("Starting rendering thread");
 
-			s_Thread = std::thread(&RenderCommandQueue::RenderFunc, Application::Get().GetWindow());
+			s_Thread = new std::thread(&RenderCommandQueue::RenderFunc, Application::Get().GetWindow());
+
+			NUT_CORE_ASSERT(s_Thread, "Unable to create render thread");
+
+			s_Thread->detach();
+
+			LOG_CORE_TRACE("Starting rendering thread");
 		}
 
 		static void Stop()
 		{
 			LOG_CORE_TRACE("Stopping rendering thread");
 
-			s_Running = false;
+			{
+				std::lock_guard<std::mutex> lock(s_ExecuteMutex);
+				s_Running = false;
+			}
+
 
 			while (!s_ThreadFinished)
 			{
 
 			}
+
+
+			delete s_Thread;
 		}
 
 		static void Join()
 		{
 			LOG_CORE_TRACE("Joining render thread");
-			s_Thread.join();
+//			s_Thread.join();
+
+//			s_Thread.detach();
 		}
 
 		static void Execute()
 		{
+			{
+				std::lock_guard<std::mutex> lock(s_FrameDoneMutex);
+				s_FrameDone = false;
+			}
 
 			{
-				s_FrameDone = false;
-
 				std::lock_guard<std::mutex> lock(s_CommandMutex);
 				s_ExecQueue.swap(s_CommandQueue);
 			}
@@ -103,6 +120,8 @@ namespace Nut
 
 		static void RenderFunc(Ref<Window> window)
 		{
+			s_ThreadFinished = false;
+
 			window->GetRenderContext()->Bind();
 
 #if _WIN32
@@ -125,7 +144,10 @@ namespace Nut
 
 						case QueueCommand::Execute:
 						{
-							s_Executing = true;
+							{
+								std::lock_guard<std::mutex> lock(s_ExecuteMutex);
+								s_Executing = true;
+							}
 
 							auto& execQueue = s_ExecQueue;
 
@@ -137,14 +159,20 @@ namespace Nut
 								command();
 							}
 							
-							s_Executing = false;
+							{
+								std::lock_guard<std::mutex> lock(s_ExecuteMutex);
+								s_Executing = false;
+							}
 
 							break;
 						}
 
 						case QueueCommand::Present:
 						{
-							s_Present = true;
+							{
+								std::lock_guard<std::mutex> lock(s_PresentMutex);
+								s_Present = true;
+							}
 
 							if (s_Present && !s_Executing)
 							{
@@ -157,9 +185,15 @@ namespace Nut
 							else
 								LOG_CORE_WARN("Present and execute, not valid!");
 
-							s_Present = false;
+							{
+								std::lock_guard<std::mutex> lock(s_PresentMutex);
+								s_Present = false;
+							}
 
-							s_FrameDone = true;
+							{
+								std::lock_guard<std::mutex> lock(s_FrameDoneMutex);
+								s_FrameDone = true;
+							}
 
 							break;
 						}
@@ -169,9 +203,17 @@ namespace Nut
 
 			}
 
-			LOG_CORE_TRACE("RenderThread stopped running");
+			{
 
-			s_ThreadFinished = true;
+				LOG_CORE_TRACE("RenderThread stopped running");
+
+				std::lock_guard<std::mutex> lock(s_FinishedMutex);
+				s_ThreadFinished = true;
+
+				LOG_CORE_WARN("Command queue size: {0}", s_CommandQueue.size());
+				LOG_CORE_WARN("Queue command size: {0}", s_QueueCommands.size());
+			}
+
 		}
 
 	public:
@@ -181,11 +223,13 @@ namespace Nut
 		static inline std::queue<std::function<void()>> s_ExecQueue;
 
 	private:
-		static inline std::thread s_Thread;
+		static inline std::thread* s_Thread = nullptr;
 		static inline std::mutex s_CommandMutex;
 		static inline std::mutex s_ExecuteMutex;
 		static inline std::mutex s_FpsMutex;
 		static inline std::mutex s_PresentMutex;
+		static inline std::mutex s_FinishedMutex;
+		static inline std::mutex s_FrameDoneMutex;
 
 		static inline std::atomic<bool> s_Running = true;
 		static inline std::atomic<bool> s_Executing = false;

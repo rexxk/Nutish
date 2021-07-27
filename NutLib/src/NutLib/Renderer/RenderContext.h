@@ -33,6 +33,7 @@ namespace Nut
 		virtual ~RenderContext() {}
 
 		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
 
 		virtual const RenderContextCapabilites& GetCapabilites() const = 0;
 		virtual const RenderContextParameters& GetParameters() const = 0;

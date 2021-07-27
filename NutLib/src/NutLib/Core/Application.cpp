@@ -112,7 +112,6 @@ namespace Nut
 
 			RenderCommandQueue::Present();
 
-
 			while (!RenderCommandQueue::IsFrameDone())
 			{
 
@@ -122,7 +121,8 @@ namespace Nut
 		}
 
 		RenderCommandQueue::Stop();
-		RenderCommandQueue::Join();
+//		RenderCommandQueue::Join();
+
 	}
 
 	void Application::AttachLayer(const Ref<Layer>& layer)
