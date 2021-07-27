@@ -15,7 +15,7 @@ int main()
 
 	app->Run();
 
-	app->Shutdown();
+//	app->Shutdown();
 
 	return 0;
 }

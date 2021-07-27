@@ -11,9 +11,9 @@ public:
 		AttachLayer(CreateRef<MainWindow>("MainWindow"));
 	}
 
-	~SandboxApp()
+	virtual ~SandboxApp()
 	{
-
+		LOG_CORE_TRACE("Sandbox shutdown");
 	}
 
 };

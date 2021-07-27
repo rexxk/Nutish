@@ -42,6 +42,10 @@ namespace Nut
 
 			s_Running = false;
 
+			while (!s_ThreadFinished)
+			{
+
+			}
 		}
 
 		static void Join()
@@ -164,7 +168,10 @@ namespace Nut
 				}
 
 			}
-	
+
+			LOG_CORE_TRACE("RenderThread stopped running");
+
+			s_ThreadFinished = true;
 		}
 
 	public:
@@ -184,6 +191,8 @@ namespace Nut
 		static inline std::atomic<bool> s_Executing = false;
 		static inline std::atomic<bool> s_Present = false;
 		static inline std::atomic<bool> s_FrameDone = false;
+
+		static inline std::atomic<bool> s_ThreadFinished = false;
 
 		static inline uint32_t s_FPS = 0;
 
