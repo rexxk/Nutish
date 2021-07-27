@@ -3,11 +3,55 @@
 
 #include "NutLib/Renderer/RenderCommandQueue.h"
 
+#include "NutLib/Tools/StringHelpers.h"
+
+
 #include <glad/glad.h>
 
 
 namespace Nut
 {
+
+	ShaderMaterialDescriptor::Type OpenGLUniformToDescriptorType(const std::string& type)
+	{
+		if (type == "bool") return ShaderMaterialDescriptor::Type::Bool;
+		if (type == "int") return ShaderMaterialDescriptor::Type::Int;
+		if (type == "uint") return ShaderMaterialDescriptor::Type::UInt;
+		if (type == "float") return ShaderMaterialDescriptor::Type::Float;
+		if (type == "double") return ShaderMaterialDescriptor::Type::Double;
+		if (type == "vec2") return ShaderMaterialDescriptor::Type::Vec2;
+		if (type == "vec3") return ShaderMaterialDescriptor::Type::Vec3;
+		if (type == "vec4") return ShaderMaterialDescriptor::Type::Vec4;
+		if (type == "mat3") return ShaderMaterialDescriptor::Type::Matrix3x3;
+		if (type == "mat4") return ShaderMaterialDescriptor::Type::Matrix4x4;
+		if (type == "sampler2D") return ShaderMaterialDescriptor::Type::Texture2D;
+		if (type == "samplerCube") return ShaderMaterialDescriptor::Type::TextureCube;
+//		if (type == "textureSphere") return ShaderMaterialDescriptor::Type::TextureSphere;
+
+		return ShaderMaterialDescriptor::Type::Unknown;
+	}
+
+	uint32_t OpenGLUniformSize(ShaderMaterialDescriptor::Type type)
+	{
+		switch (type)
+		{
+			case ShaderMaterialDescriptor::Type::Bool: return 1;
+			case ShaderMaterialDescriptor::Type::Int: return 4;
+			case ShaderMaterialDescriptor::Type::UInt: return 4;
+			case ShaderMaterialDescriptor::Type::Float: return 4;
+			case ShaderMaterialDescriptor::Type::Double: return 4;
+			case ShaderMaterialDescriptor::Type::Vec2: return 4 * 2;
+			case ShaderMaterialDescriptor::Type::Vec3: return 4 * 3;
+			case ShaderMaterialDescriptor::Type::Vec4: return 4 * 4;
+			case ShaderMaterialDescriptor::Type::Matrix3x3: return 4 * 3 * 3;
+			case ShaderMaterialDescriptor::Type::Matrix4x4: return 4 * 4 * 4;
+			case ShaderMaterialDescriptor::Type::Texture2D: return 4;
+			case ShaderMaterialDescriptor::Type::TextureCube: return 4;
+		}
+
+		return 0;
+	}
+
 
 	OpenGLShader::OpenGLShader(const std::string& shaderFile)
 		: m_ShaderPath(shaderFile)
@@ -75,6 +119,8 @@ namespace Nut
 		}
 
 		LinkProgram();
+
+		ResolveLocations();
 	}
 
 	void OpenGLShader::Bind() const
@@ -96,6 +142,57 @@ namespace Nut
 
 	void OpenGLShader::Reflect(const std::string& source)
 	{
+		if (m_MaterialDescriptors.size() > 0)
+			m_MaterialDescriptors.clear();
+
+//		LOG_CORE_TRACE("Shader reflect");
+
+		// Find uniforms and resolve the locations
+
+		size_t pos = 0;
+
+		while ((pos = source.find("uniform", pos)) != std::string::npos)
+		{
+			std::string line;
+
+			size_t endpos = source.find_first_of(';', pos);
+
+			line = source.substr(pos, endpos - pos);
+
+			auto tokens = Tokenize(line, ' ');
+
+			if (tokens[0] == "uniform")
+			{
+				std::string type = tokens[1];
+				std::string name = tokens[2];
+
+				ShaderMaterialDescriptor desc;
+				desc.Name = name;
+				desc.DescriptorType = OpenGLUniformToDescriptorType(type);
+
+				NUT_CORE_ASSERT((desc.DescriptorType != ShaderMaterialDescriptor::Type::Unknown), "GLSL syntax error, type is not valid!");
+
+				desc.Size = OpenGLUniformSize(desc.DescriptorType);
+
+				m_MaterialDescriptors.emplace_back(desc);
+			}
+
+			pos = endpos;
+		}
+
+	}
+
+	void OpenGLShader::ResolveLocations()
+	{
+		for (auto& desc : m_MaterialDescriptors)
+		{
+			RenderCommandQueue::Submit([&]()
+				{
+					desc.Location = glGetUniformLocation(m_ID, desc.Name.c_str());
+					desc.Resolved = true;
+				});
+
+		}
 
 	}
 

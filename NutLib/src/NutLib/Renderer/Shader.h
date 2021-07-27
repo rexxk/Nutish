@@ -7,6 +7,41 @@ namespace Nut
 {
 
 
+
+	class ShaderMaterialDescriptor
+	{
+	public:
+
+		enum class Type
+		{
+			Unknown = 0,
+			Bool,
+			Int,
+			UInt,
+			Float,
+			Double,
+			Vec2,
+			Vec3,
+			Vec4,
+			Matrix3x3,
+			Matrix4x4,
+			Texture2D,
+			TextureCube,
+			TextureSphere,
+		};
+
+		int32_t Location = 0;
+		uint32_t Size = 0;
+
+		Type DescriptorType = Type::Unknown;
+		std::string Name = "<unknown>";
+
+		bool Resolved = false;
+
+	};
+
+
+
 	class Shader
 	{
 	public:
@@ -20,6 +55,9 @@ namespace Nut
 		virtual void Unbind() const = 0;
 
 		virtual RendererID ID() const = 0;
+
+
+		virtual std::vector<ShaderMaterialDescriptor>& GetShaderDescriptors() = 0;
 
 	};
 

@@ -23,10 +23,15 @@ namespace Nut
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
+
+		virtual std::vector<ShaderMaterialDescriptor>& GetShaderDescriptors() override { return m_MaterialDescriptors; }
+
 	private:
 		void Reflect(const std::string& source);
 		void Compile(ShaderType domain, const std::string& source);
 		void LinkProgram();
+
+		void ResolveLocations();
 
 		void ReleaseShader();
 
@@ -38,6 +43,9 @@ namespace Nut
 		std::string m_ShaderPath;
 
 		std::vector<RendererID>* m_ShaderIDs = nullptr;
+
+
+		std::vector<ShaderMaterialDescriptor> m_MaterialDescriptors;
 	};
 
 

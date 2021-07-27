@@ -82,7 +82,6 @@ void MainWindow::OnUpdate(Timestep ts)
 {
 //	LOG_TRACE("Timestep: {0}", (double)ts);
 
-
 }
 
 void MainWindow::OnRender()

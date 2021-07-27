@@ -23,7 +23,10 @@ namespace Nut
 		template<typename Fn>
 		static void Submit(Fn fn)
 		{
-			s_CommandQueue.push(fn);
+			{
+				std::lock_guard<std::mutex> lock(s_CommandMutex);
+				s_CommandQueue.push(fn);
+			}
 		}
 
 		static void Run()
