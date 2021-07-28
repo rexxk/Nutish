@@ -51,6 +51,8 @@ namespace Nut
 	void Application::Shutdown()
 	{
 		LOG_CORE_TRACE("Application shutdown");
+
+		RenderCommandQueue::Shutdown();
 	}
 
 	void Application::Run()

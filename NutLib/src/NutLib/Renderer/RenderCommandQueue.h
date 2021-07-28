@@ -33,6 +33,16 @@ namespace Nut
 //			s_Instance->Run();
 		}
 
+		static void Shutdown()
+		{
+			if (s_Instance)
+			{
+				delete s_Instance;
+
+				s_Instance = nullptr;
+			}
+		}
+
 		RenderCommandQueue()
 		{
 
@@ -40,17 +50,11 @@ namespace Nut
 
 		~RenderCommandQueue()
 		{
+			LOG_CORE_TRACE("RenderCommandQueue destructor called");
+
 			if (s_Instance->m_Thread)
 			{
 				LOG_CORE_TRACE("RenderCommandQueue destructor wants to delete the m_Thread object");
-
-				Stop();
-				Join();
-
-				while (!Idle())
-				{
-
-				}
 
 				delete m_Thread;
 				m_Thread = nullptr;
@@ -60,7 +64,7 @@ namespace Nut
 		template<typename Fn>
 		static void Submit(Fn fn)
 		{
-			if (s_Instance->m_Running)
+			if (s_Instance)
 			{
 				std::lock_guard<std::mutex> lock(s_Instance->m_CommandMutex);
 				s_Instance->m_CommandQueue.push(fn);
