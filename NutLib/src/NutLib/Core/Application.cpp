@@ -18,6 +18,8 @@ namespace Nut
 		else
 			return;
 
+		RenderCommandQueue::Init();
+
 		m_EventQueue = CreateRef<EventQueue>();
 
 		Renderer::Init();
