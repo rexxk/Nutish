@@ -52,7 +52,7 @@ namespace Nut
 	{
 		LOG_CORE_TRACE("Application shutdown");
 
-		RenderCommandQueue::Shutdown();
+//		RenderCommandQueue::Shutdown();
 	}
 
 	void Application::Run()
@@ -125,8 +125,14 @@ namespace Nut
 		}
 
 		RenderCommandQueue::Stop();
-		RenderCommandQueue::Join();
+//		RenderCommandQueue::Join();
 
+		while (!RenderCommandQueue::ThreadStopped())
+		{
+			LOG_CORE_TRACE("Application is waiting for the render thread to stop.");
+		}
+
+		LOG_CORE_TRACE("Application knows that the render thread is stopped.");
 	}
 
 	void Application::AttachLayer(const Ref<Layer>& layer)

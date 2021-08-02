@@ -17,6 +17,7 @@ namespace Nut
 			Idle,
 			Execute,
 			Present,
+			Shutdown,
 		};
 
 	public:
@@ -33,7 +34,7 @@ namespace Nut
 //			s_Instance->Run();
 		}
 
-		static void Shutdown()
+/*		static void Shutdown()
 		{
 			if (s_Instance)
 			{
@@ -42,6 +43,7 @@ namespace Nut
 				s_Instance = nullptr;
 			}
 		}
+*/
 
 		RenderCommandQueue()
 		{
@@ -66,8 +68,15 @@ namespace Nut
 		{
 			if (s_Instance)
 			{
-				std::lock_guard<std::mutex> lock(s_Instance->m_CommandMutex);
-				s_Instance->m_CommandQueue.push(fn);
+				if (s_Instance->m_Running)
+				{
+					std::lock_guard<std::mutex> lock(s_Instance->m_CommandMutex);
+					s_Instance->m_CommandQueue.push(fn);
+				}
+				else
+				{
+					LOG_CORE_TRACE("RenderThread::Submit - no valid thread to submit to");
+				}
 			}
 		}
 
@@ -101,83 +110,108 @@ namespace Nut
 							switch (queueCommand)
 							{
 
-							case QueueCommand::Execute:
-							{
+								case QueueCommand::Execute:
 								{
-									std::lock_guard<std::mutex> lock(s_Instance->m_ExecuteMutex);
-									s_Instance->m_Executing = true;
-								}
-
-								auto& execQueue = s_Instance->m_ExecQueue;
-
-								while (!execQueue.empty())
-								{
-									auto command = execQueue.front();
-
 									{
-										std::lock_guard<std::mutex> lock(s_Instance->m_ExecQueueMutex);
-										execQueue.pop();
+										std::lock_guard<std::mutex> lock(s_Instance->m_ExecuteMutex);
+										s_Instance->m_Executing = true;
 									}
 
-									command();
+									auto& execQueue = s_Instance->m_ExecQueue;
+
+									while (!execQueue.empty())
+									{
+										auto command = execQueue.front();
+
+										{
+											std::lock_guard<std::mutex> lock(s_Instance->m_ExecQueueMutex);
+											execQueue.pop();
+										}
+
+										command();
+									}
+
+									{
+										std::lock_guard<std::mutex> lock(s_Instance->m_ExecuteMutex);
+										s_Instance->m_Executing = false;
+									}
+
+									break;
 								}
 
+								case QueueCommand::Present:
 								{
-									std::lock_guard<std::mutex> lock(s_Instance->m_ExecuteMutex);
-									s_Instance->m_Executing = false;
+									{
+										std::lock_guard<std::mutex> lock(s_Instance->m_PresentMutex);
+										s_Instance->m_Present = true;
+									}
+
+	#if _WIN32
+									SwapBuffers(deviceContext);
+	#endif
+
+									{
+										std::lock_guard<std::mutex> lock(s_Instance->m_FpsMutex);
+										s_Instance->m_FPS++;
+									}
+
+	//								if (s_Instance->m_Present && !s_Instance->m_Executing)
+	//								{
+	//								}
+	//								else
+	//									LOG_CORE_WARN("Present and execute, not valid!");
+
+									{
+										std::lock_guard<std::mutex> lock(s_Instance->m_PresentMutex);
+										s_Instance->m_Present = false;
+									}
+
+									{
+										std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
+										s_Instance->m_FrameDone = true;
+									}
+
+									break;
 								}
 
-								break;
-							}
-
-							case QueueCommand::Present:
-							{
+								case QueueCommand::Shutdown:
 								{
-									std::lock_guard<std::mutex> lock(s_Instance->m_PresentMutex);
-									s_Instance->m_Present = true;
+									{
+										std::lock_guard<std::mutex> lock(s_Instance->m_RunningMutex);
+										s_Instance->m_Running = false;
+									}
+
+									{
+										std::lock_guard<std::mutex> lock(s_Instance->m_CommandMutex);
+
+										while (s_Instance->m_CommandQueue.size() > 0)
+										{
+											auto command = s_Instance->m_CommandQueue.front();
+											s_Instance->m_CommandQueue.pop();
+
+											command();
+										}
+
+									}
+
+									break;
 								}
-
-#if _WIN32
-								SwapBuffers(deviceContext);
-#endif
-
-								{
-									std::lock_guard<std::mutex> lock(s_Instance->m_FpsMutex);
-									s_Instance->m_FPS++;
-								}
-
-//								if (s_Instance->m_Present && !s_Instance->m_Executing)
-//								{
-//								}
-//								else
-//									LOG_CORE_WARN("Present and execute, not valid!");
-
-								{
-									std::lock_guard<std::mutex> lock(s_Instance->m_PresentMutex);
-									s_Instance->m_Present = false;
-								}
-
-								{
-									std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
-									s_Instance->m_FrameDone = true;
-								}
-
-								break;
-							}
 							}
 						}
 
-						{
 
-							//				LOG_CORE_WARN("Command queue size: {0}", s_CommandQueue.size());
-							//				LOG_CORE_WARN("Queue command size: {0}", s_QueueCommands.size());
-
-							//				LOG_CORE_TRACE("RenderThread stopped running");
-
-							std::lock_guard<std::mutex> lock(s_Instance->m_FinishedMutex);
-							s_Instance->m_ThreadFinished = true;
-						}
 					}
+
+					{
+						std::lock_guard<std::mutex> lock(s_Instance->m_FinishedMutex);
+						s_Instance->m_ThreadFinished = true;
+
+						//				LOG_CORE_WARN("Command queue size: {0}", s_CommandQueue.size());
+						//				LOG_CORE_WARN("Queue command size: {0}", s_QueueCommands.size());
+
+						//				LOG_CORE_TRACE("RenderThread stopped running");
+					}
+
 				});
 
 			//			s_Instance->m_Thread = new std::thread(&RenderCommandQueue::RenderFunc, Application::Get().GetWindow());
@@ -196,73 +230,145 @@ namespace Nut
 
 		static void Stop()
 		{
+			if (s_Instance)
 			{
-				std::lock_guard<std::mutex> lock(s_Instance->m_RunningMutex);
-				s_Instance->m_Running = false;
+
+				{
+					std::lock_guard<std::mutex> lock(s_Instance->m_QueueCommandsMutex);
+					s_Instance->m_QueueCommands.push(QueueCommand::Shutdown);
+				}
+
+				while (!s_Instance->m_ThreadFinished)
+				{
+
+				}
+
+				LOG_CORE_TRACE("Stopping rendering thread");
+
+				while (!s_Instance->m_Thread->joinable())
+				{
+					LOG_CORE_TRACE("RenderThread - waiting to join");
+				}
+
+				LOG_CORE_TRACE("RenderThread is joinable, joining");
+				s_Instance->m_Thread->join();
+
+				s_Instance->m_ThreadStopped = true;
+
 			}
 
 
-			while (!s_Instance->m_ThreadFinished)
-			{
-
-			}
-
-			LOG_CORE_TRACE("Stopping rendering thread");
 		}
 
-		static void Join()
+		static bool ThreadStopped()
 		{
-			s_Instance->m_Thread->join();
+			if (s_Instance)
+			{
+				return s_Instance->m_ThreadStopped;
+			}
 
-			LOG_CORE_TRACE("Joining render thread");
+			return true;
 		}
+
+//		static void Join()
+//		{
+//			s_Instance->m_Thread->join();
+
+//			LOG_CORE_TRACE("Joining render thread");
+//		}
 
 		static void Execute()
 		{
+			if (s_Instance)
 			{
-				std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
-				s_Instance->m_FrameDone = false;
+
+				{
+					std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
+					s_Instance->m_FrameDone = false;
+				}
+
+				{
+					std::lock_guard<std::mutex> execLock(s_Instance->m_ExecQueueMutex);
+					std::lock_guard<std::mutex> commandLock(s_Instance->m_CommandMutex);
+
+					s_Instance->m_ExecQueue.swap(s_Instance->m_CommandQueue);
+				}
+
+				{
+					std::lock_guard<std::mutex> queueLock(s_Instance->m_QueueCommandsMutex);
+					s_Instance->m_QueueCommands.push(QueueCommand::Execute);
+				}
+
 			}
-
+			else
 			{
-				std::lock_guard<std::mutex> execLock(s_Instance->m_ExecQueueMutex);
-				std::lock_guard<std::mutex> commandLock(s_Instance->m_CommandMutex);
-
-				s_Instance->m_ExecQueue.swap(s_Instance->m_CommandQueue);
-			}
-
-			{
-				std::lock_guard<std::mutex> queueLock(s_Instance->m_QueueCommandsMutex);
-				s_Instance->m_QueueCommands.push(QueueCommand::Execute);
+				LOG_CORE_WARN("RenderThread::Execute - no valid instance");
 			}
 		}
 
 		static bool Idle()
 		{
-			return !(s_Instance->m_Executing || s_Instance->m_Present);
+			if (s_Instance)
+				return !(s_Instance->m_Executing || s_Instance->m_Present);
+			else
+			{
+				LOG_CORE_WARN("RenderThread::Idle - no valid instance");
+			}
+
+			return true;
 		}
 
 		static bool IsFrameDone()
 		{
-			return s_Instance->m_FrameDone;
+			if (s_Instance)
+				return s_Instance->m_FrameDone;
+			else
+			{
+				LOG_CORE_WARN("RenderThread::IsFrameDone - no valid instance");
+			}
+
+			return true;
 		}
 
 		static void ResetFPS()
 		{
-			std::lock_guard<std::mutex> lock(s_Instance->m_FpsMutex);
-			s_Instance->m_FPS = 0;
+			if (s_Instance)
+			{
+				std::lock_guard<std::mutex> lock(s_Instance->m_FpsMutex);
+				s_Instance->m_FPS = 0;
+			}
+			else
+			{
+				LOG_CORE_WARN("RenderThread::ResetFPS - no valid instance");
+			}
 		}
 
 		static uint32_t FPS()
 		{
-//			std::lock_guard<std::mutex> lock(s_FpsMutex);
-			return s_Instance->m_FPS;
+			if (s_Instance)
+			{
+//				std::lock_guard<std::mutex> lock(s_FpsMutex);
+				return s_Instance->m_FPS;
+			}
+			else
+			{
+				LOG_CORE_WARN("RenderThread::FPS - no valid instance");
+			}
+
+			return 0;
 		}
 
 		static void Present()
 		{
-			std::lock_guard<std::mutex> lock(s_Instance->m_QueueCommandsMutex);
-			s_Instance->m_QueueCommands.push(QueueCommand::Present);
+			if (s_Instance)
+			{
+				std::lock_guard<std::mutex> lock(s_Instance->m_QueueCommandsMutex);
+				s_Instance->m_QueueCommands.push(QueueCommand::Present);
+			}
+			else
+			{
+				LOG_CORE_WARN("RenderThread::Present - no valid instance");
+			}
 		}
 /*
 		static void RenderFunc(Ref<Window> window)
@@ -398,6 +504,8 @@ namespace Nut
 		std::atomic<bool> m_FrameDone = false;
 
 		std::atomic<bool> m_ThreadFinished = false;
+
+		std::atomic<bool> m_ThreadStopped = false;
 
 		uint32_t m_FPS = 0;
 
