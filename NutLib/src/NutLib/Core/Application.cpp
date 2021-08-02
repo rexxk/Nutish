@@ -52,15 +52,15 @@ namespace Nut
 	{
 		LOG_CORE_TRACE("Application shutdown");
 
-//		RenderCommandQueue::Shutdown();
+		RenderCommandQueue::Shutdown();
 	}
 
 	void Application::Run()
 	{
 		constexpr double updateFps = 60.0;
 
-		Timer runTimer(1.0);
-		Timer updateTimer(1.0 / updateFps);
+		Ref<Timer> runTimer = CreateRef<Timer>(1.0);
+		Ref<Timer> updateTimer = CreateRef<Timer>(1.0 / updateFps);
 
 		Timestep timestep;
 
@@ -69,7 +69,7 @@ namespace Nut
 
 		SubscribeToEvent<TimerTimeoutEvent>([&](TimerTimeoutEvent& event)
 			{
-				if (event.Id() == runTimer.Id())
+				if (event.Id() == runTimer->Id())
 				{
 					LOG_CORE_TRACE("FPS: {0} ({1}), UPS: {2}", RenderCommandQueue::FPS(), fpsCount, upsCount); //fpsCount, upsCount);
 
@@ -80,7 +80,7 @@ namespace Nut
 					return true;
 				}
 
-				if (event.Id() == updateTimer.Id())
+				if (event.Id() == updateTimer->Id())
 				{
 					timestep.Update(event.Timeout());
 
@@ -98,6 +98,7 @@ namespace Nut
 			});
 
 
+//		while (m_IsRunning && RenderCommandQueue::IsAlive())
 		while (m_IsRunning)
 		{
 			RenderCommandQueue::Execute();
@@ -123,6 +124,9 @@ namespace Nut
 
 			fpsCount++;
 		}
+
+		runTimer->Stop();
+		updateTimer->Stop();
 
 		RenderCommandQueue::Stop();
 //		RenderCommandQueue::Join();

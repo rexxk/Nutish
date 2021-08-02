@@ -34,16 +34,17 @@ namespace Nut
 //			s_Instance->Run();
 		}
 
-/*		static void Shutdown()
+		static void Shutdown()
 		{
 			if (s_Instance)
 			{
+				LOG_CORE_TRACE("RenderThread - Shutdown killing the instance");
 				delete s_Instance;
 
 				s_Instance = nullptr;
 			}
 		}
-*/
+
 
 		RenderCommandQueue()
 		{
@@ -52,6 +53,8 @@ namespace Nut
 
 		~RenderCommandQueue()
 		{
+			NUT_CORE_ASSERT(s_Instance, "No valid instance");
+
 			LOG_CORE_TRACE("RenderCommandQueue destructor called");
 
 			if (s_Instance->m_Thread)
@@ -73,10 +76,10 @@ namespace Nut
 					std::lock_guard<std::mutex> lock(s_Instance->m_CommandMutex);
 					s_Instance->m_CommandQueue.push(fn);
 				}
-				else
-				{
-					LOG_CORE_TRACE("RenderThread::Submit - no valid thread to submit to");
-				}
+			}
+			else
+			{
+				LOG_CORE_TRACE("RenderThread::Submit - no valid thread to submit to");
 			}
 		}
 
@@ -225,150 +228,114 @@ namespace Nut
 //			LOG_CORE_TRACE("RenderCommandQueue loop starting");
 
 			NUT_CORE_ASSERT(s_Instance->m_Thread, "Unable to create render thread");
-
-			}
+		}
 
 		static void Stop()
 		{
-			if (s_Instance)
+			NUT_CORE_ASSERT(s_Instance, "No valid instance");
+
 			{
+				std::lock_guard<std::mutex> lock(s_Instance->m_QueueCommandsMutex);
+				s_Instance->m_QueueCommands.push(QueueCommand::Shutdown);
+			}
 
-				{
-					std::lock_guard<std::mutex> lock(s_Instance->m_QueueCommandsMutex);
-					s_Instance->m_QueueCommands.push(QueueCommand::Shutdown);
-				}
-
-				while (!s_Instance->m_ThreadFinished)
-				{
-
-				}
-
-				LOG_CORE_TRACE("Stopping rendering thread");
-
-				while (!s_Instance->m_Thread->joinable())
-				{
-					LOG_CORE_TRACE("RenderThread - waiting to join");
-				}
-
-				LOG_CORE_TRACE("RenderThread is joinable, joining");
-				s_Instance->m_Thread->join();
-
-				s_Instance->m_ThreadStopped = true;
+			while (!s_Instance->m_ThreadFinished)
+			{
 
 			}
 
+			LOG_CORE_TRACE("Stopping rendering thread");
+
+			while (!s_Instance->m_Thread->joinable())
+			{
+				LOG_CORE_TRACE("RenderThread - waiting to join");
+			}
+
+			LOG_CORE_TRACE("RenderThread is joinable, joining");
+			s_Instance->m_Thread->join();
+
+			s_Instance->m_ThreadStopped = true;
 
 		}
 
 		static bool ThreadStopped()
 		{
-			if (s_Instance)
-			{
-				return s_Instance->m_ThreadStopped;
-			}
+			NUT_CORE_ASSERT(s_Instance, "No valid instance");
 
-			return true;
+			return s_Instance->m_ThreadStopped;
 		}
-
-//		static void Join()
-//		{
-//			s_Instance->m_Thread->join();
-
-//			LOG_CORE_TRACE("Joining render thread");
-//		}
 
 		static void Execute()
 		{
-			if (s_Instance)
+			NUT_CORE_ASSERT(s_Instance, "No valid instance");
+
 			{
-
-				{
-					std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
-					s_Instance->m_FrameDone = false;
-				}
-
-				{
-					std::lock_guard<std::mutex> execLock(s_Instance->m_ExecQueueMutex);
-					std::lock_guard<std::mutex> commandLock(s_Instance->m_CommandMutex);
-
-					s_Instance->m_ExecQueue.swap(s_Instance->m_CommandQueue);
-				}
-
-				{
-					std::lock_guard<std::mutex> queueLock(s_Instance->m_QueueCommandsMutex);
-					s_Instance->m_QueueCommands.push(QueueCommand::Execute);
-				}
-
+				std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
+				s_Instance->m_FrameDone = false;
 			}
-			else
+
 			{
-				LOG_CORE_WARN("RenderThread::Execute - no valid instance");
+				std::lock_guard<std::mutex> execLock(s_Instance->m_ExecQueueMutex);
+				std::lock_guard<std::mutex> commandLock(s_Instance->m_CommandMutex);
+
+				s_Instance->m_ExecQueue.swap(s_Instance->m_CommandQueue);
+			}
+
+			{
+				std::lock_guard<std::mutex> queueLock(s_Instance->m_QueueCommandsMutex);
+				s_Instance->m_QueueCommands.push(QueueCommand::Execute);
 			}
 		}
 
 		static bool Idle()
 		{
-			if (s_Instance)
-				return !(s_Instance->m_Executing || s_Instance->m_Present);
-			else
-			{
-				LOG_CORE_WARN("RenderThread::Idle - no valid instance");
-			}
-
-			return true;
+			NUT_CORE_ASSERT(s_Instance, "No valid instance");
+			
+			return !(s_Instance->m_Executing || s_Instance->m_Present);
 		}
 
 		static bool IsFrameDone()
 		{
-			if (s_Instance)
-				return s_Instance->m_FrameDone;
-			else
-			{
-				LOG_CORE_WARN("RenderThread::IsFrameDone - no valid instance");
-			}
-
-			return true;
+			NUT_CORE_ASSERT(s_Instance, "No valid instance");
+			
+			return s_Instance->m_FrameDone;
 		}
 
 		static void ResetFPS()
 		{
-			if (s_Instance)
+			NUT_CORE_ASSERT(s_Instance, "No valid instance");
+
 			{
 				std::lock_guard<std::mutex> lock(s_Instance->m_FpsMutex);
 				s_Instance->m_FPS = 0;
-			}
-			else
-			{
-				LOG_CORE_WARN("RenderThread::ResetFPS - no valid instance");
 			}
 		}
 
 		static uint32_t FPS()
 		{
-			if (s_Instance)
+			NUT_CORE_ASSERT(s_Instance, "No valid instance");
+
 			{
-//				std::lock_guard<std::mutex> lock(s_FpsMutex);
+				std::lock_guard<std::mutex> lock(s_Instance->m_FpsMutex);
 				return s_Instance->m_FPS;
 			}
-			else
-			{
-				LOG_CORE_WARN("RenderThread::FPS - no valid instance");
-			}
-
-			return 0;
 		}
 
 		static void Present()
 		{
-			if (s_Instance)
+			NUT_CORE_ASSERT(s_Instance, "No valid instance");
+
 			{
 				std::lock_guard<std::mutex> lock(s_Instance->m_QueueCommandsMutex);
 				s_Instance->m_QueueCommands.push(QueueCommand::Present);
 			}
-			else
-			{
-				LOG_CORE_WARN("RenderThread::Present - no valid instance");
-			}
+		}
+
+		static bool IsAlive()
+		{
+			NUT_CORE_ASSERT(s_Instance, "No valid instance");
+
+			return !s_Instance->m_ThreadStopped;
 		}
 /*
 		static void RenderFunc(Ref<Window> window)
