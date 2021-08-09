@@ -26,6 +26,11 @@ MainWindow::MainWindow(const std::string& name)
 
 }
 
+MainWindow::~MainWindow()
+{
+	LOG_TRACE("MainWindow destructor");
+}
+
 void MainWindow::OnAttach()
 {
 	m_Scene = CreateRef<Scene>();

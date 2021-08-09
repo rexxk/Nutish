@@ -251,8 +251,8 @@ namespace Nut
 				LOG_CORE_TRACE("RenderThread - waiting to join");
 			}
 
-			LOG_CORE_TRACE("RenderThread is joinable, joining");
 			s_Instance->m_Thread->join();
+			LOG_CORE_TRACE("RenderThread is joinable, joining");
 
 			s_Instance->m_ThreadStopped = true;
 

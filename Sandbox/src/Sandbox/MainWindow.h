@@ -10,6 +10,7 @@ class MainWindow : public Nut::Layer
 {
 public:
 	MainWindow(const std::string& name);
+	virtual ~MainWindow();
 
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
