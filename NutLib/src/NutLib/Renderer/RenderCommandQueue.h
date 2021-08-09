@@ -91,7 +91,10 @@ namespace Nut
 
 			s_Instance->m_Thread = new std::thread([&]()
 				{
-					s_Instance->m_ThreadFinished = false;
+					{
+						std::lock_guard<std::mutex> lock(s_Instance->m_FinishedMutex);
+						s_Instance->m_ThreadFinished = false;
+					}
 
 					window->GetRenderContext()->Bind();
 
@@ -184,11 +187,13 @@ namespace Nut
 										s_Instance->m_Running = false;
 									}
 
-									{
+/*									 {
 										std::lock_guard<std::mutex> lock(s_Instance->m_CommandMutex);
 
 										while (s_Instance->m_CommandQueue.size() > 0)
 										{
+											LOG_CORE_TRACE("CommandQueue size: {0}", s_Instance->m_CommandQueue.size());
+
 											auto command = s_Instance->m_CommandQueue.front();
 											s_Instance->m_CommandQueue.pop();
 
@@ -196,6 +201,8 @@ namespace Nut
 										}
 
 									}
+*/
+									LOG_CORE_TRACE("RenderThread: shutdown complete");
 
 									break;
 								}
@@ -206,8 +213,11 @@ namespace Nut
 					}
 
 					{
+
 						std::lock_guard<std::mutex> lock(s_Instance->m_FinishedMutex);
 						s_Instance->m_ThreadFinished = true;
+
+						LOG_CORE_TRACE("RenderThread: Setting thread finished flag");
 
 						//				LOG_CORE_WARN("Command queue size: {0}", s_CommandQueue.size());
 						//				LOG_CORE_WARN("Queue command size: {0}", s_QueueCommands.size());
@@ -227,7 +237,11 @@ namespace Nut
 */
 //			LOG_CORE_TRACE("RenderCommandQueue loop starting");
 
+
 			NUT_CORE_ASSERT(s_Instance->m_Thread, "Unable to create render thread");
+
+//			s_Instance->m_Thread->detach();
+
 		}
 
 		static void Stop()
@@ -239,23 +253,28 @@ namespace Nut
 				s_Instance->m_QueueCommands.push(QueueCommand::Shutdown);
 			}
 
+			LOG_CORE_TRACE("Stopping rendering thread");
+
 			while (!s_Instance->m_ThreadFinished)
 			{
-
+//				LOG_CORE_TRACE("RenderThread - waiting for thread finished flag");
 			}
 
-			LOG_CORE_TRACE("Stopping rendering thread");
+			LOG_CORE_TRACE("RenderThread: thread finished flag set");
 
 			while (!s_Instance->m_Thread->joinable())
 			{
 				LOG_CORE_TRACE("RenderThread - waiting to join");
 			}
 
+			LOG_CORE_TRACE("RenderThread: is joinable - joining");
+
 			s_Instance->m_Thread->join();
-			LOG_CORE_TRACE("RenderThread is joinable, joining");
+			LOG_CORE_TRACE("RenderThread is joined");
 
 			s_Instance->m_ThreadStopped = true;
 
+			LOG_CORE_TRACE("Render thread stopped");
 		}
 
 		static bool ThreadStopped()
@@ -298,7 +317,10 @@ namespace Nut
 		{
 			NUT_CORE_ASSERT(s_Instance, "No valid instance");
 			
-			return s_Instance->m_FrameDone;
+			{
+				std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
+				return s_Instance->m_FrameDone;
+			}
 		}
 
 		static void ResetFPS()
@@ -474,7 +496,7 @@ namespace Nut
 
 		std::atomic<bool> m_ThreadStopped = false;
 
-		uint32_t m_FPS = 0;
+		std::atomic<uint32_t> m_FPS = 0;
 
 		std::queue<QueueCommand> m_QueueCommands;
 	};

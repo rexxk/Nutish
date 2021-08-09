@@ -65,7 +65,6 @@ namespace Nut
 
 		LOG_CORE_TRACE("Application knows that the render thread is stopped.");
 
-
 		RenderCommandQueue::Shutdown();
 	}
 
@@ -142,6 +141,7 @@ namespace Nut
 		runTimer->Stop();
 		updateTimer->Stop();
 
+		LOG_CORE_TRACE("Application: Timers stopped, exiting run()");
 	}
 
 	void Application::AttachLayer(const Ref<Layer>& layer)

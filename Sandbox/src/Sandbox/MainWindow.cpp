@@ -35,7 +35,8 @@ void MainWindow::OnAttach()
 {
 	m_Scene = CreateRef<Scene>();
 
-
+	ShaderStore::Add("Basic", Shader::Create("assets/shaders/Basic.shader"));
+	m_BasicShader = ShaderStore::Get("Basic");
 
 
 	UUID eID = m_Scene->CreateEntity("Test entity");
@@ -74,7 +75,14 @@ void MainWindow::OnAttach()
 	Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(nullptr, 0);
 	Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(nullptr, 0);
 
-	m_BasicShader = Shader::Create("assets/shaders/Basic.shader");
+	LOG_TRACE("Available shaders:");
+
+	auto shaderList = ShaderStore::List();
+
+	for (auto& shaderName : shaderList)
+	{
+		LOG_TRACE(" - {0}", shaderName.c_str());
+	}
 
 }
 

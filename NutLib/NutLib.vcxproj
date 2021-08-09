@@ -121,6 +121,7 @@
     <ClInclude Include="src\NutLib\Renderer\RenderContext.h" />
     <ClInclude Include="src\NutLib\Renderer\Renderer.h" />
     <ClInclude Include="src\NutLib\Renderer\Shader.h" />
+    <ClInclude Include="src\NutLib\Renderer\ShaderStore.h" />
     <ClInclude Include="src\NutLib\Scene\Components.h" />
     <ClInclude Include="src\NutLib\Scene\Entity.h" />
     <ClInclude Include="src\NutLib\Scene\Scene.h" />
@@ -148,6 +149,7 @@
     <ClCompile Include="src\NutLib\Renderer\RenderContext.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Renderer.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Shader.cpp" />
+    <ClCompile Include="src\NutLib\Renderer\ShaderStore.cpp" />
     <ClCompile Include="src\NutLib\Scene\Scene.cpp" />
     <ClCompile Include="src\NutLib\Tools\ShaderFile.cpp" />
     <ClCompile Include="src\NutLib\Tools\StringHelpers.cpp" />
