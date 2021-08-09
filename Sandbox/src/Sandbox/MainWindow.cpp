@@ -70,7 +70,7 @@ void MainWindow::OnAttach()
 	m_TriangleVA->AttachVertexBuffer(m_TriangleVB);
 	m_TriangleVA->AttachIndexBuffer(m_TriangleIB);
 
-	m_TriangleVA->SetBufferLayout();
+	m_TriangleVA->SetBufferLayout({ { "a_Position", OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec3 } } );
 
 	Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(nullptr, 0);
 	Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(nullptr, 0);

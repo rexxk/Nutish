@@ -12,6 +12,43 @@ namespace Nut
 	{
 	public:
 
+		struct BufferLayoutItem
+		{
+			enum class LayoutType
+			{
+				None = 0,
+				Bool,
+				Int,
+				UInt,
+				Float,
+				Vec2,
+				Vec3,
+				Vec4,
+				Byte4,
+			};
+
+			std::string Name = "";
+			LayoutType Type = LayoutType::None;
+			uint32_t Offset = 0;
+			bool Normalized = false;
+
+			BufferLayoutItem(const std::string& name, LayoutType type, bool normalized = false)
+				: Name(name), Type(type), Normalized(normalized)
+			{
+				
+			}
+
+		};
+
+		struct BufferLayout
+		{
+			std::vector<BufferLayoutItem> m_Items;
+
+			uint32_t Stride = 0;
+		};
+
+	public:
+
 		static Ref<OpenGLVertexArray> Create();
 
 		OpenGLVertexArray();
@@ -23,7 +60,7 @@ namespace Nut
 		void AttachVertexBuffer(Ref<VertexBuffer> vertexBuffer);
 		void AttachIndexBuffer(Ref<IndexBuffer> indexBuffer);
 
-		void SetBufferLayout();
+		void SetBufferLayout(std::initializer_list<BufferLayoutItem> layout);
 
 		RendererID ID() const { return m_ID; }
 
@@ -32,6 +69,8 @@ namespace Nut
 
 		Ref<VertexBuffer> m_VB = nullptr;
 		Ref<IndexBuffer> m_IB = nullptr;
+
+		BufferLayout m_Layout;
 	};
 
 }

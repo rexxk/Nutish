@@ -71,7 +71,7 @@ namespace Nut
 		{
 			if (s_Instance)
 			{
-				if (s_Instance->m_Running)
+				if (IsRunning())
 				{
 					std::lock_guard<std::mutex> lock(s_Instance->m_CommandMutex);
 					s_Instance->m_CommandQueue.push(fn);
@@ -358,6 +358,18 @@ namespace Nut
 			NUT_CORE_ASSERT(s_Instance, "No valid instance");
 
 			return !s_Instance->m_ThreadStopped;
+		}
+
+		static bool IsRunning()
+		{
+			{
+				std::lock_guard<std::mutex> lock(s_Instance->m_RunningMutex);
+
+				if (s_Instance->m_Running)
+					return true;
+			}
+
+			return false;
 		}
 /*
 		static void RenderFunc(Ref<Window> window)
