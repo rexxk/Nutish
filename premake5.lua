@@ -10,12 +10,14 @@ workspace "Nutish"
 	IncludeDir["Glad"] = "vendor/Glad/include"
 	IncludeDir["glm"] = "vendor/glm"
 	IncludeDir["spdlog"] = "vendor/spdlog/include"
+	IncludeDir["imgui"] = "vendor/imgui"
 
 	targetdir "%{wks.location}/bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"
 	objdir "%{wks.location}/bin-int/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"
 
 	group "Dependencies"
 		include "NutLib/vendor/Glad"
+		include "NutLib/vendor/imgui"
 	group ""
 
 
@@ -37,13 +39,15 @@ project "NutLib"
 		"%{prj.location}/src",
 		"%{prj.location}/%{IncludeDir.spdlog}",
 		"%{prj.location}/%{IncludeDir.Glad}",
-		"%{prj.location}/%{IncludeDir.glm}"
+		"%{prj.location}/%{IncludeDir.glm}",
+		"%{prj.location}/%{IncludeDir.imgui}"
 	}
 
 	links
 	{
 		"opengl32.lib",
-		"Glad"
+		"Glad",
+		"ImGui"
 	}
 
 	pchheader "nutpch.h"
@@ -84,7 +88,8 @@ project "Sandbox"
 		"%{wks.location}/NutLib/src",
 		"%{wks.location}/NutLib/%{IncludeDir.spdlog}",
 		"%{wks.location}/NutLib/%{IncludeDir.Glad}",
-		"%{wks.location}/NutLib/%{IncludeDir.glm}"
+		"%{wks.location}/NutLib/%{IncludeDir.glm}",
+		"%{wks.location}/NutLib/%{IncludeDir.imgui}"
 	}
 	
 	links 

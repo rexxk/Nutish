@@ -7,6 +7,8 @@
 #include "NutLib/Renderer/Renderer.h"
 #include "NutLib/Renderer/RenderCommandQueue.h"
 
+#include "NutLib/Renderer/ShaderStore.h"
+
 
 namespace Nut
 {
@@ -33,8 +35,9 @@ namespace Nut
 
 		m_Window->EnableVSync(false);
 
-		m_IsRunning = true;
+		ShaderStore::Add("ImGui", Shader::Create("assets/shaders/ImGui.shader"));
 
+		m_IsRunning = true;
 
 		SubscribeToEvent<WindowClosedEvent>([&](WindowClosedEvent& event)
 			{

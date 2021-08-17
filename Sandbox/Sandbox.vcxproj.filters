@@ -16,7 +16,4 @@
       <Filter>Sandbox</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="assets\shaders\Basic.shader" />
-  </ItemGroup>
 </Project>

@@ -36,6 +36,7 @@ void MainWindow::OnAttach()
 	m_Scene = CreateRef<Scene>();
 
 	ShaderStore::Add("Basic", Shader::Create("assets/shaders/Basic.shader"));
+
 	m_BasicShader = ShaderStore::Get("Basic");
 
 

@@ -25,6 +25,27 @@ namespace Nut
 	};
 
 
+	struct TransformComponent
+	{
+
+		TransformComponent()
+		{
+
+		}
+
+	};
+
+
+	struct MeshComponent
+	{
+
+
+		MeshComponent()
+		{
+
+		}
+
+	};
 
 
 }

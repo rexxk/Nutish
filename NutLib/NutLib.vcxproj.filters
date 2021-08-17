@@ -16,6 +16,9 @@
     <Filter Include="NutLib\Scene">
       <UniqueIdentifier>{505D6772-3CC0-F616-E545-2FCDD187C299}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NutLib\Tools">
+      <UniqueIdentifier>{B3348072-9F97-0F17-481D-48CD345FDB99}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
@@ -88,10 +91,22 @@
     <ClInclude Include="src\NutLib\Event\WindowEvents.h">
       <Filter>NutLib\Event</Filter>
     </ClInclude>
+    <ClInclude Include="src\NutLib\Renderer\Buffer.h">
+      <Filter>NutLib\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Renderer\RenderCommandQueue.h">
+      <Filter>NutLib\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\NutLib\Renderer\RenderContext.h">
       <Filter>NutLib\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\NutLib\Renderer\Renderer.h">
+      <Filter>NutLib\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Renderer\Shader.h">
+      <Filter>NutLib\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Renderer\ShaderStore.h">
       <Filter>NutLib\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\NutLib\Scene\Components.h">
@@ -103,23 +118,31 @@
     <ClInclude Include="src\NutLib\Scene\Scene.h">
       <Filter>NutLib\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\NutLib\Tools\ShaderFile.h">
+      <Filter>NutLib\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Tools\StringHelpers.h">
+      <Filter>NutLib\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderContext.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRenderer.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\nutpch.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLRenderer.h" />
-    <ClInclude Include="src\NutLib\Renderer\Buffer.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
-    <ClInclude Include="src\NutLib\Renderer\RenderCommandQueue.h" />
-    <ClInclude Include="src\NutLib\Renderer\Shader.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
-    <ClInclude Include="src\NutLib\Tools\ShaderFile.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
-    <ClInclude Include="src\NutLib\Tools\StringHelpers.h" />
-    <ClInclude Include="src\NutLib\Renderer\ShaderStore.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NutLib\Core\Application.cpp">
@@ -149,28 +172,48 @@
     <ClCompile Include="src\NutLib\Event\EventHandler.cpp">
       <Filter>NutLib\Event</Filter>
     </ClCompile>
+    <ClCompile Include="src\NutLib\Renderer\Buffer.cpp">
+      <Filter>NutLib\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\NutLib\Renderer\RenderContext.cpp">
+      <Filter>NutLib\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Renderer\Renderer.cpp">
+      <Filter>NutLib\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Renderer\Shader.cpp">
+      <Filter>NutLib\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Renderer\ShaderStore.cpp">
       <Filter>NutLib\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\NutLib\Scene\Scene.cpp">
       <Filter>NutLib\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\NutLib\Tools\ShaderFile.cpp">
+      <Filter>NutLib\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Tools\StringHelpers.cpp">
+      <Filter>NutLib\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
+      <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderContext.cpp">
+      <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRenderer.cpp">
+      <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp">
+      <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
       <Filter>Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\nutpch.cpp" />
-    <ClCompile Include="src\NutLib\Renderer\Renderer.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLRenderer.cpp" />
-    <ClCompile Include="src\NutLib\Renderer\Buffer.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
-    <ClCompile Include="src\NutLib\Renderer\Shader.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
-    <ClCompile Include="src\NutLib\Tools\ShaderFile.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
-    <ClCompile Include="src\NutLib\Tools\StringHelpers.cpp" />
-    <ClCompile Include="src\NutLib\Renderer\ShaderStore.cpp" />
   </ItemGroup>
 </Project>
