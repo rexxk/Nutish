@@ -4,6 +4,10 @@
 
 #include <glad/glad.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 using namespace Nut;
 
@@ -52,15 +56,24 @@ void MainWindow::OnAttach()
 
 	float vertices[] =
 	{
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.0f, 0.5f, 0.0f,
+//		1280.0f / 3.0f, 720.0f / 3.0f * 2.0f, 0.0f, 1280.0f / 3.0f, 720.0f / 3.0f * 2.0f,
+//		1280.0f / 3.0f * 2.0f, 720.0f / 3.0f * 2.0f, 0.0f, 1280.0f / 3.0f * 2.0f, 720.0f / 3.0f * 2.0f,
+//		1280.0f / 2.0f, 720.0f / 3.0f, 0.0f, 1280.0f / 2.0f, 720.0f / 3.0f,
+
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+		0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+
 	};
 
 	uint32_t indices[] =
 	{
-		0, 1, 2,
+		0, 1, 2, 2, 3, 0,
 	};
+
+//	uint8_t texData[4] = { 128, 0, 128, 255 };
+//	m_Texture = Texture2D::Create("assets/textures/texture.png");
 
 	m_TriangleVA = OpenGLVertexArray::Create();
 	m_TriangleVA->Bind();
@@ -68,13 +81,18 @@ void MainWindow::OnAttach()
 	m_TriangleVB = VertexBuffer::Create(vertices, sizeof(vertices));
 	m_TriangleIB = IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 
+	m_TriangleVA->SetBufferLayout({ { "a_Position", OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec3 },
+								{ "a_TexCoord", OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec2 }
+		});
+
 	m_TriangleVA->AttachVertexBuffer(m_TriangleVB);
 	m_TriangleVA->AttachIndexBuffer(m_TriangleIB);
 
-	m_TriangleVA->SetBufferLayout({ { "a_Position", OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec3 } } );
 
-	Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(nullptr, 0);
-	Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(nullptr, 0);
+	m_TriangleVA->Unbind();
+
+//	Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(nullptr, 0);
+//	Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(nullptr, 0);
 
 	LOG_TRACE("Available shaders:");
 
@@ -84,6 +102,12 @@ void MainWindow::OnAttach()
 	{
 		LOG_TRACE(" - {0}", shaderName.c_str());
 	}
+
+	m_Texture = Texture2D::Create("assets/textures/texture.png");
+
+//	m_Texture->Bind(0);
+
+//	m_Texture = Texture2D::Create(texData, 1, 1);
 
 }
 
@@ -96,8 +120,21 @@ void MainWindow::OnUpdate(Timestep ts)
 {
 //	LOG_TRACE("Timestep: {0}", (double)ts);
 
-	m_BasicShader->SetFloat4("u_Color", 1.0f, 0.0f, 0.0f, 1.0f);
+	m_BasicShader->Bind();
+	m_BasicShader->SetInt("u_Texture", 5);
 
+	m_Texture->Bind(5);
+	//	m_Texture->Bind(0);
+
+
+//	auto orthoMatrix = glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f, 0.0f, 1.0f);
+	auto orthoMatrix = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+	m_BasicShader->SetMatrix4("u_ViewProjection", glm::value_ptr(orthoMatrix));
+	
+
+//	m_BasicShader->SetFloat4("u_Color", 1.0f, 0.0f, 0.0f, 1.0f);
+
+//	m_Texture->Bind(m_Texture->ID());
 
 }
 
@@ -106,13 +143,13 @@ void MainWindow::OnRender()
 
 	Renderer::BeginScene();
 
-	m_BasicShader->Bind();
 
-	m_TriangleVB->Bind();
-	m_TriangleIB->Bind();
+//	m_TriangleVB->Bind();
+//	m_TriangleIB->Bind();
 
+	m_TriangleVA->Bind();
 	
-	GLsizei indexCount = m_TriangleIB->GetIndexCount();
+	GLsizei indexCount = m_TriangleVA->GetIndexBuffer()->GetIndexCount();
 
 	RenderCommandQueue::Submit([=]()
 		{

@@ -98,6 +98,9 @@ namespace Nut
 
 	void OpenGLShader::Reload()
 	{
+		if (m_MaterialDescriptors.size() > 0)
+			m_MaterialDescriptors.clear();
+
 		m_ShaderSources = GetShaderSourcesFromFile(m_ShaderPath);
 
 		if (m_ID)
@@ -142,8 +145,8 @@ namespace Nut
 
 	void OpenGLShader::Reflect(const std::string& source)
 	{
-		if (m_MaterialDescriptors.size() > 0)
-			m_MaterialDescriptors.clear();
+//		if (m_MaterialDescriptors.size() > 0)
+//			m_MaterialDescriptors.clear();
 
 //		LOG_CORE_TRACE("Shader reflect");
 
@@ -269,6 +272,25 @@ namespace Nut
 
 	}
 
+
+	void OpenGLShader::SetInt(const std::string& name, int32_t value)
+	{
+		for (auto& desc : m_MaterialDescriptors)
+		{
+			if ((desc.Name == name) && (desc.Location != -1))
+			{
+				RenderCommandQueue::Submit([=]()
+					{
+						glUniform1i(desc.Location, value);
+					});
+
+				return;
+			}
+		}
+
+		LOG_CORE_TRACE("Shader: uniform {0} not found", name.c_str());
+	}
+
 	void OpenGLShader::SetFloat4(const std::string& name, float x, float y, float z, float w)
 	{
 		for (auto& desc : m_MaterialDescriptors)
@@ -280,10 +302,32 @@ namespace Nut
 						glUniform4f(desc.Location, x, y, z, w);
 					});
 
-				break;
+				return;
 			}
 		}
 
+		LOG_CORE_TRACE("Shader: uniform {0} not found", name.c_str());
+	}
+
+	void OpenGLShader::SetMatrix4(const std::string& name, float* values)
+	{
+		float matrixValues[16];
+		memcpy(matrixValues, values, sizeof(float) * 16);
+
+		for (auto& desc : m_MaterialDescriptors)
+		{
+			if ((desc.Name == name) && (desc.Location != -1))
+			{
+				RenderCommandQueue::Submit([=]()
+					{
+						glUniformMatrix4fv(desc.Location, 1, false, matrixValues);
+					});
+
+				return;
+			}
+		}
+
+		LOG_CORE_TRACE("Shader: uniform {0} not found", name.c_str());
 	}
 
 }

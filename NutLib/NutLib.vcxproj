@@ -15,14 +15,13 @@
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>NutLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Win64|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Win64|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -58,7 +57,7 @@
       <PrecompiledHeaderFile>nutpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NUT_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\Glad\include;vendor\glm;vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\Glad\include;vendor\glm;vendor\imgui;vendor\stb-image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -77,7 +76,7 @@
       <PrecompiledHeaderFile>nutpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\Glad\include;vendor\glm;vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\Glad\include;vendor\glm;vendor\imgui;vendor\stb-image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -116,12 +115,14 @@
     <ClInclude Include="src\NutLib\Event\MouseEvents.h" />
     <ClInclude Include="src\NutLib\Event\TimerEvents.h" />
     <ClInclude Include="src\NutLib\Event\WindowEvents.h" />
+    <ClInclude Include="src\NutLib\ImGui\ImGuiContext.h" />
     <ClInclude Include="src\NutLib\Renderer\Buffer.h" />
     <ClInclude Include="src\NutLib\Renderer\RenderCommandQueue.h" />
     <ClInclude Include="src\NutLib\Renderer\RenderContext.h" />
     <ClInclude Include="src\NutLib\Renderer\Renderer.h" />
     <ClInclude Include="src\NutLib\Renderer\Shader.h" />
     <ClInclude Include="src\NutLib\Renderer\ShaderStore.h" />
+    <ClInclude Include="src\NutLib\Renderer\Texture.h" />
     <ClInclude Include="src\NutLib\Scene\Components.h" />
     <ClInclude Include="src\NutLib\Scene\Entity.h" />
     <ClInclude Include="src\NutLib\Scene\Scene.h" />
@@ -131,6 +132,7 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\nutpch.h" />
@@ -145,18 +147,22 @@
     <ClCompile Include="src\NutLib\Core\Log.cpp" />
     <ClCompile Include="src\NutLib\Core\UUID.cpp" />
     <ClCompile Include="src\NutLib\Event\EventHandler.cpp" />
+    <ClCompile Include="src\NutLib\ImGui\ImGuiContext.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Buffer.cpp" />
     <ClCompile Include="src\NutLib\Renderer\RenderContext.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Renderer.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Shader.cpp" />
     <ClCompile Include="src\NutLib\Renderer\ShaderStore.cpp" />
+    <ClCompile Include="src\NutLib\Renderer\Texture.cpp" />
     <ClCompile Include="src\NutLib\Scene\Scene.cpp" />
     <ClCompile Include="src\NutLib\Tools\ShaderFile.cpp" />
+    <ClCompile Include="src\NutLib\Tools\STBImage.cpp" />
     <ClCompile Include="src\NutLib\Tools\StringHelpers.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\nutpch.cpp">

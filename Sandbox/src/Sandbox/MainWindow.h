@@ -29,6 +29,8 @@ private:
 	Ref<Nut::VertexBuffer> m_TriangleVB;
 	Ref<Nut::IndexBuffer> m_TriangleIB;
 
+	Ref<Nut::Texture2D> m_Texture;
+
 };
 
 

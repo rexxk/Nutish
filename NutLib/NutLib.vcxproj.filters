@@ -10,6 +10,9 @@
     <Filter Include="NutLib\Event">
       <UniqueIdentifier>{84717471-70D4-0316-195A-3CCC059CCF98}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NutLib\ImGui">
+      <UniqueIdentifier>{5D65B771-49C8-4616-F24D-7FCCDE8F1299}</UniqueIdentifier>
+    </Filter>
     <Filter Include="NutLib\Renderer">
       <UniqueIdentifier>{F92A30A2-65B6-9D66-6EC7-205BDAD1F966}</UniqueIdentifier>
     </Filter>
@@ -91,6 +94,9 @@
     <ClInclude Include="src\NutLib\Event\WindowEvents.h">
       <Filter>NutLib\Event</Filter>
     </ClInclude>
+    <ClInclude Include="src\NutLib\ImGui\ImGuiContext.h">
+      <Filter>NutLib\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="src\NutLib\Renderer\Buffer.h">
       <Filter>NutLib\Renderer</Filter>
     </ClInclude>
@@ -107,6 +113,9 @@
       <Filter>NutLib\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\NutLib\Renderer\ShaderStore.h">
+      <Filter>NutLib\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Renderer\Texture.h">
       <Filter>NutLib\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\NutLib\Scene\Components.h">
@@ -134,6 +143,9 @@
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
@@ -172,6 +184,9 @@
     <ClCompile Include="src\NutLib\Event\EventHandler.cpp">
       <Filter>NutLib\Event</Filter>
     </ClCompile>
+    <ClCompile Include="src\NutLib\ImGui\ImGuiContext.cpp">
+      <Filter>NutLib\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="src\NutLib\Renderer\Buffer.cpp">
       <Filter>NutLib\Renderer</Filter>
     </ClCompile>
@@ -185,6 +200,9 @@
       <Filter>NutLib\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\NutLib\Renderer\ShaderStore.cpp">
+      <Filter>NutLib\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Renderer\Texture.cpp">
       <Filter>NutLib\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\NutLib\Scene\Scene.cpp">
@@ -208,6 +226,9 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp">
       <Filter>Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp">
+      <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
       <Filter>Platform\OpenGL</Filter>
     </ClCompile>
@@ -215,5 +236,6 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\nutpch.cpp" />
+    <ClCompile Include="src\NutLib\Tools\STBImage.cpp" />
   </ItemGroup>
 </Project>

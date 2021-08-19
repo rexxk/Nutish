@@ -62,6 +62,8 @@ namespace Nut
 
 		void SetBufferLayout(std::initializer_list<BufferLayoutItem> layout);
 
+		Ref<IndexBuffer> GetIndexBuffer() { return m_IB; }
+
 		RendererID ID() const { return m_ID; }
 
 	private:

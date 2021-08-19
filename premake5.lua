@@ -11,6 +11,7 @@ workspace "Nutish"
 	IncludeDir["glm"] = "vendor/glm"
 	IncludeDir["spdlog"] = "vendor/spdlog/include"
 	IncludeDir["imgui"] = "vendor/imgui"
+	IncludeDir["stbimage"] = "vendor/stb-image"
 
 	targetdir "%{wks.location}/bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"
 	objdir "%{wks.location}/bin-int/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"
@@ -40,7 +41,8 @@ project "NutLib"
 		"%{prj.location}/%{IncludeDir.spdlog}",
 		"%{prj.location}/%{IncludeDir.Glad}",
 		"%{prj.location}/%{IncludeDir.glm}",
-		"%{prj.location}/%{IncludeDir.imgui}"
+		"%{prj.location}/%{IncludeDir.imgui}",
+		"%{prj.location}/%{IncludeDir.stbimage}"
 	}
 
 	links

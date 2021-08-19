@@ -24,6 +24,8 @@ namespace Nut
 				return s_Instance->m_ShaderStore[name];
 		}
 
+		LOG_CORE_ERROR("Shader {0} not found in ShaderStore", name.c_str());
+
 		return nullptr;
 	}
 

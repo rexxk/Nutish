@@ -9,6 +9,9 @@
 
 #include "NutLib/Renderer/ShaderStore.h"
 
+#include "NutLib/ImGui/ImGuiContext.h"
+
+
 
 namespace Nut
 {
@@ -36,6 +39,8 @@ namespace Nut
 		m_Window->EnableVSync(false);
 
 		ShaderStore::Add("ImGui", Shader::Create("assets/shaders/ImGui.shader"));
+
+		ImGuiContext::Init();
 
 		m_IsRunning = true;
 

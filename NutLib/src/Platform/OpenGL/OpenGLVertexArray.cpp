@@ -133,12 +133,10 @@ namespace Nut
 					glEnableVertexAttribArray(location);
 
 					if (item.Type == BufferLayoutItem::LayoutType::Int || item.Type == BufferLayoutItem::LayoutType::UInt)
-						glVertexAttribIPointer(location, LayoutItemTypeCount(item.Type), LayoutItemTypeToGLType(item.Type), m_Layout.Stride, (const void*)(uint64_t)item.Offset);
+						glVertexAttribIPointer(location++, LayoutItemTypeCount(item.Type), LayoutItemTypeToGLType(item.Type), m_Layout.Stride, (const void*)(uint64_t)item.Offset);
 					else
-						glVertexAttribPointer(location, LayoutItemTypeCount(item.Type), LayoutItemTypeToGLType(item.Type), item.Normalized ? GL_TRUE : GL_FALSE, m_Layout.Stride, (const void*)(uint64_t)item.Offset);
+						glVertexAttribPointer(location++, LayoutItemTypeCount(item.Type), LayoutItemTypeToGLType(item.Type), item.Normalized ? GL_TRUE : GL_FALSE, m_Layout.Stride, (const void*)(uint64_t)item.Offset);
 				}
-
-				location++;
 			});
 
 	}
