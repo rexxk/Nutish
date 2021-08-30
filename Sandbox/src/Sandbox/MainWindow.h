@@ -30,7 +30,9 @@ private:
 	Ref<Nut::IndexBuffer> m_TriangleIB;
 
 	Ref<Nut::Texture2D> m_Texture;
+	Ref<Nut::Texture2D> m_GradientTexture;
 
+	Ref<Nut::Model> m_Rectangle;
 };
 
 

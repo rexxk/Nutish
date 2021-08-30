@@ -8,6 +8,8 @@
 
 #include <glad/glad.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 
 namespace Nut
 {
@@ -272,62 +274,79 @@ namespace Nut
 
 	}
 
-
-	void OpenGLShader::SetInt(const std::string& name, int32_t value)
+	int32_t OpenGLShader::GetLocation(const std::string& name)
 	{
 		for (auto& desc : m_MaterialDescriptors)
 		{
 			if ((desc.Name == name) && (desc.Location != -1))
 			{
-				RenderCommandQueue::Submit([=]()
-					{
-						glUniform1i(desc.Location, value);
-					});
-
-				return;
+				return desc.Location;
 			}
 		}
 
-		LOG_CORE_TRACE("Shader: uniform {0} not found", name.c_str());
+		LOG_CORE_TRACE("Shader: uniform {0} not found or not used", name.c_str());
+
+		return -1;
 	}
 
-	void OpenGLShader::SetFloat4(const std::string& name, float x, float y, float z, float w)
+	void OpenGLShader::Set(const std::string& name, int32_t value)
 	{
-		for (auto& desc : m_MaterialDescriptors)
-		{
-			if ((desc.Name == name) && (desc.Location != -1))
+		int32_t location = GetLocation(name);
+
+		RenderCommandQueue::Submit([=]()
 			{
-				RenderCommandQueue::Submit([=]()
-					{
-						glUniform4f(desc.Location, x, y, z, w);
-					});
-
-				return;
-			}
-		}
-
-		LOG_CORE_TRACE("Shader: uniform {0} not found", name.c_str());
+				glUniform1i(location, value);
+			});
 	}
 
-	void OpenGLShader::SetMatrix4(const std::string& name, float* values)
+	void OpenGLShader::Set(const std::string& name, float value)
 	{
-		float matrixValues[16];
-		memcpy(matrixValues, values, sizeof(float) * 16);
+		int32_t location = GetLocation(name);
 
-		for (auto& desc : m_MaterialDescriptors)
-		{
-			if ((desc.Name == name) && (desc.Location != -1))
+		RenderCommandQueue::Submit([=]()
 			{
-				RenderCommandQueue::Submit([=]()
-					{
-						glUniformMatrix4fv(desc.Location, 1, false, matrixValues);
-					});
+				glUniform1f(location, value);
+			});
+	}
 
-				return;
-			}
-		}
+	void OpenGLShader::Set(const std::string& name, const glm::vec2& value)
+	{
+		int32_t location = GetLocation(name);
 
-		LOG_CORE_TRACE("Shader: uniform {0} not found", name.c_str());
+		RenderCommandQueue::Submit([=]()
+			{
+				glUniform2f(location, value.x, value.y);
+			});
+	}
+
+	void OpenGLShader::Set(const std::string& name, const glm::vec3& value)
+	{
+		int32_t location = GetLocation(name);
+
+		RenderCommandQueue::Submit([=]()
+			{
+				glUniform3f(location, value.x, value.y, value.z);
+			});
+	}
+
+	void OpenGLShader::Set(const std::string& name, const glm::vec4& value)
+	{
+		int32_t location = GetLocation(name);
+
+		RenderCommandQueue::Submit([=]()
+			{
+				glUniform4f(location, value.x, value.y, value.z, value.w);
+			});
+	}
+
+	void OpenGLShader::Set(const std::string& name, const glm::mat4& matrix)
+	{
+		int32_t location = GetLocation(name);
+
+		RenderCommandQueue::Submit([=]()
+			{
+				glUniformMatrix4fv(location, 1, false, glm::value_ptr(matrix));
+			});
 	}
 
 }

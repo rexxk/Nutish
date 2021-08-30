@@ -26,4 +26,4 @@
 #include <NutLib/Renderer/RenderCommandQueue.h>
 
 #include <NutLib/Scene/Scene.h>
-
+#include <NutLib/Scene/Model.h>

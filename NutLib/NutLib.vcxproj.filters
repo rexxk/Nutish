@@ -124,6 +124,12 @@
     <ClInclude Include="src\NutLib\Scene\Entity.h">
       <Filter>NutLib\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\NutLib\Scene\Model.h">
+      <Filter>NutLib\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Scene\Object.h">
+      <Filter>NutLib\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\NutLib\Scene\Scene.h">
       <Filter>NutLib\Scene</Filter>
     </ClInclude>
@@ -205,8 +211,17 @@
     <ClCompile Include="src\NutLib\Renderer\Texture.cpp">
       <Filter>NutLib\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\NutLib\Scene\Model.cpp">
+      <Filter>NutLib\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Scene\Object.cpp">
+      <Filter>NutLib\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\NutLib\Scene\Scene.cpp">
       <Filter>NutLib\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Tools\STBImage.cpp">
+      <Filter>NutLib\Tools</Filter>
     </ClCompile>
     <ClCompile Include="src\NutLib\Tools\ShaderFile.cpp">
       <Filter>NutLib\Tools</Filter>
@@ -236,6 +251,5 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\nutpch.cpp" />
-    <ClCompile Include="src\NutLib\Tools\STBImage.cpp" />
   </ItemGroup>
 </Project>

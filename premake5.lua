@@ -12,6 +12,7 @@ workspace "Nutish"
 	IncludeDir["spdlog"] = "vendor/spdlog/include"
 	IncludeDir["imgui"] = "vendor/imgui"
 	IncludeDir["stbimage"] = "vendor/stb-image"
+	IncludeDir["assimp"] = "vendor/assimp/include"
 
 	targetdir "%{wks.location}/bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"
 	objdir "%{wks.location}/bin-int/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"
@@ -42,7 +43,8 @@ project "NutLib"
 		"%{prj.location}/%{IncludeDir.Glad}",
 		"%{prj.location}/%{IncludeDir.glm}",
 		"%{prj.location}/%{IncludeDir.imgui}",
-		"%{prj.location}/%{IncludeDir.stbimage}"
+		"%{prj.location}/%{IncludeDir.stbimage}",
+		"%{prj.location}/%{IncludeDir.assimp}"
 	}
 
 	links
@@ -63,9 +65,19 @@ project "NutLib"
 	filter "configurations:Debug"
 		defines "NUT_DEBUG"
 		symbols "on"
+
+		links
+		{
+			"Nutlib/vendor/assimp/lib/assimp-vc142-mtd.lib"
+		}
 	
 	filter "configurations:Release"
 		optimize "on"
+
+		links
+		{
+			"Nutlib/vendor/assimp/lib/assimp-vc142-mt.lib"
+		}
 	
 
 
@@ -102,6 +114,16 @@ project "Sandbox"
 	filter "configurations:Debug"
 		defines "NUT_DEBUG"
 		symbols "on"
+
+		postbuildcommands
+		{
+			'{COPY} "../Nutlib/vendor/assimp/bin/assimp-vc142-mtd.dll" "%{cfg.targetdir}"'
+		}
 	
 	filter "configurations:Release"
 		optimize "on"
+
+		postbuildcommands
+		{
+			'{COPY} "../Nutlib/vendor/assimp/bin/assimp-vc142-mt.dll" "%{cfg.targetdir}"'
+		}

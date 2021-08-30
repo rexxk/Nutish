@@ -23,9 +23,16 @@ namespace Nut
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
-		virtual void SetInt(const std::string& name, int32_t value) override;
-		virtual void SetFloat4(const std::string& name, float x, float y, float z, float w) override;
-		virtual void SetMatrix4(const std::string& name, float* values) override;
+		virtual void Set(const std::string& name, int32_t value) override;
+		virtual void Set(const std::string& name, float value) override;
+		virtual void Set(const std::string& name, const glm::vec2& value) override;
+		virtual void Set(const std::string& name, const glm::vec3& value) override;
+		virtual void Set(const std::string& name, const glm::vec4& value) override;
+		virtual void Set(const std::string& name, const glm::mat4& matrix) override;
+
+//		virtual void SetInt(const std::string& name, int32_t value) override;
+//		virtual void SetFloat4(const std::string& name, float x, float y, float z, float w) override;
+//		virtual void SetMatrix4(const std::string& name, float* values) override;
 
 		virtual std::vector<ShaderMaterialDescriptor>& GetShaderDescriptors() override { return m_MaterialDescriptors; }
 
@@ -37,6 +44,8 @@ namespace Nut
 		void ResolveLocations();
 
 		void ReleaseShader();
+
+		int32_t GetLocation(const std::string& name);
 
 	private:
 		std::unordered_map<ShaderType, std::string> m_ShaderSources;

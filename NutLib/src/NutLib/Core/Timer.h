@@ -88,7 +88,7 @@ namespace Nut
 			}
 
 			LOG_CORE_TRACE("Timer: waiting to finish");
-			while (!m_Finished)
+			while (!IsFinished())
 			{
 
 			}
@@ -137,6 +137,18 @@ namespace Nut
 				std::lock_guard<std::mutex> lock(m_RunningMutex);
 
 				if (m_Running)
+					return true;
+			}
+
+			return false;
+		}
+
+		bool IsFinished()
+		{
+			{
+				std::lock_guard<std::mutex> lock(m_FinishedMutex);
+
+				if (m_Finished)
 					return true;
 			}
 

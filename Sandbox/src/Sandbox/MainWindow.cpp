@@ -104,10 +104,17 @@ void MainWindow::OnAttach()
 	}
 
 	m_Texture = Texture2D::Create("assets/textures/texture.png");
+	m_GradientTexture = Texture2D::Create("assets/textures/texture2.png");
 
 //	m_Texture->Bind(0);
 
 //	m_Texture = Texture2D::Create(texData, 1, 1);
+
+//	m_Rectangle = CreateRef<Model>(m_Scene, "Rectangle");
+
+	m_Rectangle = Model::Load("assets/models/rectangle.obj", m_Scene);
+
+	LOG_TRACE("m_Rectangle id: {0}, tag: {1}", m_Rectangle->ID(), Entity::GetComponent<TagComponent>(m_Rectangle->ID()).Tag.c_str());
 
 }
 
@@ -121,15 +128,18 @@ void MainWindow::OnUpdate(Timestep ts)
 //	LOG_TRACE("Timestep: {0}", (double)ts);
 
 	m_BasicShader->Bind();
-	m_BasicShader->SetInt("u_Texture", 5);
-
+	m_BasicShader->Set("u_Texture1", 5);
+	m_BasicShader->Set("u_Texture2", 3);
 	m_Texture->Bind(5);
+	m_GradientTexture->Bind(3);
+
+
 	//	m_Texture->Bind(0);
 
 
 //	auto orthoMatrix = glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f, 0.0f, 1.0f);
 	auto orthoMatrix = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
-	m_BasicShader->SetMatrix4("u_ViewProjection", glm::value_ptr(orthoMatrix));
+	m_BasicShader->Set("u_ViewProjection", orthoMatrix);
 	
 
 //	m_BasicShader->SetFloat4("u_Color", 1.0f, 0.0f, 0.0f, 1.0f);

@@ -26,13 +26,15 @@ in vec2 v_TexCoord;
 
 uniform vec4 u_Color;
 uniform vec3 u_LightDirection;
-uniform sampler2D u_Texture;
+uniform sampler2D u_Texture1;
+uniform sampler2D u_Texture2;
+
 
 void main()
 {
 //	o_Color = u_Color;
 
-	o_Color = texture(u_Texture, v_TexCoord);
+	o_Color = mix(texture(u_Texture1, v_TexCoord), texture(u_Texture2, v_TexCoord), 0.5);
 
 //	o_Color = vec4(0.2, 0.35, 0.75, 1.0);
 }
