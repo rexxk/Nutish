@@ -3,13 +3,14 @@
 
 
 #include "NutLib/Renderer/Shader.h"
+#include "NutLib/Renderer/Pipeline.h"
 #include "OpenGLBuffer.h"
 
 
 namespace Nut
 {
 
-	class OpenGLVertexArray
+	class OpenGLPipeline : public Pipeline
 	{
 	public:
 
@@ -40,28 +41,31 @@ namespace Nut
 
 	public:
 
-		static Ref<OpenGLVertexArray> Create();
+		OpenGLPipeline(Ref<Shader> shader);
+		virtual ~OpenGLPipeline();
 
-		OpenGLVertexArray();
-		virtual ~OpenGLVertexArray();
-
-		void Bind() const;
-		void Unbind() const;
+		virtual void Bind() const override;
+		virtual void Unbind() const override;
 
 		void AttachVertexBuffer(Ref<VertexBuffer> vertexBuffer);
 		void AttachIndexBuffer(Ref<IndexBuffer> indexBuffer);
 
-		void SetBufferLayout(const std::vector<ShaderLayoutDescriptor>& layout);
+		virtual void SetBufferLayout() override;
 
 		Ref<IndexBuffer> GetIndexBuffer() { return m_IB; }
 
 		RendererID ID() const { return m_ID; }
 
 	private:
+		void CalculateBufferLayout();
+
+	private:
 		RendererID m_ID = 0;
 
 		Ref<VertexBuffer> m_VB = nullptr;
 		Ref<IndexBuffer> m_IB = nullptr;
+
+		Ref<Shader> m_Shader;
 
 		BufferLayout m_Layout;
 	};

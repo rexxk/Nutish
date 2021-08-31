@@ -17,6 +17,7 @@
 #include <NutLib/Event/Events.h>
 
 #include <NutLib/Renderer/Renderer.h>
+#include <NutLib/Renderer/Pipeline.h>
 #include <NutLib/Renderer/Buffer.h>
 #include <NutLib/Renderer/Shader.h>
 #include <NutLib/Renderer/Texture.h>

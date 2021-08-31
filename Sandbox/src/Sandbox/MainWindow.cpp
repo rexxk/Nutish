@@ -43,6 +43,9 @@ void MainWindow::OnAttach()
 
 	m_BasicShader = ShaderStore::Get("Basic");
 
+	m_BasicPipeline = Pipeline::Create(m_BasicShader);
+	m_BasicPipeline->Bind();
+
 
 	UUID eID = m_Scene->CreateEntity("Test entity");
 
@@ -56,15 +59,10 @@ void MainWindow::OnAttach()
 
 	float vertices[] =
 	{
-//		1280.0f / 3.0f, 720.0f / 3.0f * 2.0f, 0.0f, 1280.0f / 3.0f, 720.0f / 3.0f * 2.0f,
-//		1280.0f / 3.0f * 2.0f, 720.0f / 3.0f * 2.0f, 0.0f, 1280.0f / 3.0f * 2.0f, 720.0f / 3.0f * 2.0f,
-//		1280.0f / 2.0f, 720.0f / 3.0f, 0.0f, 1280.0f / 2.0f, 720.0f / 3.0f,
-
 		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
 		0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
 		0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
 		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-
 	};
 
 	uint32_t indices[] =
@@ -75,23 +73,10 @@ void MainWindow::OnAttach()
 //	uint8_t texData[4] = { 128, 0, 128, 255 };
 //	m_Texture = Texture2D::Create("assets/textures/texture.png");
 
-	m_TriangleVA = OpenGLVertexArray::Create();
-	m_TriangleVA->Bind();
-
 	m_TriangleVB = VertexBuffer::Create(vertices, sizeof(vertices));
 	m_TriangleIB = IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 
-	m_TriangleVA->SetBufferLayout(m_BasicShader->GetShaderLayout());
-
-// 	m_TriangleVA->SetBufferLayout({ { "a_Position", OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec3 },
-//								{ "a_TexCoord", OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec2 }
-//		});
-
-	m_TriangleVA->AttachVertexBuffer(m_TriangleVB);
-	m_TriangleVA->AttachIndexBuffer(m_TriangleIB);
-
-
-	m_TriangleVA->Unbind();
+	m_BasicPipeline->SetBufferLayout();
 
 //	Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(nullptr, 0);
 //	Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(nullptr, 0);
@@ -144,8 +129,6 @@ void MainWindow::OnUpdate(Timestep ts)
 	m_BasicShader->Set("u_ViewProjection", orthoMatrix);
 	
 
-//	m_BasicShader->SetFloat4("u_Color", 1.0f, 0.0f, 0.0f, 1.0f);
-
 //	m_Texture->Bind(m_Texture->ID());
 
 }
@@ -155,13 +138,13 @@ void MainWindow::OnRender()
 
 	Renderer::BeginScene();
 
-
 //	m_TriangleVB->Bind();
 //	m_TriangleIB->Bind();
 
-	m_TriangleVA->Bind();
+//	m_TriangleVA->Bind();
 	
-	GLsizei indexCount = m_TriangleVA->GetIndexBuffer()->GetIndexCount();
+//	GLsizei indexCount = m_TriangleVA->GetIndexBuffer()->GetIndexCount();
+	GLsizei indexCount = m_TriangleIB->GetIndexCount();
 
 	RenderCommandQueue::Submit([=]()
 		{

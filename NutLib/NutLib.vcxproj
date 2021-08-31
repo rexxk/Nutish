@@ -117,6 +117,7 @@
     <ClInclude Include="src\NutLib\Event\WindowEvents.h" />
     <ClInclude Include="src\NutLib\ImGui\ImGuiContext.h" />
     <ClInclude Include="src\NutLib\Renderer\Buffer.h" />
+    <ClInclude Include="src\NutLib\Renderer\Pipeline.h" />
     <ClInclude Include="src\NutLib\Renderer\RenderCommandQueue.h" />
     <ClInclude Include="src\NutLib\Renderer\RenderContext.h" />
     <ClInclude Include="src\NutLib\Renderer\Renderer.h" />
@@ -135,7 +136,7 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLPipeline.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\nutpch.h" />
   </ItemGroup>
@@ -151,6 +152,7 @@
     <ClCompile Include="src\NutLib\Event\EventHandler.cpp" />
     <ClCompile Include="src\NutLib\ImGui\ImGuiContext.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\NutLib\Renderer\Pipeline.cpp" />
     <ClCompile Include="src\NutLib\Renderer\RenderContext.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Renderer.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Shader.cpp" />
@@ -167,7 +169,7 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLPipeline.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\nutpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

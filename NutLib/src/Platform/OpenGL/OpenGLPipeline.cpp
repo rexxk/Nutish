@@ -1,5 +1,5 @@
 #include "nutpch.h"
-#include "OpenGLVertexArray.h"
+#include "OpenGLPipeline.h"
 
 #include "NutLib/Renderer/RenderCommandQueue.h"
 
@@ -60,60 +60,63 @@ namespace Nut
 		return 0;
 	}
 
-
-	Ref<OpenGLVertexArray> OpenGLVertexArray::Create()
+	OpenGLPipeline::OpenGLPipeline(Ref<Shader> shader)
+		: m_Shader(shader)
 	{
-		return CreateRef<OpenGLVertexArray>();
-	}
+		if (shader == nullptr)
+		{
+			LOG_CORE_ERROR("Pipeline assigned with empty shader!");
+			return;
+		}
 
+		auto layout = shader->GetShaderLayout();
 
-	OpenGLVertexArray::OpenGLVertexArray()
-	{
-		RenderCommandQueue::Submit([&]()
-			{
-				glCreateVertexArrays(1, &m_ID);
-			});
-
-	}
-
-	OpenGLVertexArray::~OpenGLVertexArray()
-	{
-
-	}
-
-	void OpenGLVertexArray::Bind() const
-	{
-		RenderCommandQueue::Submit([=]()
-			{
-				glBindVertexArray(m_ID);
-			});
-	}
-
-	void OpenGLVertexArray::Unbind() const
-	{
-		RenderCommandQueue::Submit([]()
-			{
-				glBindVertexArray(0);
-			});
-	}
-
-	void OpenGLVertexArray::AttachVertexBuffer(Ref<VertexBuffer> vertexBuffer)
-	{
-		m_VB = vertexBuffer;
-	}
-
-	void OpenGLVertexArray::AttachIndexBuffer(Ref<IndexBuffer> indexBuffer)
-	{
-		m_IB = indexBuffer;
-	}
-
-	void OpenGLVertexArray::SetBufferLayout(const std::vector<ShaderLayoutDescriptor>& layout)
-	{
 		for (auto& item : layout)
 		{
 			m_Layout.m_Items.emplace_back(item);
 		}
 
+		CalculateBufferLayout();
+	}
+
+	OpenGLPipeline::~OpenGLPipeline()
+	{
+
+	}
+
+	void OpenGLPipeline::Bind() const
+	{
+		m_Shader->Bind();
+
+//		SetBufferLayout();
+
+	/*		RenderCommandQueue::Submit([=]()
+			{
+//				glBindVertexArray(m_ID);
+			});
+*/
+	}
+
+	void OpenGLPipeline::Unbind() const
+	{
+		RenderCommandQueue::Submit([]()
+			{
+//				glBindVertexArray(0);
+			});
+	}
+
+	void OpenGLPipeline::AttachVertexBuffer(Ref<VertexBuffer> vertexBuffer)
+	{
+		m_VB = vertexBuffer;
+	}
+
+	void OpenGLPipeline::AttachIndexBuffer(Ref<IndexBuffer> indexBuffer)
+	{
+		m_IB = indexBuffer;
+	}
+
+	void OpenGLPipeline::CalculateBufferLayout()
+	{
 		uint32_t offset = 0;
 
 		for (auto& item : m_Layout.m_Items)
@@ -123,6 +126,10 @@ namespace Nut
 			m_Layout.Stride += LayoutItemTypeSize(item.LayoutDescriptor.LayoutType);
 			offset = m_Layout.Stride;
 		}
+	}
+
+	void OpenGLPipeline::SetBufferLayout()
+	{
 
 		RenderCommandQueue::Submit([=]()
 			{
