@@ -4,7 +4,7 @@
 
 namespace Nut
 {
-	std::vector<std::string> Tokenize(const std::string& str, char delimiter)
+	std::vector<std::string> Tokenize(const std::string& str, const char* delimiter)
 	{
 		std::vector<std::string> tokens;
 

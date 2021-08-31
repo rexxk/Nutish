@@ -2,6 +2,7 @@
 #define __NUTISH_OPENGL_VERTEXARRAY_H
 
 
+#include "NutLib/Renderer/Shader.h"
 #include "OpenGLBuffer.h"
 
 
@@ -14,26 +15,16 @@ namespace Nut
 
 		struct BufferLayoutItem
 		{
-			enum class LayoutType
-			{
-				None = 0,
-				Bool,
-				Int,
-				UInt,
-				Float,
-				Vec2,
-				Vec3,
-				Vec4,
-				Byte4,
-			};
+			
+			ShaderLayoutDescriptor LayoutDescriptor;
 
-			std::string Name = "";
-			LayoutType Type = LayoutType::None;
 			uint32_t Offset = 0;
 			bool Normalized = false;
 
-			BufferLayoutItem(const std::string& name, LayoutType type, bool normalized = false)
-				: Name(name), Type(type), Normalized(normalized)
+//			BufferLayoutItem(const std::string& name, LayoutType type, bool normalized = false)
+//				: Name(name), Type(type), Normalized(normalized)
+			BufferLayoutItem(const ShaderLayoutDescriptor& descriptor)
+				: LayoutDescriptor(descriptor)
 			{
 				
 			}
@@ -60,7 +51,7 @@ namespace Nut
 		void AttachVertexBuffer(Ref<VertexBuffer> vertexBuffer);
 		void AttachIndexBuffer(Ref<IndexBuffer> indexBuffer);
 
-		void SetBufferLayout(std::initializer_list<BufferLayoutItem> layout);
+		void SetBufferLayout(const std::vector<ShaderLayoutDescriptor>& layout);
 
 		Ref<IndexBuffer> GetIndexBuffer() { return m_IB; }
 

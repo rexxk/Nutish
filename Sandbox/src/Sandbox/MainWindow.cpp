@@ -81,9 +81,11 @@ void MainWindow::OnAttach()
 	m_TriangleVB = VertexBuffer::Create(vertices, sizeof(vertices));
 	m_TriangleIB = IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 
-	m_TriangleVA->SetBufferLayout({ { "a_Position", OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec3 },
-								{ "a_TexCoord", OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec2 }
-		});
+	m_TriangleVA->SetBufferLayout(m_BasicShader->GetShaderLayout());
+
+// 	m_TriangleVA->SetBufferLayout({ { "a_Position", OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec3 },
+//								{ "a_TexCoord", OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec2 }
+//		});
 
 	m_TriangleVA->AttachVertexBuffer(m_TriangleVB);
 	m_TriangleVA->AttachIndexBuffer(m_TriangleIB);
@@ -112,7 +114,7 @@ void MainWindow::OnAttach()
 
 //	m_Rectangle = CreateRef<Model>(m_Scene, "Rectangle");
 
-	m_Rectangle = Model::Load("assets/models/rectangle.obj", m_Scene);
+	m_Rectangle = Model::Load("assets/models/cube.obj", m_Scene);
 
 	LOG_TRACE("m_Rectangle id: {0}, tag: {1}", m_Rectangle->ID(), Entity::GetComponent<TagComponent>(m_Rectangle->ID()).Tag.c_str());
 

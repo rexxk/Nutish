@@ -9,52 +9,52 @@
 namespace Nut
 {
 
-	GLenum LayoutItemTypeToGLType(OpenGLVertexArray::BufferLayoutItem::LayoutType type)
+	GLenum LayoutItemTypeToGLType(ShaderLayoutDescriptor::Type type)
 	{
 		switch (type)
 		{
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Bool: return GL_BOOL;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Int: return GL_INT;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::UInt: return GL_UNSIGNED_INT;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Float: return GL_FLOAT;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec2: return GL_FLOAT;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec3: return GL_FLOAT;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec4: return GL_FLOAT;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Byte4: return GL_UNSIGNED_BYTE;
+			case ShaderLayoutDescriptor::Type::Bool: return GL_BOOL;
+			case ShaderLayoutDescriptor::Type::Int: return GL_INT;
+			case ShaderLayoutDescriptor::Type::UInt: return GL_UNSIGNED_INT;
+			case ShaderLayoutDescriptor::Type::Float: return GL_FLOAT;
+			case ShaderLayoutDescriptor::Type::Vec2: return GL_FLOAT;
+			case ShaderLayoutDescriptor::Type::Vec3: return GL_FLOAT;
+			case ShaderLayoutDescriptor::Type::Vec4: return GL_FLOAT;
+//			case ShaderLayoutDescriptor::Type::Byte4: return GL_UNSIGNED_BYTE;
 		}
 
 		return GL_INVALID_ENUM;
 	}
 
-	uint32_t LayoutItemTypeCount(OpenGLVertexArray::BufferLayoutItem::LayoutType type)
+	uint32_t LayoutItemTypeCount(ShaderLayoutDescriptor::Type type)
 	{
 		switch (type)
 		{
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Bool: return 1;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Int: return 1;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::UInt: return 1;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Float: return 1;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec2: return 2;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec3: return 3;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec4: return 4;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Byte4: return 4;
+			case ShaderLayoutDescriptor::Type::Bool: return 1;
+			case ShaderLayoutDescriptor::Type::Int: return 1;
+			case ShaderLayoutDescriptor::Type::UInt: return 1;
+			case ShaderLayoutDescriptor::Type::Float: return 1;
+			case ShaderLayoutDescriptor::Type::Vec2: return 2;
+			case ShaderLayoutDescriptor::Type::Vec3: return 3;
+			case ShaderLayoutDescriptor::Type::Vec4: return 4;
+//			case ShaderLayoutDescriptor::Type::Byte4: return 4;
 		}
 
 		return 0;
 	}
 
-	uint32_t LayoutItemTypeSize(OpenGLVertexArray::BufferLayoutItem::LayoutType type)
+	uint32_t LayoutItemTypeSize(ShaderLayoutDescriptor::Type type)
 	{
 		switch (type)
 		{
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Bool: return 1;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Int: return 4;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::UInt: return 4;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Float: return 4;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec2: return 4 * 2;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec3: return 4 * 3;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Vec4: return 4 * 4;
-			case OpenGLVertexArray::BufferLayoutItem::LayoutType::Byte4: return 1 * 4;
+			case ShaderLayoutDescriptor::Type::Bool: return 1;
+			case ShaderLayoutDescriptor::Type::Int: return 4;
+			case ShaderLayoutDescriptor::Type::UInt: return 4;
+			case ShaderLayoutDescriptor::Type::Float: return 4;
+			case ShaderLayoutDescriptor::Type::Vec2: return 4 * 2;
+			case ShaderLayoutDescriptor::Type::Vec3: return 4 * 3;
+			case ShaderLayoutDescriptor::Type::Vec4: return 4 * 4;
+//			case ShaderLayoutDescriptor::Type::Byte4: return 1 * 4;
 		}
 
 		return 0;
@@ -107,7 +107,7 @@ namespace Nut
 		m_IB = indexBuffer;
 	}
 
-	void OpenGLVertexArray::SetBufferLayout(std::initializer_list<BufferLayoutItem> layout)
+	void OpenGLVertexArray::SetBufferLayout(const std::vector<ShaderLayoutDescriptor>& layout)
 	{
 		for (auto& item : layout)
 		{
@@ -120,22 +120,22 @@ namespace Nut
 		{
 			item.Offset += offset;
 
-			m_Layout.Stride += LayoutItemTypeSize(item.Type);
+			m_Layout.Stride += LayoutItemTypeSize(item.LayoutDescriptor.LayoutType);
 			offset = m_Layout.Stride;
 		}
 
 		RenderCommandQueue::Submit([=]()
 			{
-				uint32_t location = 0;
+//				uint32_t location = 0;
 
 				for (auto& item : m_Layout.m_Items)
 				{
-					glEnableVertexAttribArray(location);
+					glEnableVertexAttribArray(item.LayoutDescriptor.Location);
 
-					if (item.Type == BufferLayoutItem::LayoutType::Int || item.Type == BufferLayoutItem::LayoutType::UInt)
-						glVertexAttribIPointer(location++, LayoutItemTypeCount(item.Type), LayoutItemTypeToGLType(item.Type), m_Layout.Stride, (const void*)(uint64_t)item.Offset);
+					if (item.LayoutDescriptor.LayoutType == ShaderLayoutDescriptor::Type::Int || item.LayoutDescriptor.LayoutType == ShaderLayoutDescriptor::Type::UInt)
+						glVertexAttribIPointer(item.LayoutDescriptor.Location, LayoutItemTypeCount(item.LayoutDescriptor.LayoutType), LayoutItemTypeToGLType(item.LayoutDescriptor.LayoutType), m_Layout.Stride, (const void*)(uint64_t)item.Offset);
 					else
-						glVertexAttribPointer(location++, LayoutItemTypeCount(item.Type), LayoutItemTypeToGLType(item.Type), item.Normalized ? GL_TRUE : GL_FALSE, m_Layout.Stride, (const void*)(uint64_t)item.Offset);
+						glVertexAttribPointer(item.LayoutDescriptor.Location, LayoutItemTypeCount(item.LayoutDescriptor.LayoutType), LayoutItemTypeToGLType(item.LayoutDescriptor.LayoutType), item.Normalized ? GL_TRUE : GL_FALSE, m_Layout.Stride, (const void*)(uint64_t)item.Offset);
 				}
 			});
 

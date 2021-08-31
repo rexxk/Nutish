@@ -30,14 +30,12 @@ namespace Nut
 		virtual void Set(const std::string& name, const glm::vec4& value) override;
 		virtual void Set(const std::string& name, const glm::mat4& matrix) override;
 
-//		virtual void SetInt(const std::string& name, int32_t value) override;
-//		virtual void SetFloat4(const std::string& name, float x, float y, float z, float w) override;
-//		virtual void SetMatrix4(const std::string& name, float* values) override;
-
 		virtual std::vector<ShaderMaterialDescriptor>& GetShaderDescriptors() override { return m_MaterialDescriptors; }
+		virtual std::vector<ShaderLayoutDescriptor>& GetShaderLayout() override { return m_LayoutDescriptors; }
 
 	private:
 		void Reflect(const std::string& source);
+		void ReflectLayout(const std::string& source);
 		void Compile(ShaderType domain, const std::string& source);
 		void LinkProgram();
 
@@ -58,6 +56,7 @@ namespace Nut
 
 
 		std::vector<ShaderMaterialDescriptor> m_MaterialDescriptors;
+		std::vector<ShaderLayoutDescriptor> m_LayoutDescriptors;
 	};
 
 

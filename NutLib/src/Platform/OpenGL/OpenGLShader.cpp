@@ -14,6 +14,19 @@
 namespace Nut
 {
 
+	ShaderLayoutDescriptor::Type StringToOpenGLLayoutType(const std::string& type)
+	{
+		if (type == "int") return ShaderLayoutDescriptor::Type::Int;
+		if (type == "vec2") return ShaderLayoutDescriptor::Type::Vec2;
+		if (type == "vec3") return ShaderLayoutDescriptor::Type::Vec3;
+		if (type == "vec4") return ShaderLayoutDescriptor::Type::Vec4;
+		if (type == "float") return ShaderLayoutDescriptor::Type::Float;
+
+		LOG_CORE_WARN("Unknown layout type in shader");
+
+		return ShaderLayoutDescriptor::Type::Unknown;
+	}
+
 	ShaderMaterialDescriptor::Type OpenGLUniformToDescriptorType(const std::string& type)
 	{
 		if (type == "bool") return ShaderMaterialDescriptor::Type::Bool;
@@ -103,6 +116,9 @@ namespace Nut
 		if (m_MaterialDescriptors.size() > 0)
 			m_MaterialDescriptors.clear();
 
+		if (m_LayoutDescriptors.size() > 0)
+			m_LayoutDescriptors.clear();
+
 		m_ShaderSources = GetShaderSourcesFromFile(m_ShaderPath);
 
 		if (m_ID)
@@ -121,6 +137,11 @@ namespace Nut
 		{
 			Reflect(shaderSource.second);
 			Compile(shaderSource.first, shaderSource.second);
+		}
+
+		if (!m_ShaderSources[ShaderType::Vertex].empty())
+		{
+			ReflectLayout(m_ShaderSources[ShaderType::Vertex]);
 		}
 
 		LinkProgram();
@@ -147,11 +168,6 @@ namespace Nut
 
 	void OpenGLShader::Reflect(const std::string& source)
 	{
-//		if (m_MaterialDescriptors.size() > 0)
-//			m_MaterialDescriptors.clear();
-
-//		LOG_CORE_TRACE("Shader reflect");
-
 		// Find uniforms and resolve the locations
 
 		size_t pos = 0;
@@ -164,7 +180,7 @@ namespace Nut
 
 			line = source.substr(pos, endpos - pos);
 
-			auto tokens = Tokenize(line, ' ');
+			auto tokens = Tokenize(line, " ");
 
 			if (tokens[0] == "uniform")
 			{
@@ -185,6 +201,53 @@ namespace Nut
 			pos = endpos;
 		}
 
+	}
+
+	void OpenGLShader::ReflectLayout(const std::string& source)
+	{
+		size_t pos = 0;
+
+		while ((pos = source.find("layout", pos)) != std::string::npos)
+		{
+			ShaderLayoutDescriptor descriptor;
+
+			std::string line;
+
+			size_t endpos = source.find_first_of(';', pos);
+
+			line = source.substr(pos, endpos - pos);
+
+			auto tokens = Tokenize(line, " =()");
+
+			size_t i = 0;
+
+			for (auto& token : tokens)
+			{
+				if (token == "location")
+				{
+					size_t sublocation = i;
+					while (tokens[++sublocation] == "")
+					{
+
+					}
+
+					descriptor.Location = std::stoi(tokens[sublocation]);
+				}
+
+				if (token == "in")
+				{
+					descriptor.LayoutType = StringToOpenGLLayoutType(tokens[i + 1]);
+					descriptor.Name = tokens[i + 2];
+					break;
+				}
+
+				i++;
+			}
+
+			m_LayoutDescriptors.emplace_back(descriptor);
+
+			pos = endpos;
+		}
 	}
 
 	void OpenGLShader::ResolveLocations()

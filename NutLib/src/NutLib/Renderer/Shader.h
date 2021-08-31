@@ -10,13 +10,11 @@ namespace Nut
 
 
 
-	class ShaderMaterialDescriptor
+	struct ShaderMaterialDescriptor
 	{
-	public:
-
 		enum class Type
 		{
-			Unknown = 0,
+			Unknown = -1,
 			Bool,
 			Int,
 			UInt,
@@ -42,6 +40,32 @@ namespace Nut
 
 	};
 
+	struct ShaderLayoutDescriptor
+	{
+		enum class Type
+		{
+			Unknown = -1,
+			Bool,
+			Int,
+			UInt,
+			Vec2,
+			Vec3,
+			Vec4,
+			Float,
+		};
+
+		enum class Slot
+		{
+			Vertex,
+			TexCoord,
+			Normal,
+			Color,
+		};
+
+		int Location = 0;
+		Type LayoutType = Type::Unknown;
+		std::string Name = "<unknown>";
+	};
 
 
 	class Shader
@@ -70,6 +94,7 @@ namespace Nut
 //		virtual void SetMatrix4(const std::string& name, float* values) = 0;
 
 		virtual std::vector<ShaderMaterialDescriptor>& GetShaderDescriptors() = 0;
+		virtual std::vector<ShaderLayoutDescriptor>& GetShaderLayout() = 0;
 
 	};
 
