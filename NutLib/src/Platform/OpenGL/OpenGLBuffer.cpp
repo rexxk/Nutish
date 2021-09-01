@@ -9,11 +9,25 @@
 namespace Nut
 {
 
-	OpenGLVertexBuffer::OpenGLVertexBuffer(void* data, uint32_t size)
+	GLenum BufferUsageToOpenGLUsage(BufferUsage usage)
+	{
+		switch (usage)
+		{
+		case BufferUsage::Static: return GL_STATIC_DRAW;
+		case BufferUsage::Dynamic: return GL_DYNAMIC_DRAW;
+		case BufferUsage::Stream: return GL_STREAM_DRAW;
+		}
+
+		return 0;
+	}
+
+
+
+	OpenGLVertexBuffer::OpenGLVertexBuffer(void* data, uint32_t size, BufferUsage usage)
 	{
 		LOG_CORE_TRACE("Creating OpenGL vertex buffer");
 
-		CreateBuffer(data, size);
+		CreateBuffer(data, size, usage);
 	}
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
@@ -43,7 +57,7 @@ namespace Nut
 			});
 	}
 
-	void OpenGLVertexBuffer::CreateBuffer(void* data, uint32_t size)
+	void OpenGLVertexBuffer::CreateBuffer(void* data, uint32_t size, BufferUsage usage)
 	{
 		RendererID& id = m_ID;
 		std::vector<float> vec(size / sizeof(float));
@@ -53,7 +67,7 @@ namespace Nut
 			{
 				glGenBuffers(1, &id);
 				glBindBuffer(GL_ARRAY_BUFFER, id);
-				glBufferData(GL_ARRAY_BUFFER, size, vec.data(), GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, size, vec.data(), BufferUsageToOpenGLUsage(usage));
 //				glNamedBufferData(id, size, vec.data(), GL_STATIC_DRAW);
 			});
 	}
@@ -61,11 +75,11 @@ namespace Nut
 
 
 
-	OpenGLIndexBuffer::OpenGLIndexBuffer(void* data, uint32_t count)
+	OpenGLIndexBuffer::OpenGLIndexBuffer(void* data, uint32_t count, BufferUsage usage)
 	{
 		LOG_CORE_TRACE("Creating OpenGL index buffer");
 
-		CreateBuffer(data, count);
+		CreateBuffer(data, count, usage);
 	}
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
@@ -95,7 +109,7 @@ namespace Nut
 			});
 	}
 
-	void OpenGLIndexBuffer::CreateBuffer(void* data, uint32_t count)
+	void OpenGLIndexBuffer::CreateBuffer(void* data, uint32_t count, BufferUsage usage)
 	{
 		m_IndexCount = count;
 
@@ -107,7 +121,7 @@ namespace Nut
 			{
 				glGenBuffers(1, &id);
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * count, vec.data(), GL_STATIC_DRAW);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * count, vec.data(), BufferUsageToOpenGLUsage(usage));
 //				glNamedBufferData(id, sizeof(uint32_t) * count, vec.data(), GL_STATIC_DRAW);
 			});
 	}

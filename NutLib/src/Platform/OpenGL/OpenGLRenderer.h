@@ -20,6 +20,10 @@ namespace Nut
 		virtual void EndSceneImplementation() override;
 
 		virtual void PresentImplementation() override;
+
+		virtual void SubmitImplementation(Ref<Model> model) override;
+		virtual void FlushImplementation() override;
+
 	};
 
 

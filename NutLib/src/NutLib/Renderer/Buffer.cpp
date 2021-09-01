@@ -9,11 +9,11 @@
 namespace Nut
 {
 
-	Ref<VertexBuffer> VertexBuffer::Create(void* data, uint32_t size)
+	Ref<VertexBuffer> VertexBuffer::Create(void* data, uint32_t size, BufferUsage usage)
 	{
 		switch (Renderer::API())
 		{
-		case RendererAPIType::OpenGL: return CreateRef<OpenGLVertexBuffer>(data, size);
+		case RendererAPIType::OpenGL: return CreateRef<OpenGLVertexBuffer>(data, size, usage);
 
 		}
 
@@ -24,11 +24,11 @@ namespace Nut
 
 
 
-	Ref<IndexBuffer> IndexBuffer::Create(void* data, uint32_t count)
+	Ref<IndexBuffer> IndexBuffer::Create(void* data, uint32_t count, BufferUsage usage)
 	{
 		switch (Renderer::API())
 		{
-		case RendererAPIType::OpenGL: return CreateRef<OpenGLIndexBuffer>(data, count);
+		case RendererAPIType::OpenGL: return CreateRef<OpenGLIndexBuffer>(data, count, usage);
 
 		}
 

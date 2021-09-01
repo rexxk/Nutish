@@ -99,6 +99,7 @@ void MainWindow::OnAttach()
 
 //	m_Rectangle = CreateRef<Model>(m_Scene, "Rectangle");
 
+//	m_Rectangle = Model::Load("assets/models/rubik.fbx", m_Scene);
 	m_Rectangle = Model::Load("assets/models/cube.obj", m_Scene);
 
 	LOG_TRACE("m_Rectangle id: {0}, tag: {1}", m_Rectangle->ID(), Entity::GetComponent<TagComponent>(m_Rectangle->ID()).Tag.c_str());
@@ -145,6 +146,8 @@ void MainWindow::OnRender()
 	
 //	GLsizei indexCount = m_TriangleVA->GetIndexBuffer()->GetIndexCount();
 	GLsizei indexCount = m_TriangleIB->GetIndexCount();
+
+	Renderer::Submit(m_Rectangle);
 
 	RenderCommandQueue::Submit([=]()
 		{

@@ -56,4 +56,19 @@ namespace Nut
 
 	}
 
+	void OpenGLRenderer::SubmitImplementation(Ref<Model> model)
+	{		
+
+	}
+
+	void OpenGLRenderer::FlushImplementation()
+	{
+
+		RenderCommandQueue::Submit([]()
+			{
+				//				glDrawElements(GL_TRIANGLES, )
+			});
+
+	}
+
 }

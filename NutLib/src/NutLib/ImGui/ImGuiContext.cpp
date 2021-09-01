@@ -31,7 +31,7 @@ namespace Nut
 
 		LOG_CORE_TRACE("ImGui: Initializing");
 
-		m_Shader = ShaderStore::Get("ImGui");
+		m_Pipeline = Pipeline::Create(ShaderStore::Get("ImGui"));
 
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();

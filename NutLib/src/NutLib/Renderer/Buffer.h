@@ -5,10 +5,18 @@
 namespace Nut
 {
 
+	enum class BufferUsage
+	{
+		Static,
+		Dynamic,
+		Stream,
+	};
+
+
 	class VertexBuffer
 	{
 	public:
-		static Ref<VertexBuffer> Create(void* data, uint32_t size);
+		static Ref<VertexBuffer> Create(void* data, uint32_t size, BufferUsage usage = BufferUsage::Static);
 
 		virtual ~VertexBuffer() {}
 
@@ -22,7 +30,7 @@ namespace Nut
 	class IndexBuffer
 	{
 	public:
-		static Ref<IndexBuffer> Create(void* data, uint32_t count);
+		static Ref<IndexBuffer> Create(void* data, uint32_t count, BufferUsage usage = BufferUsage::Static);
 
 		virtual ~IndexBuffer() {}
 

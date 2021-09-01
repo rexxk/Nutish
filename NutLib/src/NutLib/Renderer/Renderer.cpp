@@ -14,10 +14,16 @@ namespace Nut
 		case RendererAPIType::None: s_Renderer = nullptr; return;
 		case RendererAPIType::OpenGL: s_Renderer = CreateScope<OpenGLRenderer>(); return;
 		}
+
+		s_Renderer->m_RenderData.BatchVertexBuffer = VertexBuffer::Create(nullptr, RenderData::MAX_VERTICES, BufferUsage::Dynamic);
+		s_Renderer->m_RenderData.BatchIndexBuffer = IndexBuffer::Create(nullptr, RenderData::MAX_INDICES, BufferUsage::Dynamic);
+
 	}
 
 	void Renderer::BeginScene()
 	{
+		s_Renderer->m_RenderData.Statistics.DrawCalls = 0;
+
 		s_Renderer->BeginSceneImplementation();
 	}
 
@@ -29,6 +35,16 @@ namespace Nut
 	void Renderer::Present()
 	{
 		s_Renderer->PresentImplementation();
+	}
+
+	void Renderer::Submit(Ref<Model> model)
+	{
+		s_Renderer->SubmitImplementation(model);
+	}
+
+	void Renderer::Flush()
+	{
+		s_Renderer->FlushImplementation();
 	}
 
 }

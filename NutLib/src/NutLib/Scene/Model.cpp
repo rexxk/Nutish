@@ -5,6 +5,8 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
+#include "NutLib/Renderer/Renderer.h"
+
 
 namespace Nut
 {
@@ -36,5 +38,7 @@ namespace Nut
 	{
 
 	}
+
+
 
 }

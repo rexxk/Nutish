@@ -11,7 +11,7 @@ namespace Nut
 	class OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
-		OpenGLVertexBuffer(void* data, uint32_t size);
+		OpenGLVertexBuffer(void* data, uint32_t size, BufferUsage usage);
 		virtual ~OpenGLVertexBuffer();
 
 		virtual void Bind() const override;
@@ -20,7 +20,7 @@ namespace Nut
 		virtual RendererID ID() const override { return m_ID; }
 
 	private:
-		void CreateBuffer(void* data, uint32_t size);
+		void CreateBuffer(void* data, uint32_t size, BufferUsage usage);
 
 	private:
 		RendererID m_ID = 0;
@@ -30,7 +30,7 @@ namespace Nut
 	class OpenGLIndexBuffer : public IndexBuffer
 	{
 	public:
-		OpenGLIndexBuffer(void* data, uint32_t count);
+		OpenGLIndexBuffer(void* data, uint32_t count, BufferUsage usage);
 		virtual ~OpenGLIndexBuffer();
 
 		virtual void Bind() const override;
@@ -41,7 +41,7 @@ namespace Nut
 		virtual RendererID ID() const override { return m_ID; }
 
 	private:
-		void CreateBuffer(void* data, uint32_t count);
+		void CreateBuffer(void* data, uint32_t count, BufferUsage usage);
 
 	private:
 		RendererID m_ID = 0;

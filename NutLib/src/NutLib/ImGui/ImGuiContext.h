@@ -1,7 +1,7 @@
 #pragma once
 
 #include "NutLib/Core/Timestep.h"
-#include "NutLib/Renderer/Shader.h"
+#include "NutLib/Renderer/Pipeline.h"
 
 
 namespace Nut
@@ -24,7 +24,7 @@ namespace Nut
 		uint32_t m_Height = 0;
 
 
-		Ref<Shader> m_Shader;
+		Ref<Pipeline> m_Pipeline;
 
 	};
 
