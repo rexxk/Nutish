@@ -22,20 +22,6 @@ namespace Nut
 
 	}
 
-	void OpenGLRenderer::PresentImplementation()
-	{
-		RenderCommandQueue::Submit([]()
-			{
-//#ifdef _WIN32
-//				SwapBuffers(GetDC(static_cast<HWND>(Application::Get().GetWindow()->GetNativeHandle())));
-//#endif
-
-//				RenderCommandQueue::IncreaseFPS();
-
-			});
-
-	}
-
 	void OpenGLRenderer::BeginSceneImplementation()
 	{
 		RenderCommandQueue::Submit([]()
@@ -66,7 +52,7 @@ namespace Nut
 
 		RenderCommandQueue::Submit([]()
 			{
-				//				glDrawElements(GL_TRIANGLES, )
+//				glDrawElements(GL_TRIANGLES, )
 			});
 
 	}

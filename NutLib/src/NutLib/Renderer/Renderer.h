@@ -54,8 +54,6 @@ namespace Nut
 		static void BeginScene();
 		static void EndScene();
 
-		static void Present();
-
 		static void Submit(Ref<Model> model);
 		static void Flush();
 
@@ -64,8 +62,6 @@ namespace Nut
 	private:
 		virtual void BeginSceneImplementation() = 0;
 		virtual void EndSceneImplementation() = 0;
-
-		virtual void PresentImplementation() = 0;
 
 		virtual void SubmitImplementation(Ref<Model> model) = 0;
 		virtual void FlushImplementation() = 0;

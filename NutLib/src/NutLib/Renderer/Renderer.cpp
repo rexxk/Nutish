@@ -32,11 +32,6 @@ namespace Nut
 		s_Renderer->EndSceneImplementation();
 	}
 
-	void Renderer::Present()
-	{
-		s_Renderer->PresentImplementation();
-	}
-
 	void Renderer::Submit(Ref<Model> model)
 	{
 		s_Renderer->SubmitImplementation(model);
