@@ -92,8 +92,9 @@ namespace Nut
 			s_Instance->m_Thread = new std::thread([&]()
 				{
 					{
-						std::lock_guard<std::mutex> lock(s_Instance->m_FinishedMutex);
-						s_Instance->m_ThreadFinished = false;
+//						std::lock_guard<std::mutex> lock(s_Instance->m_FinishedMutex);
+//						s_Instance->m_ThreadFinished = false;
+						s_Instance->m_ThreadFinished.store(false);
 					}
 
 					window->GetRenderContext()->Bind();
@@ -119,8 +120,9 @@ namespace Nut
 								case QueueCommand::Execute:
 								{
 									{
-										std::lock_guard<std::mutex> lock(s_Instance->m_ExecuteMutex);
-										s_Instance->m_Executing = true;
+//										std::lock_guard<std::mutex> lock(s_Instance->m_ExecuteMutex);
+//										s_Instance->m_Executing = true;
+										s_Instance->m_Executing.store(true);
 									}
 
 									auto& execQueue = s_Instance->m_ExecQueue;
@@ -138,8 +140,9 @@ namespace Nut
 									}
 
 									{
-										std::lock_guard<std::mutex> lock(s_Instance->m_ExecuteMutex);
-										s_Instance->m_Executing = false;
+//										std::lock_guard<std::mutex> lock(s_Instance->m_ExecuteMutex);
+//										s_Instance->m_Executing = false;
+										s_Instance->m_Executing.store(false);
 									}
 
 									break;
@@ -148,8 +151,9 @@ namespace Nut
 								case QueueCommand::Present:
 								{
 									{
-										std::lock_guard<std::mutex> lock(s_Instance->m_PresentMutex);
-										s_Instance->m_Present = true;
+//										std::lock_guard<std::mutex> lock(s_Instance->m_PresentMutex);
+//										s_Instance->m_Present = true;
+										s_Instance->m_Present.store(true);
 									}
 
 	#if _WIN32
@@ -168,13 +172,15 @@ namespace Nut
 	//									LOG_CORE_WARN("Present and execute, not valid!");
 
 									{
-										std::lock_guard<std::mutex> lock(s_Instance->m_PresentMutex);
-										s_Instance->m_Present = false;
+//										std::lock_guard<std::mutex> lock(s_Instance->m_PresentMutex);
+//										s_Instance->m_Present = false;
+										s_Instance->m_Present.store(false);
 									}
 
 									{
-										std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
-										s_Instance->m_FrameDone = true;
+//										std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
+//										s_Instance->m_FrameDone = true;
+										s_Instance->m_FrameDone.store(true);
 									}
 
 									break;
@@ -183,8 +189,9 @@ namespace Nut
 								case QueueCommand::Shutdown:
 								{
 									{
-										std::lock_guard<std::mutex> lock(s_Instance->m_RunningMutex);
-										s_Instance->m_Running = false;
+//										std::lock_guard<std::mutex> lock(s_Instance->m_RunningMutex);
+//										s_Instance->m_Running = false;
+										s_Instance->m_Running.store(false);
 									}
 
 /*									 {
@@ -214,8 +221,9 @@ namespace Nut
 
 					{
 
-						std::lock_guard<std::mutex> lock(s_Instance->m_FinishedMutex);
-						s_Instance->m_ThreadFinished = true;
+//						std::lock_guard<std::mutex> lock(s_Instance->m_FinishedMutex);
+//						s_Instance->m_ThreadFinished = true;
+						s_Instance->m_ThreadFinished.store(true);
 
 						LOG_CORE_TRACE("RenderThread: Setting thread finished flag");
 
@@ -289,8 +297,9 @@ namespace Nut
 			NUT_CORE_ASSERT(s_Instance, "No valid instance");
 
 			{
-				std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
-				s_Instance->m_FrameDone = false;
+//				std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
+//				s_Instance->m_FrameDone = false;
+				s_Instance->m_FrameDone.store(false);
 			}
 
 			{
@@ -318,8 +327,10 @@ namespace Nut
 			NUT_CORE_ASSERT(s_Instance, "No valid instance");
 			
 			{
-				std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
-				return s_Instance->m_FrameDone;
+//				std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
+//				return s_Instance->m_FrameDone;
+
+				return s_Instance->m_FrameDone.load();
 			}
 		}
 
@@ -363,9 +374,9 @@ namespace Nut
 		static bool IsRunning()
 		{
 			{
-				std::lock_guard<std::mutex> lock(s_Instance->m_RunningMutex);
+//				std::lock_guard<std::mutex> lock(s_Instance->m_RunningMutex);
 
-				if (s_Instance->m_Running)
+				if (s_Instance->m_Running.load())
 					return true;
 			}
 
@@ -490,25 +501,25 @@ namespace Nut
 		std::thread* m_Thread = nullptr;
 
 		std::mutex m_CommandMutex;
-		std::mutex m_ExecuteMutex;
 		std::mutex m_ExecQueueMutex;
-		std::mutex m_FinishedMutex;
 		std::mutex m_FpsMutex;
-		std::mutex m_FrameDoneMutex;
 		std::mutex m_QueueCommandsMutex;
-		std::mutex m_PresentMutex;
-		std::mutex m_RunningMutex;
 
-		std::atomic<bool> m_Running = true;
+//		std::mutex m_ExecuteMutex;
+//		std::mutex m_FinishedMutex;
+//		std::mutex m_FrameDoneMutex;
+//		std::mutex m_PresentMutex;
+//		std::mutex m_RunningMutex;
+
 		std::atomic<bool> m_Executing = false;
-		std::atomic<bool> m_Present = false;
 		std::atomic<bool> m_FrameDone = false;
+		std::atomic<bool> m_Present = false;
+		std::atomic<bool> m_Running = true;
 
 		std::atomic<bool> m_ThreadFinished = false;
-
 		std::atomic<bool> m_ThreadStopped = false;
 
-		std::atomic<uint32_t> m_FPS = 0;
+		uint32_t m_FPS = 0;
 
 		std::queue<QueueCommand> m_QueueCommands;
 	};

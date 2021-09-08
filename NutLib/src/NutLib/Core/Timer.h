@@ -46,8 +46,10 @@ namespace Nut
 			}
 
 			{
-				std::lock_guard<std::mutex> lock(m_FinishedMutex);
-				m_Finished = true;
+//				std::lock_guard<std::mutex> lock(m_FinishedMutex);
+//				m_Finished = true;
+
+				m_Finished.store(true);
 			}
 		}
 
@@ -65,8 +67,9 @@ namespace Nut
 
 			LOG_CORE_TRACE("Timer start: setting running state");
 			{
-				std::lock_guard<std::mutex> lock(m_RunningMutex);
-				m_Running = true;
+//				std::lock_guard<std::mutex> lock(m_RunningMutex);
+//				m_Running = true;
+				m_Running.store(true);
 			}
 
 			LOG_CORE_TRACE("Timer start: starting thread");
@@ -81,8 +84,9 @@ namespace Nut
 
 			{
 				LOG_CORE_TRACE("Timer: setting running flag to false");
-				std::lock_guard<std::mutex> lock(m_RunningMutex);
-				m_Running = false;
+//				std::lock_guard<std::mutex> lock(m_RunningMutex);
+//				m_Running = false;
+				m_Running.store(false);
 				LOG_CORE_TRACE("Timer: running flag set to false");
 
 			}
@@ -134,9 +138,9 @@ namespace Nut
 		bool IsRunning()
 		{
 			{
-				std::lock_guard<std::mutex> lock(m_RunningMutex);
+//				std::lock_guard<std::mutex> lock(m_RunningMutex);
 
-				if (m_Running)
+				if (m_Running.load())
 					return true;
 			}
 
@@ -146,9 +150,9 @@ namespace Nut
 		bool IsFinished()
 		{
 			{
-				std::lock_guard<std::mutex> lock(m_FinishedMutex);
+//				std::lock_guard<std::mutex> lock(m_FinishedMutex);
 
-				if (m_Finished)
+				if (m_Finished.load())
 					return true;
 			}
 
@@ -166,8 +170,8 @@ namespace Nut
 		std::thread* m_TimerThread = nullptr;
 		std::mutex m_TimerMutex;
 
-		std::mutex m_RunningMutex;
-		std::mutex m_FinishedMutex;
+//		std::mutex m_RunningMutex;
+//		std::mutex m_FinishedMutex;
 
 		std::atomic<bool> m_Running = false;
 		std::atomic<bool> m_Finished = false;
