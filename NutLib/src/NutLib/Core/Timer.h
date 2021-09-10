@@ -45,12 +45,7 @@ namespace Nut
 				Update();
 			}
 
-			{
-//				std::lock_guard<std::mutex> lock(m_FinishedMutex);
-//				m_Finished = true;
-
-				m_Finished.store(true);
-			}
+			m_Finished.store(true);
 		}
 
 		void Reset()
@@ -82,14 +77,10 @@ namespace Nut
 		{
 			LOG_CORE_TRACE("Timer: Stopping timer");
 
-			{
-				LOG_CORE_TRACE("Timer: setting running flag to false");
-//				std::lock_guard<std::mutex> lock(m_RunningMutex);
-//				m_Running = false;
-				m_Running.store(false);
-				LOG_CORE_TRACE("Timer: running flag set to false");
+			LOG_CORE_TRACE("Timer: setting running flag to false");
+			m_Running.store(false);
+			LOG_CORE_TRACE("Timer: running flag set to false");
 
-			}
 
 			LOG_CORE_TRACE("Timer: waiting to finish");
 			while (!IsFinished())
@@ -137,24 +128,16 @@ namespace Nut
 	private:
 		bool IsRunning()
 		{
-			{
-//				std::lock_guard<std::mutex> lock(m_RunningMutex);
-
-				if (m_Running.load())
-					return true;
-			}
+			if (m_Running.load())
+				return true;
 
 			return false;
 		}
 
 		bool IsFinished()
 		{
-			{
-//				std::lock_guard<std::mutex> lock(m_FinishedMutex);
-
-				if (m_Finished.load())
-					return true;
-			}
+			if (m_Finished.load())
+				return true;
 
 			return false;
 		}

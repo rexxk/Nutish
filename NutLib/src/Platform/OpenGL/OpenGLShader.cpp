@@ -67,6 +67,15 @@ namespace Nut
 		return 0;
 	}
 
+	ShaderLayoutDescriptor::Slot OpenGLLayoutNameToSlot(const std::string& name)
+	{
+		if (name == "a_Position") return ShaderLayoutDescriptor::Slot::Vertex;
+		if (name == "a_TexCoord") return ShaderLayoutDescriptor::Slot::TexCoord;
+		if (name == "a_Normal") return ShaderLayoutDescriptor::Slot::Normal;
+		if (name == "a_Color") return ShaderLayoutDescriptor::Slot::Color;
+
+		return ShaderLayoutDescriptor::Slot::Unknown;
+	}
 
 	OpenGLShader::OpenGLShader(const std::string& shaderFile)
 		: m_ShaderPath(shaderFile)
@@ -244,7 +253,8 @@ namespace Nut
 				i++;
 			}
 
-			m_LayoutDescriptors.emplace_back(descriptor);
+//			m_LayoutDescriptors.emplace_back(descriptor);
+			m_LayoutDescriptors[OpenGLLayoutNameToSlot(descriptor.Name)] = descriptor;
 
 			pos = endpos;
 		}

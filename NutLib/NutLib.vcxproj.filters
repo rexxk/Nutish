@@ -162,6 +162,7 @@
     </ClInclude>
     <ClInclude Include="src\nutpch.h" />
     <ClInclude Include="src\NutLib\Renderer\Pipeline.h" />
+    <ClInclude Include="src\NutLib\Renderer\Mesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NutLib\Core\Application.cpp">
@@ -253,5 +254,6 @@
     </ClCompile>
     <ClCompile Include="src\nutpch.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Pipeline.cpp" />
+    <ClCompile Include="src\NutLib\Renderer\Mesh.cpp" />
   </ItemGroup>
 </Project>

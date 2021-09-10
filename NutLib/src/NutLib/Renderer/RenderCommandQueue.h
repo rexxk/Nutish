@@ -30,8 +30,6 @@ namespace Nut
 
 				NUT_CORE_ASSERT(s_Instance, "Failed to create render command queue");
 			}
-
-//			s_Instance->Run();
 		}
 
 		static void Shutdown()
@@ -91,11 +89,7 @@ namespace Nut
 
 			s_Instance->m_Thread = new std::thread([&]()
 				{
-					{
-//						std::lock_guard<std::mutex> lock(s_Instance->m_FinishedMutex);
-//						s_Instance->m_ThreadFinished = false;
-						s_Instance->m_ThreadFinished.store(false);
-					}
+					s_Instance->m_ThreadFinished.store(false);
 
 					window->GetRenderContext()->Bind();
 
@@ -119,11 +113,7 @@ namespace Nut
 
 								case QueueCommand::Execute:
 								{
-									{
-//										std::lock_guard<std::mutex> lock(s_Instance->m_ExecuteMutex);
-//										s_Instance->m_Executing = true;
-										s_Instance->m_Executing.store(true);
-									}
+									s_Instance->m_Executing.store(true);
 
 									auto& execQueue = s_Instance->m_ExecQueue;
 
@@ -139,22 +129,14 @@ namespace Nut
 										command();
 									}
 
-									{
-//										std::lock_guard<std::mutex> lock(s_Instance->m_ExecuteMutex);
-//										s_Instance->m_Executing = false;
-										s_Instance->m_Executing.store(false);
-									}
+									s_Instance->m_Executing.store(false);
 
 									break;
 								}
 
 								case QueueCommand::Present:
 								{
-									{
-//										std::lock_guard<std::mutex> lock(s_Instance->m_PresentMutex);
-//										s_Instance->m_Present = true;
-										s_Instance->m_Present.store(true);
-									}
+									s_Instance->m_Present.store(true);
 
 	#if _WIN32
 									SwapBuffers(deviceContext);
@@ -165,50 +147,16 @@ namespace Nut
 										s_Instance->m_FPS++;
 									}
 
-	//								if (s_Instance->m_Present && !s_Instance->m_Executing)
-	//								{
-	//								}
-	//								else
-	//									LOG_CORE_WARN("Present and execute, not valid!");
-
-									{
-//										std::lock_guard<std::mutex> lock(s_Instance->m_PresentMutex);
-//										s_Instance->m_Present = false;
-										s_Instance->m_Present.store(false);
-									}
-
-									{
-//										std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
-//										s_Instance->m_FrameDone = true;
-										s_Instance->m_FrameDone.store(true);
-									}
+									s_Instance->m_Present.store(false);
+									s_Instance->m_FrameDone.store(true);
 
 									break;
 								}
 
 								case QueueCommand::Shutdown:
 								{
-									{
-//										std::lock_guard<std::mutex> lock(s_Instance->m_RunningMutex);
-//										s_Instance->m_Running = false;
-										s_Instance->m_Running.store(false);
-									}
+									s_Instance->m_Running.store(false);
 
-/*									 {
-										std::lock_guard<std::mutex> lock(s_Instance->m_CommandMutex);
-
-										while (s_Instance->m_CommandQueue.size() > 0)
-										{
-											LOG_CORE_TRACE("CommandQueue size: {0}", s_Instance->m_CommandQueue.size());
-
-											auto command = s_Instance->m_CommandQueue.front();
-											s_Instance->m_CommandQueue.pop();
-
-											command();
-										}
-
-									}
-*/
 									LOG_CORE_TRACE("RenderThread: shutdown complete");
 
 									break;
@@ -219,36 +167,14 @@ namespace Nut
 
 					}
 
-					{
+					s_Instance->m_ThreadFinished.store(true);
 
-//						std::lock_guard<std::mutex> lock(s_Instance->m_FinishedMutex);
-//						s_Instance->m_ThreadFinished = true;
-						s_Instance->m_ThreadFinished.store(true);
-
-						LOG_CORE_TRACE("RenderThread: Setting thread finished flag");
-
-						//				LOG_CORE_WARN("Command queue size: {0}", s_CommandQueue.size());
-						//				LOG_CORE_WARN("Queue command size: {0}", s_QueueCommands.size());
-
-						//				LOG_CORE_TRACE("RenderThread stopped running");
-					}
+					LOG_CORE_TRACE("RenderThread: Setting thread finished flag");
 
 				});
 
-			//			s_Instance->m_Thread = new std::thread(&RenderCommandQueue::RenderFunc, Application::Get().GetWindow());
-/*			s_Instance->m_Thread = new std::thread([&](Window* window)
- {
-
-
-
-					}, Application::Get().GetWindow());
-*/
-//			LOG_CORE_TRACE("RenderCommandQueue loop starting");
-
 
 			NUT_CORE_ASSERT(s_Instance->m_Thread, "Unable to create render thread");
-
-//			s_Instance->m_Thread->detach();
 
 		}
 
@@ -296,11 +222,7 @@ namespace Nut
 		{
 			NUT_CORE_ASSERT(s_Instance, "No valid instance");
 
-			{
-//				std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
-//				s_Instance->m_FrameDone = false;
-				s_Instance->m_FrameDone.store(false);
-			}
+			s_Instance->m_FrameDone.store(false);
 
 			{
 				std::lock_guard<std::mutex> execLock(s_Instance->m_ExecQueueMutex);
@@ -326,12 +248,7 @@ namespace Nut
 		{
 			NUT_CORE_ASSERT(s_Instance, "No valid instance");
 			
-			{
-//				std::lock_guard<std::mutex> lock(s_Instance->m_FrameDoneMutex);
-//				return s_Instance->m_FrameDone;
-
-				return s_Instance->m_FrameDone.load();
-			}
+			return s_Instance->m_FrameDone.load();
 		}
 
 		static void ResetFPS()
@@ -373,123 +290,11 @@ namespace Nut
 
 		static bool IsRunning()
 		{
-			{
-//				std::lock_guard<std::mutex> lock(s_Instance->m_RunningMutex);
-
-				if (s_Instance->m_Running.load())
-					return true;
-			}
+			if (s_Instance->m_Running.load())
+				return true;
 
 			return false;
 		}
-/*
-		static void RenderFunc(Ref<Window> window)
-		{
-			s_Instance->m_ThreadFinished = false;
-
-			window->GetRenderContext()->Bind();
-
-#if _WIN32
-			HDC deviceContext = GetDC(static_cast<HWND>(window->GetNativeHandle()));
-#endif
-
-//			LOG_CORE_TRACE("RenderCommandQueue loop starting");
-
-			while (s_Running)
-			{
-				if (!s_QueueCommands.empty())
-				{
-					QueueCommand queueCommand = s_QueueCommands.front();
-
-					{
-						std::lock_guard<std::mutex> lock(s_CommandMutex);
-						s_QueueCommands.pop();
-					}
-
-					switch (queueCommand)
-					{
-
-						case QueueCommand::Execute:
-						{
-							{
-								std::lock_guard<std::mutex> lock(s_ExecuteMutex);
-								s_Executing = true;
-							}
-
-							auto& execQueue = s_ExecQueue;
-
-							while (!execQueue.empty())
-							{
-								auto command = execQueue.front();
-
-								{
-									std::lock_guard<std::mutex> lock(s_ExecQueueMutex);
-									execQueue.pop();
-								}
-
-								command();
-							}
-							
-							{
-								std::lock_guard<std::mutex> lock(s_ExecuteMutex);
-								s_Executing = false;
-							}
-
-							break;
-						}
-
-						case QueueCommand::Present:
-						{
-							{
-								std::lock_guard<std::mutex> lock(s_PresentMutex);
-								s_Present = true;
-							}
-
-							if (s_Present && !s_Executing)
-							{
-#if _WIN32
-								SwapBuffers(deviceContext);
-#endif
-
-								{
-									std::lock_guard<std::mutex> lock(s_Instance->m_FpsMutex);
-									s_Instance->m_FPS++;
-								}
-							}
-							else
-								LOG_CORE_WARN("Present and execute, not valid!");
-
-							{
-								std::lock_guard<std::mutex> lock(s_PresentMutex);
-								s_Present = false;
-							}
-
-							{
-								std::lock_guard<std::mutex> lock(s_FrameDoneMutex);
-								s_FrameDone = true;
-							}
-
-							break;
-						}
-
-					}
-				}
-
-			}
-
-			{
-
-//				LOG_CORE_WARN("Command queue size: {0}", s_CommandQueue.size());
-//				LOG_CORE_WARN("Queue command size: {0}", s_QueueCommands.size());
-
-//				LOG_CORE_TRACE("RenderThread stopped running");
-
-				std::lock_guard<std::mutex> lock(s_FinishedMutex);
-				s_ThreadFinished = true;
-			}
-
-		}
-*/
 
 	private:
 		std::queue<std::function<void()>> m_CommandQueue;
@@ -504,12 +309,6 @@ namespace Nut
 		std::mutex m_ExecQueueMutex;
 		std::mutex m_FpsMutex;
 		std::mutex m_QueueCommandsMutex;
-
-//		std::mutex m_ExecuteMutex;
-//		std::mutex m_FinishedMutex;
-//		std::mutex m_FrameDoneMutex;
-//		std::mutex m_PresentMutex;
-//		std::mutex m_RunningMutex;
 
 		std::atomic<bool> m_Executing = false;
 		std::atomic<bool> m_FrameDone = false;

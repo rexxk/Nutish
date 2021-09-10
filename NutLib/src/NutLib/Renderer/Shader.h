@@ -56,6 +56,7 @@ namespace Nut
 
 		enum class Slot
 		{
+			Unknown = -1,
 			Vertex,
 			TexCoord,
 			Normal,
@@ -65,6 +66,14 @@ namespace Nut
 		int Location = 0;
 		Type LayoutType = Type::Unknown;
 		std::string Name = "<unknown>";
+
+		ShaderLayoutDescriptor()
+		{
+			Location = -1;
+			LayoutType = Type::Unknown;
+			Name = "<unknown>";
+		}
+
 	};
 
 
@@ -94,7 +103,7 @@ namespace Nut
 //		virtual void SetMatrix4(const std::string& name, float* values) = 0;
 
 		virtual std::vector<ShaderMaterialDescriptor>& GetShaderDescriptors() = 0;
-		virtual std::vector<ShaderLayoutDescriptor>& GetShaderLayout() = 0;
+		virtual std::unordered_map<ShaderLayoutDescriptor::Slot, ShaderLayoutDescriptor>& GetShaderLayout() = 0;
 
 	};
 

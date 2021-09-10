@@ -73,7 +73,8 @@ namespace Nut
 
 		for (auto& item : layout)
 		{
-			m_Layout.m_Items.emplace_back(item);
+//			m_Layout.m_Items[item.first] = item.second;
+			m_Layout.m_Items.emplace_back(item.second);
 		}
 
 		CalculateBufferLayout();

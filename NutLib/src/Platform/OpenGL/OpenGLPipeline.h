@@ -13,34 +13,6 @@ namespace Nut
 	class OpenGLPipeline : public Pipeline
 	{
 	public:
-
-		struct BufferLayoutItem
-		{
-			
-			ShaderLayoutDescriptor LayoutDescriptor;
-
-			uint32_t Offset = 0;
-			bool Normalized = false;
-
-//			BufferLayoutItem(const std::string& name, LayoutType type, bool normalized = false)
-//				: Name(name), Type(type), Normalized(normalized)
-			BufferLayoutItem(const ShaderLayoutDescriptor& descriptor)
-				: LayoutDescriptor(descriptor)
-			{
-				
-			}
-
-		};
-
-		struct BufferLayout
-		{
-			std::vector<BufferLayoutItem> m_Items;
-
-			uint32_t Stride = 0;
-		};
-
-	public:
-
 		OpenGLPipeline(Ref<Shader> shader);
 		virtual ~OpenGLPipeline();
 
@@ -51,6 +23,8 @@ namespace Nut
 		void AttachIndexBuffer(Ref<IndexBuffer> indexBuffer);
 
 		virtual void SetBufferLayout() override;
+
+		virtual Ref<Shader> GetShader() override { return m_Shader; }
 
 		Ref<IndexBuffer> GetIndexBuffer() { return m_IB; }
 

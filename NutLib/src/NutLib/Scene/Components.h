@@ -1,10 +1,13 @@
 #ifndef __NUTLIB_COMPONENTS_H
 #define __NUTLIB_COMPONENTS_H
 
+#include "NutLib/Core/Base.h"
+//#include "Model.h"
 
 
 namespace Nut
 {
+	class Model;
 
 	struct TagComponent
 	{
@@ -36,9 +39,21 @@ namespace Nut
 	};
 
 
+	struct ModelComponent
+	{
+		Ref<Model> GraphicsModel;
+
+		ModelComponent(Ref<Model> model)
+			: GraphicsModel(model)
+		{
+
+		}
+
+	};
+
 	struct MeshComponent
 	{
-
+		
 
 		MeshComponent()
 		{
