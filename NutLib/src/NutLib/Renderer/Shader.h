@@ -4,6 +4,8 @@
 
 #include <glm/glm.hpp>
 
+#include "NutLib/Core/DataBuffer.h"
+
 
 namespace Nut
 {
@@ -40,21 +42,9 @@ namespace Nut
 
 	};
 
-	struct ShaderLayoutDescriptor
+	struct ShaderLayoutItem : public DataBufferLayoutItem
 	{
-		enum class Type
-		{
-			Unknown = -1,
-			Bool,
-			Int,
-			UInt,
-			Vec2,
-			Vec3,
-			Vec4,
-			Float,
-		};
-
-		enum class Slot
+		enum class ShaderSlot
 		{
 			Unknown = -1,
 			Vertex,
@@ -63,15 +53,16 @@ namespace Nut
 			Color,
 		};
 
+		ShaderSlot Slot = ShaderSlot::Unknown;
 		int Location = 0;
-		Type LayoutType = Type::Unknown;
-		std::string Name = "<unknown>";
 
-		ShaderLayoutDescriptor()
+		bool Normalized = false;
+
+		ShaderLayoutItem()
+			: DataBufferLayoutItem(DataType::Unknown, "<unknown>")
 		{
 			Location = -1;
-			LayoutType = Type::Unknown;
-			Name = "<unknown>";
+			Normalized = false;
 		}
 
 	};
@@ -103,7 +94,7 @@ namespace Nut
 //		virtual void SetMatrix4(const std::string& name, float* values) = 0;
 
 		virtual std::vector<ShaderMaterialDescriptor>& GetShaderDescriptors() = 0;
-		virtual std::unordered_map<ShaderLayoutDescriptor::Slot, ShaderLayoutDescriptor>& GetShaderLayout() = 0;
+		virtual DataBufferLayout<ShaderLayoutItem>& GetShaderLayout() = 0;
 
 	};
 

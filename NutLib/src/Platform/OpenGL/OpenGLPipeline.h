@@ -31,9 +31,6 @@ namespace Nut
 		RendererID ID() const { return m_ID; }
 
 	private:
-		void CalculateBufferLayout();
-
-	private:
 		RendererID m_ID = 0;
 
 		Ref<VertexBuffer> m_VB = nullptr;
@@ -41,7 +38,7 @@ namespace Nut
 
 		Ref<Shader> m_Shader;
 
-		BufferLayout m_Layout;
+//		BufferLayout m_Layout;
 	};
 
 }

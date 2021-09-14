@@ -97,6 +97,8 @@
     <ClInclude Include="src\NutLib.h" />
     <ClInclude Include="src\NutLib\Core\Application.h" />
     <ClInclude Include="src\NutLib\Core\Base.h" />
+    <ClInclude Include="src\NutLib\Core\DataBuffer.h" />
+    <ClInclude Include="src\NutLib\Core\DataType.h" />
     <ClInclude Include="src\NutLib\Core\Entrypoint.h" />
     <ClInclude Include="src\NutLib\Core\Hash.h" />
     <ClInclude Include="src\NutLib\Core\Input.h" />
@@ -143,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NutLib\Core\Application.cpp" />
+    <ClCompile Include="src\NutLib\Core\DataType.cpp" />
     <ClCompile Include="src\NutLib\Core\Entrypoint.cpp" />
     <ClCompile Include="src\NutLib\Core\Hash.cpp" />
     <ClCompile Include="src\NutLib\Core\Input.cpp" />

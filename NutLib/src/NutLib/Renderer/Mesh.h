@@ -15,7 +15,7 @@ namespace Nut
 		virtual ~Mesh();
 
 	private:
-		Ref<Pipeline::BufferLayout> m_BufferLayout;
+		Ref<DataBufferLayout<DataBufferLayoutItem>> m_BufferLayout;
 
 		std::vector<uint8_t> m_VertexData;
 		std::vector<uint32_t> m_IndexData;

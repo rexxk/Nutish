@@ -23,26 +23,28 @@ namespace Nut
 			return nullptr;
 		}
 
-		auto shaderData = shader->GetShaderLayout();
-
-		if (shaderData.find(ShaderLayoutDescriptor::Slot::Vertex) != shaderData.end())
+		for (auto& item : shader->GetShaderLayout().Items())
 		{
-			LOG_CORE_TRACE("Model loader: loading vertices");
-		}
+			
+			if (item.Slot == ShaderLayoutItem::ShaderSlot::Vertex)
+			{
+				LOG_CORE_TRACE("Model loader: loading vertices");
+			}
 
-		if (shaderData.find(ShaderLayoutDescriptor::Slot::TexCoord) != shaderData.end())
-		{
-			LOG_CORE_TRACE("Model loader: loading texture coordinates");
-		}
+			if (item.Slot == ShaderLayoutItem::ShaderSlot::TexCoord)
+			{
+				LOG_CORE_TRACE("Model loader: loading texture coordinates");
+			}
 
-		if (shaderData.find(ShaderLayoutDescriptor::Slot::Normal) != shaderData.end())
-		{
-			LOG_CORE_TRACE("Model loader: loading normals");
-		}
+			if (item.Slot == ShaderLayoutItem::ShaderSlot::Normal)
+			{
+				LOG_CORE_TRACE("Model loader: loading normals");
+			}
 
-		if (shaderData.find(ShaderLayoutDescriptor::Slot::Color) != shaderData.end())
-		{
-			LOG_CORE_TRACE("Model loader: loading colors");
+			if (item.Slot == ShaderLayoutItem::ShaderSlot::Color)
+			{
+				LOG_CORE_TRACE("Model loader: loading colors");
+			}
 		}
 
 		Ref<Model> newModel = CreateRef<Model>(scene);

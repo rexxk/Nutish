@@ -1,40 +1,13 @@
 #pragma once
 
 #include "Shader.h"
-
+#include "NutLib/Core/DataBuffer.h"
 
 namespace Nut
 {
 
 	class Pipeline
 	{
-	public:
-		struct BufferLayoutItem
-		{
-
-			ShaderLayoutDescriptor LayoutDescriptor;
-
-			uint32_t Offset = 0;
-			bool Normalized = false;
-
-			//			BufferLayoutItem(const std::string& name, LayoutType type, bool normalized = false)
-			//				: Name(name), Type(type), Normalized(normalized)
-			BufferLayoutItem(const ShaderLayoutDescriptor& descriptor)
-				: LayoutDescriptor(descriptor)
-			{
-
-			}
-
-		};
-
-		struct BufferLayout
-		{
-			std::vector<BufferLayoutItem> m_Items;
-
-			uint32_t Stride = 0;
-		};
-
-
 	public:
 		static Ref<Pipeline> Create(Ref<Shader> shader);
 

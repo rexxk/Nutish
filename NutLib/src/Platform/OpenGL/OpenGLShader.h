@@ -31,7 +31,9 @@ namespace Nut
 		virtual void Set(const std::string& name, const glm::mat4& matrix) override;
 
 		virtual std::vector<ShaderMaterialDescriptor>& GetShaderDescriptors() override { return m_MaterialDescriptors; }
-		virtual std::unordered_map<ShaderLayoutDescriptor::Slot, ShaderLayoutDescriptor>& GetShaderLayout() override { return m_LayoutDescriptors; }
+//		virtual std::unordered_map<ShaderLayoutDescriptor::Slot, ShaderLayoutDescriptor>& GetShaderLayout() override { return m_LayoutDescriptors; }
+		virtual DataBufferLayout<ShaderLayoutItem>& GetShaderLayout() override { return m_ShaderLayout; }
+
 
 	private:
 		void Reflect(const std::string& source);
@@ -56,7 +58,8 @@ namespace Nut
 
 
 		std::vector<ShaderMaterialDescriptor> m_MaterialDescriptors;
-		std::unordered_map<ShaderLayoutDescriptor::Slot, ShaderLayoutDescriptor> m_LayoutDescriptors;
+//		std::unordered_map<ShaderLayoutDescriptor::Slot, ShaderLayoutDescriptor> m_LayoutDescriptors;
+		DataBufferLayout<ShaderLayoutItem> m_ShaderLayout;
 	};
 
 

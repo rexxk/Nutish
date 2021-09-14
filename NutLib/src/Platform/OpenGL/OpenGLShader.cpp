@@ -14,18 +14,7 @@
 namespace Nut
 {
 
-	ShaderLayoutDescriptor::Type StringToOpenGLLayoutType(const std::string& type)
-	{
-		if (type == "int") return ShaderLayoutDescriptor::Type::Int;
-		if (type == "vec2") return ShaderLayoutDescriptor::Type::Vec2;
-		if (type == "vec3") return ShaderLayoutDescriptor::Type::Vec3;
-		if (type == "vec4") return ShaderLayoutDescriptor::Type::Vec4;
-		if (type == "float") return ShaderLayoutDescriptor::Type::Float;
 
-		LOG_CORE_WARN("Unknown layout type in shader");
-
-		return ShaderLayoutDescriptor::Type::Unknown;
-	}
 
 	ShaderMaterialDescriptor::Type OpenGLUniformToDescriptorType(const std::string& type)
 	{
@@ -67,14 +56,14 @@ namespace Nut
 		return 0;
 	}
 
-	ShaderLayoutDescriptor::Slot OpenGLLayoutNameToSlot(const std::string& name)
+	ShaderLayoutItem::ShaderSlot OpenGLLayoutNameToShaderSlot(const std::string& name)
 	{
-		if (name == "a_Position") return ShaderLayoutDescriptor::Slot::Vertex;
-		if (name == "a_TexCoord") return ShaderLayoutDescriptor::Slot::TexCoord;
-		if (name == "a_Normal") return ShaderLayoutDescriptor::Slot::Normal;
-		if (name == "a_Color") return ShaderLayoutDescriptor::Slot::Color;
+		if (name == "a_Position") return ShaderLayoutItem::ShaderSlot::Vertex;
+		if (name == "a_TexCoord") return ShaderLayoutItem::ShaderSlot::TexCoord;
+		if (name == "a_Normal") return ShaderLayoutItem::ShaderSlot::Normal;
+		if (name == "a_Color") return ShaderLayoutItem::ShaderSlot::Color;
 
-		return ShaderLayoutDescriptor::Slot::Unknown;
+		return ShaderLayoutItem::ShaderSlot::Unknown;
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& shaderFile)
@@ -125,8 +114,8 @@ namespace Nut
 		if (m_MaterialDescriptors.size() > 0)
 			m_MaterialDescriptors.clear();
 
-		if (m_LayoutDescriptors.size() > 0)
-			m_LayoutDescriptors.clear();
+		if (m_ShaderLayout.Items().size() > 0)
+			m_ShaderLayout.Items().clear();
 
 		m_ShaderSources = GetShaderSourcesFromFile(m_ShaderPath);
 
@@ -218,7 +207,7 @@ namespace Nut
 
 		while ((pos = source.find("layout", pos)) != std::string::npos)
 		{
-			ShaderLayoutDescriptor descriptor;
+			ShaderLayoutItem shaderItem;
 
 			std::string line;
 
@@ -240,24 +229,26 @@ namespace Nut
 
 					}
 
-					descriptor.Location = std::stoi(tokens[sublocation]);
+					shaderItem.Location = std::stoi(tokens[sublocation]);
 				}
 
 				if (token == "in")
 				{
-					descriptor.LayoutType = StringToOpenGLLayoutType(tokens[i + 1]);
-					descriptor.Name = tokens[i + 2];
+					shaderItem.Type = StringToDataType(tokens[i + 1]);
+					shaderItem.Name = tokens[i + 2];
 					break;
 				}
 
 				i++;
 			}
 
-//			m_LayoutDescriptors.emplace_back(descriptor);
-			m_LayoutDescriptors[OpenGLLayoutNameToSlot(descriptor.Name)] = descriptor;
+			shaderItem.Slot = OpenGLLayoutNameToShaderSlot(shaderItem.Name);
+			m_ShaderLayout.Items().emplace_back(shaderItem);
 
 			pos = endpos;
 		}
+
+		m_ShaderLayout.UpdateOffsets();
 	}
 
 	void OpenGLShader::ResolveLocations()
