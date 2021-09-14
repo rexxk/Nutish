@@ -12,11 +12,15 @@ namespace Nut
 		Int,
 		UInt,
 		Float,
+		Double,
 		Vec2,
 		Vec3,
 		Vec4,
 		Matrix3x3,
 		Matrix4x4,
+
+		Texture2D,
+		TextureCube,
 	};
 
 

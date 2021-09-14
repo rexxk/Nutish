@@ -14,48 +14,6 @@
 namespace Nut
 {
 
-
-
-	ShaderMaterialDescriptor::Type OpenGLUniformToDescriptorType(const std::string& type)
-	{
-		if (type == "bool") return ShaderMaterialDescriptor::Type::Bool;
-		if (type == "int") return ShaderMaterialDescriptor::Type::Int;
-		if (type == "uint") return ShaderMaterialDescriptor::Type::UInt;
-		if (type == "float") return ShaderMaterialDescriptor::Type::Float;
-		if (type == "double") return ShaderMaterialDescriptor::Type::Double;
-		if (type == "vec2") return ShaderMaterialDescriptor::Type::Vec2;
-		if (type == "vec3") return ShaderMaterialDescriptor::Type::Vec3;
-		if (type == "vec4") return ShaderMaterialDescriptor::Type::Vec4;
-		if (type == "mat3") return ShaderMaterialDescriptor::Type::Matrix3x3;
-		if (type == "mat4") return ShaderMaterialDescriptor::Type::Matrix4x4;
-		if (type == "sampler2D") return ShaderMaterialDescriptor::Type::Texture2D;
-		if (type == "samplerCube") return ShaderMaterialDescriptor::Type::TextureCube;
-//		if (type == "textureSphere") return ShaderMaterialDescriptor::Type::TextureSphere;
-
-		return ShaderMaterialDescriptor::Type::Unknown;
-	}
-
-	uint32_t OpenGLUniformSize(ShaderMaterialDescriptor::Type type)
-	{
-		switch (type)
-		{
-			case ShaderMaterialDescriptor::Type::Bool: return 1;
-			case ShaderMaterialDescriptor::Type::Int: return 4;
-			case ShaderMaterialDescriptor::Type::UInt: return 4;
-			case ShaderMaterialDescriptor::Type::Float: return 4;
-			case ShaderMaterialDescriptor::Type::Double: return 4;
-			case ShaderMaterialDescriptor::Type::Vec2: return 4 * 2;
-			case ShaderMaterialDescriptor::Type::Vec3: return 4 * 3;
-			case ShaderMaterialDescriptor::Type::Vec4: return 4 * 4;
-			case ShaderMaterialDescriptor::Type::Matrix3x3: return 4 * 3 * 3;
-			case ShaderMaterialDescriptor::Type::Matrix4x4: return 4 * 4 * 4;
-			case ShaderMaterialDescriptor::Type::Texture2D: return 4;
-			case ShaderMaterialDescriptor::Type::TextureCube: return 4;
-		}
-
-		return 0;
-	}
-
 	ShaderLayoutItem::ShaderSlot OpenGLLayoutNameToShaderSlot(const std::string& name)
 	{
 		if (name == "a_Position") return ShaderLayoutItem::ShaderSlot::Vertex;
@@ -111,8 +69,11 @@ namespace Nut
 
 	void OpenGLShader::Reload()
 	{
-		if (m_MaterialDescriptors.size() > 0)
-			m_MaterialDescriptors.clear();
+//		if (m_MaterialDescriptors.size() > 0)
+//			m_MaterialDescriptors.clear();
+
+		if (m_ShaderMaterialLayout.Items().size() > 0)
+			m_ShaderMaterialLayout.Items().clear();
 
 		if (m_ShaderLayout.Items().size() > 0)
 			m_ShaderLayout.Items().clear();
@@ -185,15 +146,15 @@ namespace Nut
 				std::string type = tokens[1];
 				std::string name = tokens[2];
 
-				ShaderMaterialDescriptor desc;
-				desc.Name = name;
-				desc.DescriptorType = OpenGLUniformToDescriptorType(type);
+				ShaderMaterialItem item;
+				item.Name = name;
+				item.Type = StringToDataType(type);
 
-				NUT_CORE_ASSERT((desc.DescriptorType != ShaderMaterialDescriptor::Type::Unknown), "GLSL syntax error, type is not valid!");
+				NUT_CORE_ASSERT((item.Type != DataType::Unknown), "GLSL syntax error, type is not valid!");
 
-				desc.Size = OpenGLUniformSize(desc.DescriptorType);
+				item.Size = DataTypeSize(item.Type);
 
-				m_MaterialDescriptors.emplace_back(desc);
+				m_ShaderMaterialLayout.Items().emplace_back(item);
 			}
 
 			pos = endpos;
@@ -253,12 +214,12 @@ namespace Nut
 
 	void OpenGLShader::ResolveLocations()
 	{
-		for (auto& desc : m_MaterialDescriptors)
+		for (auto& item : m_ShaderMaterialLayout.Items())
 		{
 			RenderCommandQueue::Submit([&]()
 				{
-					desc.Location = glGetUniformLocation(m_ID, desc.Name.c_str());
-					desc.Resolved = true;
+					item.Location = glGetUniformLocation(m_ID, item.Name.c_str());
+					item.Resolved = true;
 				});
 
 		}
@@ -340,11 +301,11 @@ namespace Nut
 
 	int32_t OpenGLShader::GetLocation(const std::string& name)
 	{
-		for (auto& desc : m_MaterialDescriptors)
+		for (auto& item : m_ShaderMaterialLayout.Items())
 		{
-			if ((desc.Name == name) && (desc.Location != -1))
+			if ((item.Name == name) && (item.Location != -1))
 			{
-				return desc.Location;
+				return item.Location;
 			}
 		}
 

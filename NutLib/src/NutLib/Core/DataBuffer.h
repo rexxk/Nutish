@@ -14,10 +14,6 @@ namespace Nut
 		DataType Type;
 		std::string Name;
 
-//			BufferLayoutItem(const std::string& name, LayoutType type, bool normalized = false)
-//				: Name(name), Type(type), Normalized(normalized)
-//		DataBufferLayoutItem(const ShaderLayoutDescriptor& descriptor)
-//			: LayoutDescriptor(descriptor)
 		DataBufferLayoutItem(DataType type, const std::string& name)
 			: Type(type), Name(name)
 		{

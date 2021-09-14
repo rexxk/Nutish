@@ -35,6 +35,7 @@ void main()
 //	o_Color = u_Color;
 
 	o_Color = mix(texture(u_Texture1, v_TexCoord), texture(u_Texture2, v_TexCoord), 0.5);
+//	o_Color = texture(u_Texture1, v_TexCoord);
 
 //	o_Color = vec4(0.2, 0.35, 0.75, 1.0);
 }

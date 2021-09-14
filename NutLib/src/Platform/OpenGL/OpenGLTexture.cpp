@@ -15,8 +15,8 @@ namespace Nut
 	{
 		switch (filter)
 		{
-		case TextureFilter::Linear: return GL_LINEAR;
-		case TextureFilter::Nearest: return GL_NEAREST;
+			case TextureFilter::Linear: return GL_LINEAR;
+			case TextureFilter::Nearest: return GL_NEAREST;
 		}
 
 		return 0;
@@ -26,10 +26,10 @@ namespace Nut
 	{
 		switch (wrap)
 		{
-		case TextureWrap::Repeat: return GL_REPEAT;
-		case TextureWrap::MirroredRepeat: return GL_MIRRORED_REPEAT;
-		case TextureWrap::ClampToEdge: return GL_CLAMP_TO_EDGE;
-		case TextureWrap::ClampToBorder: return GL_CLAMP_TO_BORDER;
+			case TextureWrap::Repeat: return GL_REPEAT;
+			case TextureWrap::MirroredRepeat: return GL_MIRRORED_REPEAT;
+			case TextureWrap::ClampToEdge: return GL_CLAMP_TO_EDGE;
+			case TextureWrap::ClampToBorder: return GL_CLAMP_TO_BORDER;
 		}
 
 		return 0;
@@ -91,13 +91,19 @@ namespace Nut
 				glBindTexture(GL_TEXTURE_2D, id);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureFilterToGLTextureFilter(filter));
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilterToGLTextureFilter(filter));
+
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, TextureWrapToGLTextureWrap(TextureWrap::ClampToEdge));
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, TextureWrapToGLTextureWrap(TextureWrap::ClampToEdge));
+
+				glGenerateMipmap(GL_TEXTURE_2D);
 			});
 	}
 
 	void OpenGLTexture2D::SetData(uint8_t* data, uint32_t width, uint32_t height)
 	{
-		std::vector<uint8_t> vec(width * height * 4);
-		memcpy(vec.data(), data, width * height * 4);
+		size_t size = width * height * 4;
+		std::vector<uint8_t> vec(size);
+		memcpy(vec.data(), data, size);
 
 		RenderCommandQueue::Submit([=]()
 			{
