@@ -33,13 +33,10 @@ namespace Nut
 
 			if (m_Running)
 				Stop();
-//			m_Running = false;
-//			m_TimerThread->join();
 		}
 
 		void ThreadFunc()
 		{
-//			while (m_Running)
 			while (IsRunning())
 			{
 				Update();
@@ -50,53 +47,35 @@ namespace Nut
 
 		void Reset()
 		{
-			LOG_CORE_TRACE("Starting timer");
-
 			m_StartTime = std::chrono::steady_clock::now();
 
-			LOG_CORE_TRACE("Timer start: setting timeouttime");
 			{
 				std::lock_guard<std::mutex> lock(m_TimerMutex);
 				m_TimeoutTime = m_StartTime;
 			}
 
-			LOG_CORE_TRACE("Timer start: setting running state");
 			{
-//				std::lock_guard<std::mutex> lock(m_RunningMutex);
-//				m_Running = true;
 				m_Running.store(true);
 			}
 
-			LOG_CORE_TRACE("Timer start: starting thread");
 			m_TimerThread = new std::thread(&Timer::ThreadFunc, this);
-
-//			m_TimerThread->detach();
 		}
 
 		void Stop()
 		{
-			LOG_CORE_TRACE("Timer: Stopping timer");
-
-			LOG_CORE_TRACE("Timer: setting running flag to false");
 			m_Running.store(false);
-			LOG_CORE_TRACE("Timer: running flag set to false");
 
-
-			LOG_CORE_TRACE("Timer: waiting to finish");
 			while (!IsFinished())
 			{
 
 			}
 
-//			LOG_CORE_TRACE("Timer: stopped");
 			while (!m_TimerThread->joinable())
 			{
 
 			}
 
 			m_TimerThread->join();
-			 
-			LOG_CORE_TRACE("Timer: Joining timer");
 		}
 
 		void Update()
@@ -152,9 +131,6 @@ namespace Nut
 
 		std::thread* m_TimerThread = nullptr;
 		std::mutex m_TimerMutex;
-
-//		std::mutex m_RunningMutex;
-//		std::mutex m_FinishedMutex;
 
 		std::atomic<bool> m_Running = false;
 		std::atomic<bool> m_Finished = false;

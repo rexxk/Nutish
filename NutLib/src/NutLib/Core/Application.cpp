@@ -64,14 +64,11 @@ namespace Nut
 		LOG_CORE_TRACE("Application shutdown");
 
 		RenderCommandQueue::Stop();
-		//		RenderCommandQueue::Join();
 
 		while (!RenderCommandQueue::ThreadStopped())
 		{
-			LOG_CORE_TRACE("Application is waiting for the render thread to stop.");
-		}
 
-		LOG_CORE_TRACE("Application knows that the render thread is stopped.");
+		}
 
 		RenderCommandQueue::Shutdown();
 	}
@@ -119,7 +116,6 @@ namespace Nut
 			});
 
 
-//		while (m_IsRunning && RenderCommandQueue::IsAlive())
 		while (m_IsRunning)
 		{
 			RenderCommandQueue::Execute();
@@ -148,8 +144,6 @@ namespace Nut
 
 		runTimer->Stop();
 		updateTimer->Stop();
-
-		LOG_CORE_TRACE("Application: Timers stopped, exiting run()");
 	}
 
 	void Application::AttachLayer(const Ref<Layer>& layer)

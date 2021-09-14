@@ -36,7 +36,6 @@ namespace Nut
 		{
 			if (s_Instance)
 			{
-				LOG_CORE_TRACE("RenderThread - Shutdown killing the instance");
 				delete s_Instance;
 
 				s_Instance = nullptr;
@@ -53,12 +52,8 @@ namespace Nut
 		{
 			NUT_CORE_ASSERT(s_Instance, "No valid instance");
 
-			LOG_CORE_TRACE("RenderCommandQueue destructor called");
-
 			if (s_Instance->m_Thread)
 			{
-				LOG_CORE_TRACE("RenderCommandQueue destructor wants to delete the m_Thread object");
-
 				delete m_Thread;
 				m_Thread = nullptr;
 			}
@@ -74,10 +69,6 @@ namespace Nut
 					std::lock_guard<std::mutex> lock(s_Instance->m_CommandMutex);
 					s_Instance->m_CommandQueue.push(fn);
 				}
-			}
-			else
-			{
-				LOG_CORE_TRACE("RenderThread::Submit - no valid thread to submit to");
 			}
 		}
 
@@ -157,8 +148,6 @@ namespace Nut
 								{
 									s_Instance->m_Running.store(false);
 
-									LOG_CORE_TRACE("RenderThread: shutdown complete");
-
 									break;
 								}
 							}
@@ -168,8 +157,6 @@ namespace Nut
 					}
 
 					s_Instance->m_ThreadFinished.store(true);
-
-					LOG_CORE_TRACE("RenderThread: Setting thread finished flag");
 
 				});
 
@@ -187,25 +174,17 @@ namespace Nut
 				s_Instance->m_QueueCommands.push(QueueCommand::Shutdown);
 			}
 
-			LOG_CORE_TRACE("Stopping rendering thread");
-
 			while (!s_Instance->m_ThreadFinished)
 			{
-//				LOG_CORE_TRACE("RenderThread - waiting for thread finished flag");
-			}
 
-			LOG_CORE_TRACE("RenderThread: thread finished flag set");
+			}
 
 			while (!s_Instance->m_Thread->joinable())
 			{
 				LOG_CORE_TRACE("RenderThread - waiting to join");
 			}
 
-			LOG_CORE_TRACE("RenderThread: is joinable - joining");
-
 			s_Instance->m_Thread->join();
-			LOG_CORE_TRACE("RenderThread is joined");
-
 			s_Instance->m_ThreadStopped = true;
 
 			LOG_CORE_TRACE("Render thread stopped");
