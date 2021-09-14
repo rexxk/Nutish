@@ -58,6 +58,7 @@ namespace Nut
 		if (type == "uint") return DataType::UInt;
 		if (type == "float") return DataType::Float;
 		if (type == "double") return DataType::Double;
+
 		if (type == "vec2") return DataType::Vec2;
 		if (type == "vec3") return DataType::Vec3;
 		if (type == "vec4") return DataType::Vec4;
@@ -73,4 +74,27 @@ namespace Nut
 		return DataType::Unknown;
 	}
 
+	std::string DataTypeToString(DataType type)
+	{
+		switch (type)
+		{
+			case DataType::Bool: return "bool";
+			case DataType::Int: return "int";
+			case DataType::UInt: return "uint";
+			case DataType::Float: return "float";
+			case DataType::Double: return "double";
+
+			case DataType::Vec2: return "vec2";
+			case DataType::Vec3: return "vec3";
+			case DataType::Vec4: return "vec4";
+
+			case DataType::Matrix3x3: return "mat3";
+			case DataType::Matrix4x4: return "mat4";
+
+			case DataType::Texture2D: return "sampler2D";
+			case DataType::TextureCube: return "samplerCube";
+		}
+
+		return "<unknown datatype>";
+	}
 }

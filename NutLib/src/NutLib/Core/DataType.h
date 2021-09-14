@@ -27,5 +27,6 @@ namespace Nut
 	uint32_t DataTypeSize(DataType type);
 	uint32_t DataTypeCount(DataType type);
 	DataType StringToDataType(const std::string& type);
+	std::string DataTypeToString(DataType type);
 
 }
