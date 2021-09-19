@@ -47,7 +47,8 @@ void MainWindow::OnAttach()
 	m_BasicPipeline->Bind();
 
 
-	UUID eID = m_Scene->CreateEntity("Test entity");
+	m_TestEntity = m_Scene->CreateEntity("Test entity");
+
 
 	auto& tagView = View<TagComponent>::Get();
 
@@ -99,6 +100,10 @@ void MainWindow::OnAttach()
 
 //	m_Rectangle = CreateRef<Model>(m_Scene, "Rectangle");
 
+	Ref<DataBuffer<ShaderLayoutItem>> vertexBuffer = CreateRef<DataBuffer<ShaderLayoutItem>>(vertices, 4, m_BasicShader->GetShaderLayout());
+//	Entity::AddComponent<Nut::MeshComponent>(m_TestEntity, /*vertexBuffer,*/ indices);
+	Entity::AddComponent<MeshComponent>(m_TestEntity, indices);
+
 //	m_Rectangle = Model::Load("assets/models/rubik.fbx", m_Scene);
 	m_Rectangle = Model::Load("assets/models/cube.obj", m_Scene, ShaderStore::Get("Basic"));
 
@@ -148,6 +153,8 @@ void MainWindow::OnRender()
 	GLsizei indexCount = m_TriangleIB->GetIndexCount();
 
 	Renderer::Submit(m_Rectangle);
+
+//	m_Scene->Draw();
 
 	RenderThread::Submit([=]()
 		{

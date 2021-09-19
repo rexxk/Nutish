@@ -70,10 +70,12 @@ namespace Nut
 	class DataBuffer
 	{
 	public:
-		DataBuffer(DataBufferLayout<T> layout, uint32_t size)
-			: m_BufferLayout(layout), m_Size(size)
+		DataBuffer(void* data, uint32_t count, DataBufferLayout<T> layout)
+			: m_BufferLayout(layout), m_Count(count), m_Buffer(data)
 		{
+			m_Size = count * layout.Stride();
 
+			LOG_CORE_TRACE("DataBuffer size: {0}", m_Size);
 		}
 
 		virtual ~DataBuffer()
@@ -85,6 +87,7 @@ namespace Nut
 		void* m_Buffer = nullptr;
 
 		uint32_t m_Size = 0;
+		uint32_t m_Count = 0;
 
 		DataBufferLayout<T> m_BufferLayout;
 	};

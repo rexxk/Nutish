@@ -3,7 +3,11 @@
 
 #include "NutLib/Core/Base.h"
 //#include "Model.h"
+#include "NutLib/Core/DataBuffer.h"
 
+#include "NutLib/Renderer/Shader.h"
+
+#include <vector>
 
 namespace Nut
 {
@@ -53,11 +57,17 @@ namespace Nut
 
 	struct MeshComponent
 	{
-		
+		Ref<DataBuffer<ShaderLayoutItem>> Vertices;
+		uint32_t* Indices;
 
-		MeshComponent()
+		MeshComponent(uint32_t* indices)
+			: Indices(indices)
+//		MeshComponent(/*Ref<DataBuffer<ShaderLayoutItem>> vertices, */std::vector<uint32_t> indices)
+//			: /*Vertices(vertices), */Indices(indices)
 		{
+//			LOG_CORE_TRACE("MeshComponent data: {0}, {1}", data, bdata);
 
+			LOG_CORE_TRACE("MeshComponent going indices..?");
 		}
 
 	};

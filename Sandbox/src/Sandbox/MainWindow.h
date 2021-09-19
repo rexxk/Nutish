@@ -31,6 +31,8 @@ private:
 	Ref<Nut::Texture2D> m_GradientTexture;
 
 	Ref<Nut::Model> m_Rectangle;
+
+	Nut::UUID m_TestEntity;
 };
 
 
