@@ -1,7 +1,7 @@
 #include "nutpch.h"
 #include "OpenGLPipeline.h"
 
-#include "NutLib/Renderer/RenderCommandQueue.h"
+#include "NutLib/Renderer/RenderThread.h"
 
 #include <glad/glad.h>
 
@@ -47,7 +47,7 @@ namespace Nut
 
 	void OpenGLPipeline::Unbind() const
 	{
-		RenderCommandQueue::Submit([]()
+		RenderThread::Submit([]()
 			{
 //				glBindVertexArray(0);
 			});
@@ -70,7 +70,7 @@ namespace Nut
 		auto& items = layout.Items();
 
 
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 				for (ShaderLayoutItem item : items)
 				{

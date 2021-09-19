@@ -1,7 +1,7 @@
 #include "nutpch.h"
 #include "OpenGLShader.h"
 
-#include "NutLib/Renderer/RenderCommandQueue.h"
+#include "NutLib/Renderer/RenderThread.h"
 
 #include "NutLib/Tools/StringHelpers.h"
 
@@ -46,7 +46,7 @@ namespace Nut
 			{
 				RendererID id = (*it);
 
-				RenderCommandQueue::Submit([=]()
+				RenderThread::Submit([=]()
 					{
 						glDeleteShader(id);
 					});
@@ -57,7 +57,7 @@ namespace Nut
 
 		if (m_ID)
 		{
-			RenderCommandQueue::Submit([=]()
+			RenderThread::Submit([=]()
 				{
 					glDeleteProgram(m_ID);
 				});
@@ -85,7 +85,7 @@ namespace Nut
 			ReleaseShader();
 		}
 
-		RenderCommandQueue::Submit([&]()
+		RenderThread::Submit([&]()
 			{
 				m_ID = glCreateProgram();
 
@@ -110,7 +110,7 @@ namespace Nut
 
 	void OpenGLShader::Bind() const
 	{
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 				glUseProgram(m_ID);
 			});
@@ -118,7 +118,7 @@ namespace Nut
 
 	void OpenGLShader::Unbind() const
 	{
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 				glUseProgram(0);
 			});
@@ -216,7 +216,7 @@ namespace Nut
 	{
 		for (auto& item : m_ShaderMaterialLayout.Items())
 		{
-			RenderCommandQueue::Submit([&]()
+			RenderThread::Submit([&]()
 				{
 					item.Location = glGetUniformLocation(m_ID, item.Name.c_str());
 					item.Resolved = true;
@@ -241,7 +241,7 @@ namespace Nut
 
 		auto& shaderIDs = m_ShaderIDs;
 
-		RenderCommandQueue::Submit([=, &shaderIDs]()
+		RenderThread::Submit([=, &shaderIDs]()
 			{
 				const char* glSource = source.data();
 				GLint length = (GLint)source.length();
@@ -276,7 +276,7 @@ namespace Nut
 
 	void OpenGLShader::LinkProgram()
 	{
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 				glLinkProgram(m_ID);
 
@@ -318,7 +318,7 @@ namespace Nut
 	{
 		int32_t location = GetLocation(name);
 
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 				glUniform1i(location, value);
 			});
@@ -328,7 +328,7 @@ namespace Nut
 	{
 		int32_t location = GetLocation(name);
 
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 				glUniform1f(location, value);
 			});
@@ -338,7 +338,7 @@ namespace Nut
 	{
 		int32_t location = GetLocation(name);
 
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 				glUniform2f(location, value.x, value.y);
 			});
@@ -348,7 +348,7 @@ namespace Nut
 	{
 		int32_t location = GetLocation(name);
 
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 				glUniform3f(location, value.x, value.y, value.z);
 			});
@@ -358,7 +358,7 @@ namespace Nut
 	{
 		int32_t location = GetLocation(name);
 
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 				glUniform4f(location, value.x, value.y, value.z, value.w);
 			});
@@ -368,7 +368,7 @@ namespace Nut
 	{
 		int32_t location = GetLocation(name);
 
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 				glUniformMatrix4fv(location, 1, false, glm::value_ptr(matrix));
 			});

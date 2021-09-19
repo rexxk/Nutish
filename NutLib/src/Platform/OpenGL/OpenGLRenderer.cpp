@@ -3,7 +3,7 @@
 
 #include "NutLib/Core/Application.h"
 
-#include "NutLib/Renderer/RenderCommandQueue.h"
+#include "NutLib/Renderer/RenderThread.h"
 
 
 #include <glad/glad.h>
@@ -24,7 +24,7 @@ namespace Nut
 
 	void OpenGLRenderer::BeginSceneImplementation()
 	{
-		RenderCommandQueue::Submit([]()
+		RenderThread::Submit([]()
 			{
 				glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 				glClear(GL_COLOR_BUFFER_BIT);
@@ -34,7 +34,7 @@ namespace Nut
 
 	void OpenGLRenderer::EndSceneImplementation()
 	{
-		RenderCommandQueue::Submit([]()
+		RenderThread::Submit([]()
 			{
 
 			});
@@ -50,7 +50,7 @@ namespace Nut
 	void OpenGLRenderer::FlushImplementation()
 	{
 
-		RenderCommandQueue::Submit([]()
+		RenderThread::Submit([]()
 			{
 //				glDrawElements(GL_TRIANGLES, )
 			});

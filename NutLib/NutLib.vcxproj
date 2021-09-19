@@ -121,7 +121,7 @@
     <ClInclude Include="src\NutLib\Renderer\Buffer.h" />
     <ClInclude Include="src\NutLib\Renderer\Mesh.h" />
     <ClInclude Include="src\NutLib\Renderer\Pipeline.h" />
-    <ClInclude Include="src\NutLib\Renderer\RenderCommandQueue.h" />
+    <ClInclude Include="src\NutLib\Renderer\RenderThread.h" />
     <ClInclude Include="src\NutLib\Renderer\RenderContext.h" />
     <ClInclude Include="src\NutLib\Renderer\Renderer.h" />
     <ClInclude Include="src\NutLib\Renderer\Shader.h" />

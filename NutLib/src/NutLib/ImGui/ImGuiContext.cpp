@@ -1,7 +1,7 @@
 #include "nutpch.h"
 #include "ImGuiContext.h"
 
-#include "NutLib/Renderer/RenderCommandQueue.h"
+#include "NutLib/Renderer/RenderThread.h"
 #include "NutLib/Renderer/ShaderStore.h"
 
 #include "NutLib/Event/Events.h"

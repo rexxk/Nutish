@@ -5,7 +5,7 @@
 #include "Timestep.h"
 
 #include "NutLib/Renderer/Renderer.h"
-#include "NutLib/Renderer/RenderCommandQueue.h"
+#include "NutLib/Renderer/RenderThread.h"
 
 #include "NutLib/Renderer/ShaderStore.h"
 
@@ -23,7 +23,7 @@ namespace Nut
 		else
 			return;
 
-		RenderCommandQueue::Init();
+		RenderThread::Init();
 
 		m_EventQueue = CreateRef<EventQueue>();
 
@@ -34,7 +34,7 @@ namespace Nut
 
 		m_Window = Window::Create(windowProps);
 
-		RenderCommandQueue::Run();
+		RenderThread::Run();
 
 		m_Window->EnableVSync(false);
 
@@ -63,14 +63,14 @@ namespace Nut
 	{
 		LOG_CORE_TRACE("Application shutdown");
 
-		RenderCommandQueue::Stop();
+		RenderThread::Stop();
 
-		while (!RenderCommandQueue::ThreadStopped())
+		while (!RenderThread::ThreadStopped())
 		{
 
 		}
 
-		RenderCommandQueue::Shutdown();
+		RenderThread::Shutdown();
 	}
 
 	void Application::Run()
@@ -89,9 +89,9 @@ namespace Nut
 			{
 				if (event.Id() == runTimer->Id())
 				{
-					LOG_CORE_TRACE("FPS: {0} ({1}), UPS: {2}", RenderCommandQueue::FPS(), fpsCount, upsCount); //fpsCount, upsCount);
+					LOG_CORE_TRACE("FPS: {0} ({1}), UPS: {2}", RenderThread::FPS(), fpsCount, upsCount); //fpsCount, upsCount);
 
-					RenderCommandQueue::ResetFPS();
+					RenderThread::ResetFPS();
 					fpsCount = 0;
 					upsCount = 0;
 
@@ -118,7 +118,7 @@ namespace Nut
 
 		while (m_IsRunning)
 		{
-			RenderCommandQueue::Execute();
+			RenderThread::Execute();
 
 			m_Window->Update();
 
@@ -132,9 +132,9 @@ namespace Nut
 				layer->OnRender();
 			}
 
-			RenderCommandQueue::Present();
+			RenderThread::Present();
 
-			while (!RenderCommandQueue::IsFrameDone())
+			while (!RenderThread::IsFrameDone())
 			{
 
 			}

@@ -24,7 +24,7 @@
 
 #include <NutLib/Renderer/ShaderStore.h>
 
-#include <NutLib/Renderer/RenderCommandQueue.h>
+#include <NutLib/Renderer/RenderThread.h>
 
 #include <NutLib/Scene/Scene.h>
 #include <NutLib/Scene/Model.h>

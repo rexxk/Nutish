@@ -2,7 +2,7 @@
 #include "OpenGLRenderContext.h"
 
 #include "NutLib/Core/Application.h"
-#include "NutLib/Renderer/RenderCommandQueue.h"
+#include "NutLib/Renderer/RenderThread.h"
 
 #include <glad/glad.h>
 
@@ -34,7 +34,7 @@ namespace Nut
 
 		SubscribeToEvent<WindowResizedEvent>([](WindowResizedEvent& event)
 			{
-				RenderCommandQueue::Submit([=]()
+				RenderThread::Submit([=]()
 					{
 						glViewport(0, 0, event.Width(), event.Height());
 					});

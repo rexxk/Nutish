@@ -1,7 +1,7 @@
 #include "nutpch.h"
 #include "OpenGLTexture.h"
 
-#include "NutLib/Renderer/RenderCommandQueue.h"
+#include "NutLib/Renderer/RenderThread.h"
 
 #include <stb_image.h>
 
@@ -75,7 +75,7 @@ namespace Nut
 	{
 		RendererID& id = m_ID;
 
-		RenderCommandQueue::Submit([&]()
+		RenderThread::Submit([&]()
 			{
 				glDeleteTextures(1, &id);
 			});
@@ -85,7 +85,7 @@ namespace Nut
 	{
 		RendererID& id = m_ID;
 
-		RenderCommandQueue::Submit([&]()
+		RenderThread::Submit([&]()
 			{
 				glGenTextures(1, &id);
 				glBindTexture(GL_TEXTURE_2D, id);
@@ -105,7 +105,7 @@ namespace Nut
 		std::vector<uint8_t> vec(size);
 		memcpy(vec.data(), data, size);
 
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, vec.data());
 				glGenerateMipmap(GL_TEXTURE_2D);
@@ -114,7 +114,7 @@ namespace Nut
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
 	{
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 				glActiveTexture(GL_TEXTURE0 + slot);
 				glBindTexture(GL_TEXTURE_2D, m_ID);
@@ -123,7 +123,7 @@ namespace Nut
 
 	void OpenGLTexture2D::Unbind(uint32_t slot) const
 	{
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 //				glActiveTexture(GL_TEXTURE0 + slot);
 				glBindTextureUnit(GL_TEXTURE_2D, 0);

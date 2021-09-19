@@ -1,7 +1,7 @@
 #include "nutpch.h"
 #include "OpenGLBuffer.h"
 
-#include "NutLib/Renderer/RenderCommandQueue.h"
+#include "NutLib/Renderer/RenderThread.h"
 
 #include <glad/glad.h>
 
@@ -34,7 +34,7 @@ namespace Nut
 	{
 		if (m_ID != 0)
 		{
-			RenderCommandQueue::Submit([=]()
+			RenderThread::Submit([=]()
 				{
 					glDeleteBuffers(1, &m_ID);
 				});
@@ -43,7 +43,7 @@ namespace Nut
 
 	void OpenGLVertexBuffer::Bind() const
 	{
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, m_ID);
 			});
@@ -51,7 +51,7 @@ namespace Nut
 
 	void OpenGLVertexBuffer::Unbind() const
 	{
-		RenderCommandQueue::Submit([]()
+		RenderThread::Submit([]()
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 			});
@@ -63,7 +63,7 @@ namespace Nut
 		std::vector<float> vec(size / sizeof(float));
 		memcpy(vec.data(), data, size);
 
-		RenderCommandQueue::Submit([=, &id]()
+		RenderThread::Submit([=, &id]()
 			{
 				glGenBuffers(1, &id);
 				glBindBuffer(GL_ARRAY_BUFFER, id);
@@ -86,7 +86,7 @@ namespace Nut
 	{
 		if (m_ID != 0)
 		{
-			RenderCommandQueue::Submit([=]()
+			RenderThread::Submit([=]()
 				{
 					glDeleteBuffers(1, &m_ID);
 				});
@@ -95,7 +95,7 @@ namespace Nut
 
 	void OpenGLIndexBuffer::Bind() const
 	{
-		RenderCommandQueue::Submit([=]()
+		RenderThread::Submit([=]()
 			{
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID);
 			});
@@ -103,7 +103,7 @@ namespace Nut
 
 	void OpenGLIndexBuffer::Unbind() const
 	{
-		RenderCommandQueue::Submit([]()
+		RenderThread::Submit([]()
 			{
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 			});
@@ -117,7 +117,7 @@ namespace Nut
 		std::vector<uint32_t> vec(count);
 		memcpy(vec.data(), data, sizeof(uint32_t) * count);
 
-		RenderCommandQueue::Submit([=, &id]()
+		RenderThread::Submit([=, &id]()
 			{
 				glGenBuffers(1, &id);
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);

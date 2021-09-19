@@ -10,7 +10,7 @@
 namespace Nut
 {
 
-	class RenderCommandQueue
+	class RenderThread
 	{
 		enum class QueueCommand
 		{
@@ -26,7 +26,7 @@ namespace Nut
 		{
 			if (s_Instance == nullptr)
 			{
-				s_Instance = new RenderCommandQueue();
+				s_Instance = new RenderThread();
 
 				NUT_CORE_ASSERT(s_Instance, "Failed to create render command queue");
 			}
@@ -43,12 +43,12 @@ namespace Nut
 		}
 
 
-		RenderCommandQueue()
+		RenderThread()
 		{
 
 		}
 
-		~RenderCommandQueue()
+		~RenderThread()
 		{
 			NUT_CORE_ASSERT(s_Instance, "No valid instance");
 
@@ -279,7 +279,7 @@ namespace Nut
 		std::queue<std::function<void()>> m_CommandQueue;
 		std::queue<std::function<void()>> m_ExecQueue;
 
-		static inline RenderCommandQueue* s_Instance = nullptr;
+		static inline RenderThread* s_Instance = nullptr;
 
 	private:
 		std::thread* m_Thread = nullptr;

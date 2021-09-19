@@ -6,7 +6,7 @@
 #include "NutLib/Core/Keycodes.h"
 
 #include "NutLib/Renderer/Renderer.h"
-#include "NutLib/Renderer/RenderCommandQueue.h"
+#include "NutLib/Renderer/RenderThread.h"
 
 #include <glad/glad.h>
 
@@ -118,7 +118,7 @@ namespace Nut
 	{
 		m_Properties.VSync = value;
 
-		RenderCommandQueue::Submit([&]()
+		RenderThread::Submit([&]()
 			{
 				if (value == true)
 					wglSwapInterval(1);

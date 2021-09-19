@@ -100,7 +100,7 @@
     <ClInclude Include="src\NutLib\Renderer\Buffer.h">
       <Filter>NutLib\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\NutLib\Renderer\RenderCommandQueue.h">
+    <ClInclude Include="src\NutLib\Renderer\RenderThread.h">
       <Filter>NutLib\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\NutLib\Renderer\RenderContext.h">

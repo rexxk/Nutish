@@ -149,7 +149,7 @@ void MainWindow::OnRender()
 
 	Renderer::Submit(m_Rectangle);
 
-	RenderCommandQueue::Submit([=]()
+	RenderThread::Submit([=]()
 		{
 			glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
 		});
