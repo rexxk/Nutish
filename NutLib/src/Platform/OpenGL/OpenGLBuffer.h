@@ -17,6 +17,8 @@ namespace Nut
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
+		virtual void SetData(void* data, uint32_t size) override;
+
 		virtual RendererID ID() const override { return m_ID; }
 
 	private:
@@ -35,6 +37,8 @@ namespace Nut
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
+
+		virtual void SetData(void* data, uint32_t size) override;
 
 		virtual uint32_t GetIndexCount() const override { return m_IndexCount; }
 

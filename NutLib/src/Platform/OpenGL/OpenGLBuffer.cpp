@@ -25,7 +25,7 @@ namespace Nut
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(void* data, uint32_t size, BufferUsage usage)
 	{
-		LOG_CORE_TRACE("Creating OpenGL vertex buffer");
+//		LOG_CORE_TRACE("Creating OpenGL vertex buffer");
 
 		CreateBuffer(data, size, usage);
 	}
@@ -60,24 +60,29 @@ namespace Nut
 	void OpenGLVertexBuffer::CreateBuffer(void* data, uint32_t size, BufferUsage usage)
 	{
 		RendererID& id = m_ID;
-		std::vector<float> vec(size / sizeof(float));
-		memcpy(vec.data(), data, size);
 
 		RenderThread::Submit([=, &id]()
 			{
 				glGenBuffers(1, &id);
 				glBindBuffer(GL_ARRAY_BUFFER, id);
-				glBufferData(GL_ARRAY_BUFFER, size, vec.data(), BufferUsageToOpenGLUsage(usage));
-//				glNamedBufferData(id, size, vec.data(), GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, size, data, BufferUsageToOpenGLUsage(usage));
+			});
+	}
+
+	void OpenGLVertexBuffer::SetData(void* data, uint32_t size)
+	{
+		RenderThread::Submit([=]()
+			{
+				LOG_CORE_TRACE("SetData vb");
+				glNamedBufferSubData(m_ID, 0, size, data);
 			});
 	}
 
 
 
-
 	OpenGLIndexBuffer::OpenGLIndexBuffer(void* data, uint32_t count, BufferUsage usage)
 	{
-		LOG_CORE_TRACE("Creating OpenGL index buffer");
+//		LOG_CORE_TRACE("Creating OpenGL index buffer");
 
 		CreateBuffer(data, count, usage);
 	}
@@ -114,15 +119,29 @@ namespace Nut
 		m_IndexCount = count;
 
 		RendererID& id = m_ID;
-		std::vector<uint32_t> vec(count);
-		memcpy(vec.data(), data, sizeof(uint32_t) * count);
 
 		RenderThread::Submit([=, &id]()
 			{
 				glGenBuffers(1, &id);
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * count, vec.data(), BufferUsageToOpenGLUsage(usage));
-//				glNamedBufferData(id, sizeof(uint32_t) * count, vec.data(), GL_STATIC_DRAW);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * count, data, BufferUsageToOpenGLUsage(usage));
 			});
+	}
+
+	void OpenGLIndexBuffer::SetData(void* data, uint32_t size)
+	{
+		m_IndexCount = size;
+
+		size <<= 2;
+
+//		std::vector<uint8_t> vec(size);
+//		memcpy(vec.data(), data, size);
+
+		RenderThread::Submit([=]()
+			{
+				LOG_CORE_TRACE("SetData ib");
+				glNamedBufferSubData(m_ID, 0, size, data);
+			});
+
 	}
 }

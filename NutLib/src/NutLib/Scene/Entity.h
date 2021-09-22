@@ -107,7 +107,7 @@ namespace Nut
 		template<typename T>
 		static std::tuple<const std::vector<UUID>> GetView()
 		{
-			return View<T>::GetView();
+			return View<T>::Get();
 		}
 
 	private:

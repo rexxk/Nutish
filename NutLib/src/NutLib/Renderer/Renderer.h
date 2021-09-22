@@ -19,27 +19,13 @@ namespace Nut
 	};
 
 
-	struct RenderDataStats
+	struct RenderStats
 	{
 		uint32_t DrawCalls = 0;
+
+		uint32_t NumVerticesInScene = 0;
 	};
 
-
-	struct RenderData
-	{
-		static const uint32_t MAX_VERTICES = 30000;
-		static const uint32_t MAX_INDICES = 10000;
-
-		Ref<VertexBuffer> BatchVertexBuffer = nullptr;
-		Ref<IndexBuffer> BatchIndexBuffer = nullptr;
-
-		uint32_t VertexCount = 0;
-		uint32_t IndexCount = 0;
-
-		RenderDataStats Statistics;
-
-		const RenderDataStats& GetStats() const { return Statistics; }
-	};
 
 
 	class Renderer
@@ -54,17 +40,11 @@ namespace Nut
 		static void BeginScene();
 		static void EndScene();
 
-		static void Submit(Ref<Model> model);
-		static void Flush();
-
-		static RenderData& GetRenderData() { return s_Renderer->m_RenderData; }
+		static RenderStats& GetRenderStats() { return s_Renderer->m_RenderStats; }
 
 	private:
 		virtual void BeginSceneImplementation() = 0;
 		virtual void EndSceneImplementation() = 0;
-
-		virtual void SubmitImplementation(Ref<Model> model) = 0;
-		virtual void FlushImplementation() = 0;
 
 	private:
 
@@ -72,7 +52,7 @@ namespace Nut
 
 		static inline Scope<Renderer> s_Renderer = nullptr;
 
-		RenderData m_RenderData;
+		RenderStats m_RenderStats;
 	};
 
 

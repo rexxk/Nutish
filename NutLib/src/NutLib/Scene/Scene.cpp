@@ -1,6 +1,7 @@
 #include "nutpch.h"
 #include "Scene.h"
 
+#include "NutLib/Renderer/Renderer.h"
 
 
 namespace Nut
@@ -26,6 +27,25 @@ namespace Nut
 	void Scene::DeleteEntity(UUID id)
 	{
 		m_Entity->Remove(id);
+	}
+
+	void Scene::Draw()
+	{
+
+		// Mesh Components
+		auto [meshIDs] = Entity::GetView<MeshComponent>();
+
+		for (auto& id : meshIDs)
+		{
+//			Renderer::GetRenderData().
+
+			auto& mesh = Entity::GetComponent<MeshComponent>(id);
+
+			mesh.Pipeline->Submit(mesh.Vertices, mesh.Indices);
+//			mesh.Pipeline->Submit(mesh.FloatVertices, mesh.Indices);
+//			Renderer::Submit(mesh.Vertices, mesh.Indices);
+		}
+
 	}
 
 }

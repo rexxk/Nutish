@@ -17,6 +17,9 @@ namespace Nut
 		UUID CreateEntity(const std::string& tag);
 		void DeleteEntity(UUID id);
 
+		void Draw();
+
+
 	private:
 
 		Ref<Registry> m_Registry;

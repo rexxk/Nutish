@@ -35,7 +35,7 @@ namespace Nut
 		ReleaseShader();
 
 		if (m_ShaderIDs)
-			delete m_ShaderIDs;
+			delete[] m_ShaderIDs;
 	}
 
 	void OpenGLShader::ReleaseShader()

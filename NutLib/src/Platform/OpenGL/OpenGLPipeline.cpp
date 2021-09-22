@@ -33,6 +33,9 @@ namespace Nut
 			LOG_CORE_ERROR("Pipeline assigned with empty shader!");
 			return;
 		}
+
+		m_RenderData.BatchVertexBuffer = VertexBuffer::Create(nullptr, PipelineRenderData::MAX_TRIANGLES * shader->GetShaderLayout().Stride(), BufferUsage::Dynamic);
+		m_RenderData.BatchIndexBuffer = IndexBuffer::Create(nullptr, PipelineRenderData::MAX_TRIANGLES, BufferUsage::Dynamic);
 	}
 
 	OpenGLPipeline::~OpenGLPipeline()
@@ -53,7 +56,7 @@ namespace Nut
 			});
 	}
 
-	void OpenGLPipeline::AttachVertexBuffer(Ref<VertexBuffer> vertexBuffer)
+/*	void OpenGLPipeline::AttachVertexBuffer(Ref<VertexBuffer> vertexBuffer)
 	{
 		m_VB = vertexBuffer;
 	}
@@ -62,6 +65,7 @@ namespace Nut
 	{
 		m_IB = indexBuffer;
 	}
+*/
 
 	void OpenGLPipeline::SetBufferLayout()
 	{
@@ -84,5 +88,35 @@ namespace Nut
 			});
 
 	}
+
+	void OpenGLPipeline::Submit(DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer)
+	{
+		LOG_CORE_TRACE("Submitting render data: {0}", (uint64_t)vertexBuffer.Data());
+		m_RenderData.VertexData = vertexBuffer;
+		m_RenderData.IndexData = indexBuffer;
+	}
+
+	void OpenGLPipeline::Flush()
+	{
+		
+		m_RenderData.BatchVertexBuffer->Bind();
+		m_RenderData.BatchIndexBuffer->Bind();
+
+		m_RenderData.BatchVertexBuffer->SetData(m_RenderData.VertexData.Data(), m_RenderData.VertexData.Size());
+		m_RenderData.BatchIndexBuffer->SetData(m_RenderData.IndexData.data(), static_cast<uint32_t>(m_RenderData.IndexData.size()));
+
+		SetBufferLayout();
+
+		uint32_t indexCount = m_RenderData.BatchIndexBuffer->GetIndexCount();
+
+//		LOG_CORE_TRACE("Flushing pipeline: {0} indices", indexCount);
+
+		RenderThread::Submit([=]()
+			{
+				glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+			});
+
+	}
+
 }
 

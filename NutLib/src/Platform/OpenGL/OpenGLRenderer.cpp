@@ -1,5 +1,6 @@
 #include "nutpch.h"
 #include "OpenGLRenderer.h"
+#include "OpenGLBuffer.h"
 
 #include "NutLib/Core/Application.h"
 
@@ -34,27 +35,8 @@ namespace Nut
 
 	void OpenGLRenderer::EndSceneImplementation()
 	{
-		RenderThread::Submit([]()
-			{
-
-			});
-
 
 	}
 
-	void OpenGLRenderer::SubmitImplementation(Ref<Model> model)
-	{		
-
-	}
-
-	void OpenGLRenderer::FlushImplementation()
-	{
-
-		RenderThread::Submit([]()
-			{
-//				glDrawElements(GL_TRIANGLES, )
-			});
-
-	}
 
 }

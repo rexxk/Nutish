@@ -48,6 +48,9 @@ void MainWindow::OnAttach()
 
 
 	m_TestEntity = m_Scene->CreateEntity("Test entity");
+	Entity::AddComponent<MeshComponent>(m_TestEntity);
+
+	auto& triangleMesh = Entity::GetComponent<MeshComponent>(m_TestEntity);
 
 
 	auto& tagView = View<TagComponent>::Get();
@@ -58,7 +61,7 @@ void MainWindow::OnAttach()
 	}
 
 
-	float vertices[] =
+	std::vector<float> vertices =
 	{
 		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
 		0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
@@ -66,21 +69,20 @@ void MainWindow::OnAttach()
 		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
 	};
 
-	uint32_t indices[] =
-	{
-		0, 1, 2, 2, 3, 0,
-	};
+	triangleMesh.Vertices = DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout());
+	triangleMesh.Indices = { 0, 1, 2, 2, 3, 0 };
+
+	triangleMesh.Pipeline = m_BasicPipeline;
 
 //	uint8_t texData[4] = { 128, 0, 128, 255 };
 //	m_Texture = Texture2D::Create("assets/textures/texture.png");
 
-	m_TriangleVB = VertexBuffer::Create(vertices, sizeof(vertices));
-	m_TriangleIB = IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
+//	m_TriangleVB = VertexBuffer::Create(vertices, sizeof(vertices));
+//	m_TriangleIB = IndexBuffer::Create(indices.data(), static_cast<uint32_t>(indices.size()));
+//	m_TriangleVB = VertexBuffer::Create(triangleMesh.Vertices.Data(), triangleMesh.Vertices.Size());
+//	m_TriangleIB = IndexBuffer::Create(triangleMesh.Indices.data(), static_cast<uint32_t>(triangleMesh.Indices.size()));
 
 	m_BasicPipeline->SetBufferLayout();
-
-//	Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(nullptr, 0);
-//	Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(nullptr, 0);
 
 	LOG_TRACE("Available shaders:");
 
@@ -93,16 +95,6 @@ void MainWindow::OnAttach()
 
 	m_Texture = Texture2D::Create("assets/textures/v90.png");
 	m_GradientTexture = Texture2D::Create("assets/textures/texture2.png");
-
-//	m_Texture->Bind(0);
-
-//	m_Texture = Texture2D::Create(texData, 1, 1);
-
-//	m_Rectangle = CreateRef<Model>(m_Scene, "Rectangle");
-
-	Ref<DataBuffer<ShaderLayoutItem>> vertexBuffer = CreateRef<DataBuffer<ShaderLayoutItem>>(vertices, 4, m_BasicShader->GetShaderLayout());
-//	Entity::AddComponent<Nut::MeshComponent>(m_TestEntity, /*vertexBuffer,*/ indices);
-	Entity::AddComponent<MeshComponent>(m_TestEntity, indices);
 
 //	m_Rectangle = Model::Load("assets/models/rubik.fbx", m_Scene);
 	m_Rectangle = Model::Load("assets/models/cube.obj", m_Scene, ShaderStore::Get("Basic"));
@@ -142,25 +134,25 @@ void MainWindow::OnUpdate(Timestep ts)
 void MainWindow::OnRender()
 {
 
+//	LOG_TRACE("OnRender");
+
 	Renderer::BeginScene();
 
-//	m_TriangleVB->Bind();
-//	m_TriangleIB->Bind();
-
-//	m_TriangleVA->Bind();
-	
 //	GLsizei indexCount = m_TriangleVA->GetIndexBuffer()->GetIndexCount();
-	GLsizei indexCount = m_TriangleIB->GetIndexCount();
+//	GLsizei indexCount = m_TriangleIB->GetIndexCount();
 
-	Renderer::Submit(m_Rectangle);
+//	Renderer::Submit(m_Rectangle);
 
-//	m_Scene->Draw();
+	m_BasicPipeline->Bind();
 
-	RenderThread::Submit([=]()
-		{
-			glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-		});
+	m_Scene->Draw();
 
+//	RenderThread::Submit([=]()
+//		{
+//			glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+//		});
+
+	m_BasicPipeline->Flush();
 
 	Renderer::EndScene();
 
