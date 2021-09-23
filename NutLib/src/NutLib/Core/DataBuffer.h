@@ -42,6 +42,14 @@ namespace Nut
 			UpdateOffsets();
 		}
 
+		void Clear()
+		{
+			if (m_Items.size() > 0)
+				m_Items.clear();
+
+			m_Stride = 0;
+		}
+
 		void UpdateOffsets()
 		{
 			uint32_t offset = 0;

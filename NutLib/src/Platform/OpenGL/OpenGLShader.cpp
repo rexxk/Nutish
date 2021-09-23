@@ -75,11 +75,8 @@ namespace Nut
 //		if (m_MaterialDescriptors.size() > 0)
 //			m_MaterialDescriptors.clear();
 
-		if (m_ShaderMaterialLayout.Items().size() > 0)
-			m_ShaderMaterialLayout.Items().clear();
-
-		if (m_ShaderLayout.Items().size() > 0)
-			m_ShaderLayout.Items().clear();
+		m_ShaderMaterialLayout.Clear();
+		m_ShaderLayout.Clear();
 
 		m_ShaderSources = GetShaderSourcesFromFile(m_ShaderPath);
 
