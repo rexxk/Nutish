@@ -91,9 +91,10 @@ namespace Nut
 
 	void OpenGLPipeline::Submit(DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer)
 	{
-		LOG_CORE_TRACE("Submitting render data: {0}", (uint64_t)vertexBuffer.Data());
+//		LOG_CORE_TRACE("Submitting render data: {0}", (uint64_t)vertexBuffer.Data());
 		m_RenderData.VertexData = vertexBuffer;
 		m_RenderData.IndexData = indexBuffer;
+//		LOG_CORE_TRACE("End submitting (copying data) {0} : new vb = {1}", (uint64_t)vertexBuffer.Data(), (uint64_t)m_RenderData.VertexData.Data());
 	}
 
 	void OpenGLPipeline::Flush()

@@ -32,10 +32,13 @@ namespace Nut
 
 	OpenGLShader::~OpenGLShader()
 	{
+		LOG_CORE_TRACE("Shader destructor");
+
 		ReleaseShader();
 
 		if (m_ShaderIDs)
 			delete[] m_ShaderIDs;
+
 	}
 
 	void OpenGLShader::ReleaseShader()

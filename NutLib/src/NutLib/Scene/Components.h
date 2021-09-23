@@ -76,6 +76,7 @@ namespace Nut
 		{
 //			LOG_CORE_TRACE("MeshComponent going indices..?");
 		}
+
 	};
 
 

@@ -35,7 +35,7 @@ namespace Nut
 		// Mesh Components
 		auto [meshIDs] = Entity::GetView<MeshComponent>();
 
-		for (auto& id : meshIDs)
+		for (auto id : meshIDs)
 		{
 //			Renderer::GetRenderData().
 

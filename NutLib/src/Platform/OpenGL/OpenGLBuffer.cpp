@@ -73,7 +73,7 @@ namespace Nut
 	{
 		RenderThread::Submit([=]()
 			{
-				LOG_CORE_TRACE("SetData vb");
+//				LOG_CORE_TRACE("SetData vb");
 				glNamedBufferSubData(m_ID, 0, size, data);
 			});
 	}
@@ -139,7 +139,7 @@ namespace Nut
 
 		RenderThread::Submit([=]()
 			{
-				LOG_CORE_TRACE("SetData ib");
+//				LOG_CORE_TRACE("SetData ib");
 				glNamedBufferSubData(m_ID, 0, size, data);
 			});
 
