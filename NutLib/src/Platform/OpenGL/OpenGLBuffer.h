@@ -39,6 +39,7 @@ namespace Nut
 		virtual void Unbind() const override;
 
 		virtual void SetData(void* data, uint32_t size) override;
+		virtual void SetData(const std::vector<uint32_t>& indexBuffer) override;
 
 		virtual uint32_t GetIndexCount() const override { return m_IndexCount; }
 

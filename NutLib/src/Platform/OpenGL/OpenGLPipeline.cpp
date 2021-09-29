@@ -95,7 +95,6 @@ namespace Nut
 
 	void OpenGLPipeline::Submit(DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer)
 	{
-//		LOG_CORE_TRACE("Submitting render data: {0}", (uint64_t)vertexBuffer.Data());
 //		m_RenderData.VertexData = vertexBuffer;
 
 		if (vertexBuffer.Count() > m_RenderData.MAX_VERTICES)
@@ -140,7 +139,6 @@ namespace Nut
 		}
 
 		m_RenderData.IndexData = indexBuffer;
-//		LOG_CORE_TRACE("End submitting (copying data) {0} : new vb = {1}", (uint64_t)vertexBuffer.Data(), (uint64_t)m_RenderData.VertexData.Data());
 	}
 
 	void OpenGLPipeline::Flush()
@@ -148,15 +146,8 @@ namespace Nut
 		m_RenderData.BatchVertexBuffer->Bind();
 		m_RenderData.BatchIndexBuffer->Bind();
 
-//		auto flushVertices = m_RenderData.VertexData;
-		auto flushIndices = m_RenderData.IndexData;
-
-//		m_RenderData.BatchVertexBuffer->SetData(m_RenderData.VertexData.Data(), m_RenderData.VertexData.Size());
-//		m_RenderData.BatchIndexBuffer->SetData(m_RenderData.IndexData.data(), static_cast<uint32_t>(m_RenderData.IndexData.size()));
-
-//		m_RenderData.BatchVertexBuffer->SetData(flushVertices.Data(), flushVertices.Size());
 		m_RenderData.BatchVertexBuffer->SetData(m_RenderData.VertexData);
-		m_RenderData.BatchIndexBuffer->SetData(flushIndices.data(), static_cast<uint32_t>(flushIndices.size()));
+		m_RenderData.BatchIndexBuffer->SetData(m_RenderData.IndexData);
 
 		SetBufferLayout();
 

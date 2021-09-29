@@ -13,9 +13,9 @@ namespace Nut
 	{
 		switch (usage)
 		{
-		case BufferUsage::Static: return GL_STATIC_DRAW;
-		case BufferUsage::Dynamic: return GL_DYNAMIC_DRAW;
-		case BufferUsage::Stream: return GL_STREAM_DRAW;
+			case BufferUsage::Static: return GL_STATIC_DRAW;
+			case BufferUsage::Dynamic: return GL_DYNAMIC_DRAW;
+			case BufferUsage::Stream: return GL_STREAM_DRAW;
 		}
 
 		return 0;
@@ -25,8 +25,6 @@ namespace Nut
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(void* data, uint32_t size, BufferUsage usage)
 	{
-//		LOG_CORE_TRACE("Creating OpenGL vertex buffer");
-
 		CreateBuffer(data, size, usage);
 	}
 
@@ -73,37 +71,22 @@ namespace Nut
 	{
 		RenderThread::Submit([=]()
 			{
-//				LOG_CORE_TRACE("SetData vb");
 				glNamedBufferSubData(m_ID, 0, size, data);
 			});
 	}
 
 	void OpenGLVertexBuffer::SetData(const DataBuffer<ShaderLayoutItem>& dataBuffer)
 	{
-		LOG_CORE_TRACE("GLVertexbuffer::SetData with databuffer");
-
-		DataBuffer<ShaderLayoutItem> buffer(dataBuffer);
-
-		RendererID& id = m_ID;
-
-		LOG_CORE_TRACE("buffer in setdata: {0}", (uint64_t)buffer.Data());
-
-		RenderThread::Submit([buffer, &id]()
+		RenderThread::Submit([=]()
 			{
-				LOG_CORE_TRACE("buffer in lambda: {0}", (uint64_t)buffer.Data());
-				glNamedBufferSubData(id, 0, buffer.Size(), buffer.Data());
+				glNamedBufferSubData(m_ID, 0, dataBuffer.Size(), dataBuffer.Data());
 			});
-
-		LOG_CORE_TRACE("GLVertexbuffer::SetData copied buffer");
-
 	}
 
 
 
 	OpenGLIndexBuffer::OpenGLIndexBuffer(void* data, uint32_t count, BufferUsage usage)
 	{
-//		LOG_CORE_TRACE("Creating OpenGL index buffer");
-
 		CreateBuffer(data, count, usage);
 	}
 
@@ -154,14 +137,21 @@ namespace Nut
 
 		size <<= 2;
 
-//		std::vector<uint8_t> vec(size);
-//		memcpy(vec.data(), data, size);
-
 		RenderThread::Submit([=]()
 			{
-//				LOG_CORE_TRACE("SetData ib");
 				glNamedBufferSubData(m_ID, 0, size, data);
 			});
 
 	}
+
+	void OpenGLIndexBuffer::SetData(const std::vector<uint32_t>& indexBuffer)
+	{
+		m_IndexCount = indexBuffer.size();
+
+		RenderThread::Submit([=]()
+			{
+				glNamedBufferSubData(m_ID, 0, indexBuffer.size() * sizeof(uint32_t), indexBuffer.data());
+			});
+	}
+
 }

@@ -43,6 +43,7 @@ namespace Nut
 		virtual void Unbind() const = 0;
 
 		virtual void SetData(void* data, uint32_t size) = 0;
+		virtual void SetData(const std::vector<uint32_t>& indexBuffer) = 0;
 
 		virtual uint32_t GetIndexCount() const = 0;
 

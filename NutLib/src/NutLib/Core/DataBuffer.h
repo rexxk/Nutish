@@ -80,7 +80,7 @@ namespace Nut
 	public:
 		DataBuffer()
 		{
-			LOG_CORE_TRACE("DataBuffer() default: {0}", (uint64_t)m_Buffer);
+//			LOG_CORE_TRACE("DataBuffer() default: {0}", (uint64_t)m_Buffer);
 		}
 
 		DataBuffer(DataBuffer& rhs)
@@ -94,7 +94,7 @@ namespace Nut
 			m_Buffer = new uint8_t[m_Size];
 			memcpy(m_Buffer, rhs.m_Buffer, m_Size);
 
-			LOG_CORE_TRACE("Const Copy constructor: {0}", (uint64_t)m_Buffer);
+//			LOG_CORE_TRACE("Const Copy constructor: {0}", (uint64_t)m_Buffer);
 		}
 
 		DataBuffer(const DataBuffer& rhs)
@@ -108,12 +108,12 @@ namespace Nut
 			m_Buffer = new uint8_t[m_Size];
 			memcpy(m_Buffer, rhs.m_Buffer, m_Size);
 
-			LOG_CORE_TRACE("Const Copy constructor: {0}", (uint64_t)m_Buffer);
+//			LOG_CORE_TRACE("Const Copy constructor: {0} (from {3}), size = {1}, position = {2}", (uint64_t)m_Buffer, m_Size, m_Position, (uint64_t)rhs.m_Buffer);
 		}
 
 		DataBuffer(DataBuffer&& rhs)
 		{
-			LOG_CORE_TRACE("DataBuffer() move constructor: {0}", (uint64_t)rhs.m_Buffer);
+//			LOG_CORE_TRACE("DataBuffer() move constructor: {0}", (uint64_t)rhs.m_Buffer);
 		}
 
 		DataBuffer(uint32_t count, DataBufferLayout<T> layout)
@@ -123,7 +123,7 @@ namespace Nut
 			m_Buffer = new uint8_t[m_Size];
 			m_Position = 0;
 
-			LOG_CORE_TRACE("DataBuffer() new: {0} (count: {1}, size: {2}, stride: {3}", (uint64_t)m_Buffer, count, m_Size, layout.Stride());
+//			LOG_CORE_TRACE("DataBuffer() new: {0} (count: {1}, size: {2}, stride: {3}", (uint64_t)m_Buffer, count, m_Size, layout.Stride());
 		}
 
 		DataBuffer(void* data, uint32_t count, DataBufferLayout<T> layout)
@@ -135,7 +135,7 @@ namespace Nut
 
 			memcpy(m_Buffer, data, m_Size);
 
-			LOG_CORE_TRACE("DataBuffer() data: {0} (count: {1}, size: {2}, stride: {3}", (uint64_t)m_Buffer, count, m_Size, layout.Stride());
+//			LOG_CORE_TRACE("DataBuffer() data: {0} (count: {1}, size: {2}, stride: {3}", (uint64_t)m_Buffer, count, m_Size, layout.Stride());
 		}
 
 		virtual ~DataBuffer()
@@ -160,7 +160,7 @@ namespace Nut
 */
 		DataBuffer& operator=(DataBuffer& rhs)
 		{
-			LOG_CORE_TRACE("DataBuffer copying, nonconst");
+//			LOG_CORE_TRACE("DataBuffer copying, nonconst");
 
 			m_Size = rhs.m_Size;
 			m_Count = rhs.m_Count;
@@ -175,14 +175,14 @@ namespace Nut
 
 			m_Buffer = rhs.m_Buffer;
 
-			LOG_CORE_TRACE("DataBuffer done copying, new databuffer: {0} (count: {1}, size: {2}, stride: {3}", (uint64_t)m_Buffer, m_Count, m_Size, m_BufferLayout.Stride());
+//			LOG_CORE_TRACE("DataBuffer done copying, new databuffer: {0} (count: {1}, size: {2}, stride: {3}", (uint64_t)m_Buffer, m_Count, m_Size, m_BufferLayout.Stride());
 
 			return *this;
 		}
 
 		DataBuffer& operator=(const DataBuffer& rhs)
 		{
-			LOG_CORE_TRACE("DataBuffer copying, const");
+//			LOG_CORE_TRACE("DataBuffer copying, const");
 
 			m_Size = rhs.m_Size;
 			m_Count = rhs.m_Count;
@@ -197,7 +197,7 @@ namespace Nut
 
 			m_Buffer = rhs.m_Buffer;
 
-			LOG_CORE_TRACE("DataBuffer done copying, new databuffer: {0} (count: {1}, size: {2}, stride: {3}", (uint64_t)m_Buffer, m_Count, m_Size, m_BufferLayout.Stride());
+//			LOG_CORE_TRACE("DataBuffer done copying, new databuffer: {0} (count: {1}, size: {2}, stride: {3}", (uint64_t)m_Buffer, m_Count, m_Size, m_BufferLayout.Stride());
 
 			return *this;
 		}
