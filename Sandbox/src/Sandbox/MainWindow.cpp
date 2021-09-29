@@ -93,7 +93,7 @@ void MainWindow::OnAttach()
 		LOG_TRACE(" - {0}", shaderName.c_str());
 	}
 
-	m_Texture = Texture2D::Create("assets/textures/v90.png");
+	m_Texture = Texture2D::Create("assets/textures/texture.png");
 	m_GradientTexture = Texture2D::Create("assets/textures/texture2.png");
 
 //	m_Rectangle = Model::Load("assets/models/rubik.fbx", m_Scene);

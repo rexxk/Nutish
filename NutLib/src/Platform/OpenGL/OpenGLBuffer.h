@@ -4,7 +4,6 @@
 #include "NutLib/Renderer/Buffer.h"
 
 
-
 namespace Nut
 {
 
@@ -18,6 +17,7 @@ namespace Nut
 		virtual void Unbind() const override;
 
 		virtual void SetData(void* data, uint32_t size) override;
+		virtual void SetData(const DataBuffer<ShaderLayoutItem>& dataBuffer) override;
 
 		virtual RendererID ID() const override { return m_ID; }
 

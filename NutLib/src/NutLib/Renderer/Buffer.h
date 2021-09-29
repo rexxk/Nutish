@@ -1,6 +1,8 @@
 #ifndef __NUTLIB_BUFFER_H
 #define __NUTLIB_BUFFER_H
 
+#include "NutLib/Core/DataBuffer.h"
+#include "NutLib/Renderer/Shader.h"
 
 namespace Nut
 {
@@ -24,6 +26,7 @@ namespace Nut
 		virtual void Unbind() const = 0;
 
 		virtual void SetData(void* data, uint32_t size) = 0;
+		virtual void SetData(const DataBuffer<ShaderLayoutItem>& dataBuffer) = 0;
 
 		virtual RendererID ID() const = 0;
 	};

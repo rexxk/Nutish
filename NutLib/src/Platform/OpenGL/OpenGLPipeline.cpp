@@ -34,8 +34,12 @@ namespace Nut
 			return;
 		}
 
-		m_RenderData.BatchVertexBuffer = VertexBuffer::Create(nullptr, PipelineRenderData::MAX_TRIANGLES * shader->GetShaderLayout().Stride(), BufferUsage::Dynamic);
+		m_RenderData.BatchVertexBuffer = VertexBuffer::Create(nullptr, PipelineRenderData::MAX_VERTICES * shader->GetShaderLayout().Stride(), BufferUsage::Dynamic);
 		m_RenderData.BatchIndexBuffer = IndexBuffer::Create(nullptr, PipelineRenderData::MAX_TRIANGLES, BufferUsage::Dynamic);
+
+		m_RenderData.VertexData.SetLayout(shader->GetShaderLayout());
+		m_RenderData.VertexData.Allocate(m_RenderData.MAX_VERTICES);
+
 	}
 
 	OpenGLPipeline::~OpenGLPipeline()
@@ -92,19 +96,67 @@ namespace Nut
 	void OpenGLPipeline::Submit(DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer)
 	{
 //		LOG_CORE_TRACE("Submitting render data: {0}", (uint64_t)vertexBuffer.Data());
-		m_RenderData.VertexData = vertexBuffer;
+//		m_RenderData.VertexData = vertexBuffer;
+
+		if (vertexBuffer.Count() > m_RenderData.MAX_VERTICES)
+		{
+			LOG_CORE_TRACE("Pipeline::Submit: Direct output");
+		}
+		else
+		{
+//			LOG_CORE_TRACE("Pipeline::Submit: Batched output");
+
+			if ((m_RenderData.VertexData.Position() + vertexBuffer.Count()) > m_RenderData.MAX_VERTICES)
+			{
+				Flush();
+			}
+
+			for (uint32_t i = 0; i < vertexBuffer.Count(); i++)
+			{
+				for (auto& vbItem : vertexBuffer.GetLayout().Items())
+				{
+					for (auto& item : m_RenderData.VertexData.GetLayout().Items())
+					{
+						if (vbItem.Slot == item.Slot)
+						{
+							uint8_t* destination = (uint8_t*)m_RenderData.VertexData.Data() + (m_RenderData.VertexData.Position() * m_RenderData.VertexData.GetLayout().Stride() + item.Offset);
+							uint8_t* source = (uint8_t*)vertexBuffer.Data() + i * vertexBuffer.GetLayout().Stride() + vbItem.Offset;
+
+//							LOG_CORE_TRACE("Pipeline::Submit: Type match ({0}) {1}->{2}", vbItem.Name.c_str(), (uint64_t)source, (uint64_t)destination);
+
+							memcpy(destination, source, DataTypeSize(item.Type));
+
+							continue;
+						}
+
+					}
+
+				}
+
+				m_RenderData.VertexData.Position()++;
+
+			}
+
+		}
+
 		m_RenderData.IndexData = indexBuffer;
 //		LOG_CORE_TRACE("End submitting (copying data) {0} : new vb = {1}", (uint64_t)vertexBuffer.Data(), (uint64_t)m_RenderData.VertexData.Data());
 	}
 
 	void OpenGLPipeline::Flush()
 	{
-		
 		m_RenderData.BatchVertexBuffer->Bind();
 		m_RenderData.BatchIndexBuffer->Bind();
 
-		m_RenderData.BatchVertexBuffer->SetData(m_RenderData.VertexData.Data(), m_RenderData.VertexData.Size());
-		m_RenderData.BatchIndexBuffer->SetData(m_RenderData.IndexData.data(), static_cast<uint32_t>(m_RenderData.IndexData.size()));
+//		auto flushVertices = m_RenderData.VertexData;
+		auto flushIndices = m_RenderData.IndexData;
+
+//		m_RenderData.BatchVertexBuffer->SetData(m_RenderData.VertexData.Data(), m_RenderData.VertexData.Size());
+//		m_RenderData.BatchIndexBuffer->SetData(m_RenderData.IndexData.data(), static_cast<uint32_t>(m_RenderData.IndexData.size()));
+
+//		m_RenderData.BatchVertexBuffer->SetData(flushVertices.Data(), flushVertices.Size());
+		m_RenderData.BatchVertexBuffer->SetData(m_RenderData.VertexData);
+		m_RenderData.BatchIndexBuffer->SetData(flushIndices.data(), static_cast<uint32_t>(flushIndices.size()));
 
 		SetBufferLayout();
 
@@ -116,6 +168,10 @@ namespace Nut
 			{
 				glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 			});
+
+		m_RenderData.VertexData.Clear();
+		m_RenderData.VertexData.Position() = 0;
+		m_RenderData.IndexData.clear();
 
 	}
 

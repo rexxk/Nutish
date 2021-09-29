@@ -78,6 +78,26 @@ namespace Nut
 			});
 	}
 
+	void OpenGLVertexBuffer::SetData(const DataBuffer<ShaderLayoutItem>& dataBuffer)
+	{
+		LOG_CORE_TRACE("GLVertexbuffer::SetData with databuffer");
+
+		DataBuffer<ShaderLayoutItem> buffer(dataBuffer);
+
+		RendererID& id = m_ID;
+
+		LOG_CORE_TRACE("buffer in setdata: {0}", (uint64_t)buffer.Data());
+
+		RenderThread::Submit([buffer, &id]()
+			{
+				LOG_CORE_TRACE("buffer in lambda: {0}", (uint64_t)buffer.Data());
+				glNamedBufferSubData(id, 0, buffer.Size(), buffer.Data());
+			});
+
+		LOG_CORE_TRACE("GLVertexbuffer::SetData copied buffer");
+
+	}
+
 
 
 	OpenGLIndexBuffer::OpenGLIndexBuffer(void* data, uint32_t count, BufferUsage usage)

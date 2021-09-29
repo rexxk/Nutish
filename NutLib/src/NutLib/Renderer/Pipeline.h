@@ -10,7 +10,7 @@ namespace Nut
 
 	struct PipelineRenderData
 	{
-//		static const uint32_t MAX_VERTICES = 30000;
+		static const uint32_t MAX_VERTICES = 10000;
 		static const uint32_t MAX_TRIANGLES = 30000;
 
 		Ref<VertexBuffer> BatchVertexBuffer = nullptr;
