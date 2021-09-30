@@ -146,7 +146,7 @@ namespace Nut
 
 	void OpenGLIndexBuffer::SetData(const std::vector<uint32_t>& indexBuffer)
 	{
-		m_IndexCount = indexBuffer.size();
+		m_IndexCount = static_cast<uint32_t>(indexBuffer.size());
 
 		RenderThread::Submit([=]()
 			{
