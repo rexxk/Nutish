@@ -2,11 +2,21 @@
 
 #include "Shader.h"
 
+#include "NutLib/Core/UUID.h"
+
 #include "NutLib/Core/DataBuffer.h"
 #include "Buffer.h"
 
 namespace Nut
 {
+
+
+	struct PipelineEntityBuffers
+	{
+		Ref<VertexBuffer> EntityVertexBuffer;
+		Ref<IndexBuffer> EntityIndexBuffer;
+	};
+
 
 	struct PipelineRenderData
 	{
@@ -16,8 +26,16 @@ namespace Nut
 		Ref<VertexBuffer> BatchVertexBuffer = nullptr;
 		Ref<IndexBuffer> BatchIndexBuffer = nullptr;
 
+		Ref<VertexBuffer> DirectVertexBuffer = nullptr;
+		Ref<IndexBuffer> DirectIndexBuffer = nullptr;
+
 		DataBuffer<ShaderLayoutItem> VertexData;
 		std::vector<uint32_t> IndexData;
+
+		DataBuffer<ShaderLayoutItem> DirectVertexData;
+		std::vector<uint32_t> DirectIndexData;
+
+		std::unordered_map<UUID, PipelineEntityBuffers> EntityBufferCache;
 
 		uint32_t IndexCount() const { return static_cast<uint32_t>(IndexData.size()); }
 //		PipelineRenderData()

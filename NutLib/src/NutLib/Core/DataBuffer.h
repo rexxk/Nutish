@@ -173,7 +173,13 @@ namespace Nut
 				m_Buffer = nullptr;
 			}
 
-			m_Buffer = rhs.m_Buffer;
+			if (rhs.m_Buffer)
+			{
+				m_Buffer = new uint8_t[m_Size];
+				memcpy(m_Buffer, rhs.m_Buffer, m_Size);
+			}
+
+//			m_Buffer = rhs.m_Buffer;
 
 //			LOG_CORE_TRACE("DataBuffer done copying, new databuffer: {0} (count: {1}, size: {2}, stride: {3}", (uint64_t)m_Buffer, m_Count, m_Size, m_BufferLayout.Stride());
 
@@ -195,7 +201,13 @@ namespace Nut
 				m_Buffer = nullptr;
 			}
 
-			m_Buffer = rhs.m_Buffer;
+			if (rhs.m_Buffer)
+			{
+				m_Buffer = new uint8_t[m_Size];
+				memcpy(m_Buffer, rhs.m_Buffer, m_Size);
+			}
+			
+//			m_Buffer = rhs.m_Buffer;
 
 //			LOG_CORE_TRACE("DataBuffer done copying, new databuffer: {0} (count: {1}, size: {2}, stride: {3}", (uint64_t)m_Buffer, m_Count, m_Size, m_BufferLayout.Stride());
 
@@ -204,8 +216,6 @@ namespace Nut
 
 		DataBuffer& operator=(DataBuffer&& rhs)
 		{
-			LOG_CORE_TRACE("Move operator!");
-
 			m_Size = rhs.m_Size;
 			m_Count = rhs.m_Count;
 			m_Position = rhs.m_Position;

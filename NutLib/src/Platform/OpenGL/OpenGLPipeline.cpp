@@ -37,6 +37,9 @@ namespace Nut
 		m_RenderData.BatchVertexBuffer = VertexBuffer::Create(nullptr, PipelineRenderData::MAX_VERTICES * shader->GetShaderLayout().Stride(), BufferUsage::Dynamic);
 		m_RenderData.BatchIndexBuffer = IndexBuffer::Create(nullptr, PipelineRenderData::MAX_TRIANGLES, BufferUsage::Dynamic);
 
+		m_RenderData.DirectVertexBuffer = VertexBuffer::Create(nullptr, 0, BufferUsage::Static);
+		m_RenderData.DirectIndexBuffer = IndexBuffer::Create(nullptr, 0, BufferUsage::Static);
+
 		m_RenderData.VertexData.SetLayout(shader->GetShaderLayout());
 		m_RenderData.VertexData.Allocate(m_RenderData.MAX_VERTICES);
 
@@ -95,20 +98,56 @@ namespace Nut
 
 	void OpenGLPipeline::Submit(DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer)
 	{
-//		m_RenderData.VertexData = vertexBuffer;
-
 		if (vertexBuffer.Count() > m_RenderData.MAX_VERTICES)
 		{
-			LOG_CORE_TRACE("Pipeline::Submit: Direct output");
+			// Direct output
+
+			LOG_CORE_TRACE("Pipeline::Submit: Direct output, mesh exceeds {0} vertices", m_RenderData.MAX_VERTICES);
+
+			// TODO: Need a batch flush to get correct drawing order? Remove if unnecessary
+//			Flush();
+
+/*			m_RenderData.DirectVertexData = vertexBuffer;
+			m_RenderData.DirectIndexData = indexBuffer;
+
+			m_RenderData.DirectVertexBuffer->SetData(m_RenderData.DirectVertexData);
+			m_RenderData.DirectIndexBuffer->SetData(m_RenderData.DirectIndexData);
+
+			m_RenderData.DirectVertexBuffer->Bind();
+			m_RenderData.DirectIndexBuffer->Bind();
+*/
+//			SetBufferLayout();
+
+			uint32_t indexCount = m_RenderData.DirectIndexBuffer->GetIndexCount();
+
+			RenderThread::Submit([=]()
+				{
+					glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+				});
+
+//			m_RenderData.DirectIndexBuffer.reset(new OpenGLIndexBuffer(indexBuffer, BufferUsage::Static));
+
+//			m_RenderData.DirectVertexBuffer->Bind();
+//			m_RenderData.DirectIndexBuffer->Bind();
+
+//			uint32_t indexCount = m_RenderData.DirectIndexBuffer->GetIndexCount();
+
+//			RenderThread::Submit([=]()
+//				{
+//					glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+//				});
+
 		}
 		else
 		{
-//			LOG_CORE_TRACE("Pipeline::Submit: Batched output");
+			// Batched output
 
 			if ((m_RenderData.VertexData.Position() + vertexBuffer.Count()) > m_RenderData.MAX_VERTICES)
 			{
 				Flush();
 			}
+
+			uint32_t indexBase = m_RenderData.VertexData.Position();
 
 			for (uint32_t i = 0; i < vertexBuffer.Count(); i++)
 			{
@@ -136,9 +175,13 @@ namespace Nut
 
 			}
 
+			for (auto i : indexBuffer)
+			{
+				m_RenderData.IndexData.push_back(i + indexBase);
+			}
+
 		}
 
-		m_RenderData.IndexData = indexBuffer;
 	}
 
 	void OpenGLPipeline::Flush()
@@ -146,8 +189,8 @@ namespace Nut
 		m_RenderData.BatchVertexBuffer->Bind();
 		m_RenderData.BatchIndexBuffer->Bind();
 
-		m_RenderData.BatchVertexBuffer->SetData(m_RenderData.VertexData);
-		m_RenderData.BatchIndexBuffer->SetData(m_RenderData.IndexData);
+		m_RenderData.BatchVertexBuffer->UpdateData(m_RenderData.VertexData);
+		m_RenderData.BatchIndexBuffer->UpdateData(m_RenderData.IndexData);
 
 		SetBufferLayout();
 

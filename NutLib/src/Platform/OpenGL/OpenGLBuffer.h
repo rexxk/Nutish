@@ -11,18 +11,20 @@ namespace Nut
 	{
 	public:
 		OpenGLVertexBuffer(void* data, uint32_t size, BufferUsage usage);
+		OpenGLVertexBuffer(const DataBuffer<ShaderLayoutItem>& vertexBuffer, BufferUsage usage);
 		virtual ~OpenGLVertexBuffer();
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
-		virtual void SetData(void* data, uint32_t size) override;
 		virtual void SetData(const DataBuffer<ShaderLayoutItem>& dataBuffer) override;
+		virtual void UpdateData(const DataBuffer<ShaderLayoutItem>& dataBuffer) override;
 
 		virtual RendererID ID() const override { return m_ID; }
 
 	private:
 		void CreateBuffer(void* data, uint32_t size, BufferUsage usage);
+		void CreateBuffer(const DataBuffer<ShaderLayoutItem>& vertexBuffer, BufferUsage usage);
 
 	private:
 		RendererID m_ID = 0;
@@ -33,13 +35,14 @@ namespace Nut
 	{
 	public:
 		OpenGLIndexBuffer(void* data, uint32_t count, BufferUsage usage);
+		OpenGLIndexBuffer(const std::vector<uint32_t>& indexBuffer, BufferUsage usage);
 		virtual ~OpenGLIndexBuffer();
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
-		virtual void SetData(void* data, uint32_t size) override;
 		virtual void SetData(const std::vector<uint32_t>& indexBuffer) override;
+		virtual void UpdateData(const std::vector<uint32_t>& indexBuffer) override;
 
 		virtual uint32_t GetIndexCount() const override { return m_IndexCount; }
 
@@ -47,6 +50,7 @@ namespace Nut
 
 	private:
 		void CreateBuffer(void* data, uint32_t count, BufferUsage usage);
+		void CreateBuffer(const std::vector<uint32_t>& indexBuffer, BufferUsage usage);
 
 	private:
 		RendererID m_ID = 0;

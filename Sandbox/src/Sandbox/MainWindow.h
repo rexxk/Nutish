@@ -33,6 +33,7 @@ private:
 	Ref<Nut::Model> m_Rectangle;
 
 	Nut::UUID m_TestEntity;
+	Nut::UUID m_TestEntity2;
 };
 
 

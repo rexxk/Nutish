@@ -28,6 +28,11 @@ namespace Nut
 		CreateBuffer(data, size, usage);
 	}
 
+	OpenGLVertexBuffer::OpenGLVertexBuffer(const DataBuffer<ShaderLayoutItem>& vertexBuffer, BufferUsage usage)
+	{
+		CreateBuffer(vertexBuffer, usage);
+	}
+
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
 		if (m_ID != 0)
@@ -67,15 +72,27 @@ namespace Nut
 			});
 	}
 
-	void OpenGLVertexBuffer::SetData(void* data, uint32_t size)
+	void OpenGLVertexBuffer::CreateBuffer(const DataBuffer<ShaderLayoutItem>& vertexBuffer, BufferUsage usage)
 	{
-		RenderThread::Submit([=]()
+		RendererID& id = m_ID;
+
+		RenderThread::Submit([=, &id]()
 			{
-				glNamedBufferSubData(m_ID, 0, size, data);
+				glGenBuffers(1, &id);
+				glBindBuffer(GL_ARRAY_BUFFER, id);
+				glBufferData(GL_ARRAY_BUFFER, vertexBuffer.Size(), vertexBuffer.Data(), BufferUsageToOpenGLUsage(usage));
 			});
 	}
 
 	void OpenGLVertexBuffer::SetData(const DataBuffer<ShaderLayoutItem>& dataBuffer)
+	{
+		RenderThread::Submit([=]()
+			{
+				glBufferData(m_ID, dataBuffer.Size(), dataBuffer.Data(), GL_STATIC_DRAW);
+			});
+	}
+
+	void OpenGLVertexBuffer::UpdateData(const DataBuffer<ShaderLayoutItem>& dataBuffer)
 	{
 		RenderThread::Submit([=]()
 			{
@@ -88,6 +105,11 @@ namespace Nut
 	OpenGLIndexBuffer::OpenGLIndexBuffer(void* data, uint32_t count, BufferUsage usage)
 	{
 		CreateBuffer(data, count, usage);
+	}
+
+	OpenGLIndexBuffer::OpenGLIndexBuffer(const std::vector<uint32_t>& indexBuffer, BufferUsage usage)
+	{
+		CreateBuffer(indexBuffer, usage);
 	}
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
@@ -131,20 +153,31 @@ namespace Nut
 			});
 	}
 
-	void OpenGLIndexBuffer::SetData(void* data, uint32_t size)
+	void OpenGLIndexBuffer::CreateBuffer(const std::vector<uint32_t>& indexBuffer, BufferUsage usage)
 	{
-		m_IndexCount = size;
+		m_IndexCount = static_cast<uint32_t>(indexBuffer.size());
 
-		size <<= 2;
+		RendererID& id = m_ID;
 
-		RenderThread::Submit([=]()
+		RenderThread::Submit([=, &id]()
 			{
-				glNamedBufferSubData(m_ID, 0, size, data);
+				glGenBuffers(1, &id);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer.size() * sizeof(uint32_t), indexBuffer.data(), BufferUsageToOpenGLUsage(usage));
 			});
-
 	}
 
 	void OpenGLIndexBuffer::SetData(const std::vector<uint32_t>& indexBuffer)
+	{
+		m_IndexCount = static_cast<uint32_t>(indexBuffer.size());
+
+		RenderThread::Submit([=]()
+			{
+				glBufferData(m_ID, indexBuffer.size() * sizeof(uint32_t), indexBuffer.data(), GL_STATIC_DRAW);
+			});
+	}
+
+	void OpenGLIndexBuffer::UpdateData(const std::vector<uint32_t>& indexBuffer)
 	{
 		m_IndexCount = static_cast<uint32_t>(indexBuffer.size());
 

@@ -69,10 +69,32 @@ void MainWindow::OnAttach()
 		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
 	};
 
-	triangleMesh.Vertices = DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout());
-	triangleMesh.Indices = { 0, 1, 2, 2, 3, 0 };
+	triangleMesh.AssetData = MeshAsset(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), { 0, 1, 2, 2, 3, 0 });
+
+//	triangleMesh.AssetData.SetVertexData(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()));
+//	triangleMesh.AssetData.SetIndexData({0, 1, 2, 2, 3, 0});
 
 	triangleMesh.Pipeline = m_BasicPipeline;
+
+	std::vector<float> vertices2 =
+	{
+		0.5f, 0.5f, 0.0f, 0.0f, 0.0f,
+		1.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+		1.5f, 1.5f, 0.0f, 1.0f, 1.0f,
+		0.5f, 1.5f, 0.0f, 0.0f, 1.0f,
+	};
+
+	m_TestEntity2 = m_Scene->CreateEntity("Test entity 2");
+	Entity::AddComponent<MeshComponent>(m_TestEntity2);
+
+	auto& mesh2 = Entity::GetComponent<MeshComponent>(m_TestEntity2);
+
+	mesh2.AssetData = MeshAsset(DataBuffer<ShaderLayoutItem>(vertices2.data(), 4, m_BasicShader->GetShaderLayout()), { 0, 1, 2, 2, 3, 0 });
+
+//	mesh2.Vertices = DataBuffer<ShaderLayoutItem>(vertices2.data(), 4, m_BasicShader->GetShaderLayout());
+//	mesh2.Indices = { 0, 1, 2, 2, 3, 0 };
+
+	mesh2.Pipeline = m_BasicPipeline;
 
 //	uint8_t texData[4] = { 128, 0, 128, 255 };
 //	m_Texture = Texture2D::Create("assets/textures/texture.png");
@@ -96,7 +118,7 @@ void MainWindow::OnAttach()
 	m_Texture = Texture2D::Create("assets/textures/texture.png");
 	m_GradientTexture = Texture2D::Create("assets/textures/texture2.png");
 
-//	m_Rectangle = Model::Load("assets/models/rubik.fbx", m_Scene);
+//	m_Rectangle = Model::Load("assets/models/rubik.fbx", m_Scene, ShaderStore::Get("Basic"));
 	m_Rectangle = Model::Load("assets/models/cube.obj", m_Scene, ShaderStore::Get("Basic"));
 
 	LOG_TRACE("m_Rectangle id: {0}, tag: {1}", m_Rectangle->ID(), Entity::GetComponent<TagComponent>(m_Rectangle->ID()).Tag.c_str());

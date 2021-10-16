@@ -8,6 +8,8 @@
 #include "NutLib/Renderer/Pipeline.h"
 #include "NutLib/Renderer/Shader.h"
 
+#include "NutLib/Asset/MeshAsset.h"
+
 #include <vector>
 
 namespace Nut
@@ -58,12 +60,17 @@ namespace Nut
 
 	struct MeshComponent
 	{
-		DataBuffer<ShaderLayoutItem> Vertices;
-		std::vector<uint32_t> Indices;
+//		DataBuffer<ShaderLayoutItem> Vertices;
+//		std::vector<uint32_t> Indices;
 
+		MeshAsset AssetData;
 		Ref<Pipeline> Pipeline;
 
-		MeshComponent() = default;
+		MeshComponent()
+			: AssetData()
+		{
+
+		}
 
 //		MeshComponent(const std::vector<uint32_t>& indices)
 //			: Indices(indices)
@@ -72,9 +79,9 @@ namespace Nut
 //		MeshComponent(uint32_t* indices)
 //			: Indices(indices)
 		MeshComponent(DataBuffer<ShaderLayoutItem> vertices, const std::vector<uint32_t>& indices)
-			: Vertices(vertices), Indices(indices)
+			: AssetData(vertices, indices)
 		{
-//			LOG_CORE_TRACE("MeshComponent going indices..?");
+
 		}
 
 	};

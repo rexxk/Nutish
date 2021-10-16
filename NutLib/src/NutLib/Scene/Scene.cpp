@@ -41,7 +41,7 @@ namespace Nut
 
 			auto& mesh = Entity::GetComponent<MeshComponent>(id);
 
-			mesh.Pipeline->Submit(mesh.Vertices, mesh.Indices);
+			mesh.Pipeline->Submit(mesh.AssetData.Vertices(), mesh.AssetData.Indices());
 //			mesh.Pipeline->Submit(mesh.FloatVertices, mesh.Indices);
 //			Renderer::Submit(mesh.Vertices, mesh.Indices);
 		}
