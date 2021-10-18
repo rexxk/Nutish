@@ -69,7 +69,8 @@ void MainWindow::OnAttach()
 		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
 	};
 
-	triangleMesh.AssetData = MeshAsset(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), { 0, 1, 2, 2, 3, 0 });
+	std::vector<uint32_t> indices =	{ 0, 1, 2, 2, 3, 0 };
+	triangleMesh.AssetData = CreateRef<MeshAsset>(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), indices);
 
 //	triangleMesh.AssetData.SetVertexData(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()));
 //	triangleMesh.AssetData.SetIndexData({0, 1, 2, 2, 3, 0});
@@ -85,11 +86,11 @@ void MainWindow::OnAttach()
 	};
 
 	m_TestEntity2 = m_Scene->CreateEntity("Test entity 2");
-	Entity::AddComponent<MeshComponent>(m_TestEntity2);
+	Entity::AddComponent<MeshComponent>(m_TestEntity2, triangleMesh);
 
 	auto& mesh2 = Entity::GetComponent<MeshComponent>(m_TestEntity2);
 
-	mesh2.AssetData = MeshAsset(DataBuffer<ShaderLayoutItem>(vertices2.data(), 4, m_BasicShader->GetShaderLayout()), { 0, 1, 2, 2, 3, 0 });
+//	mesh2.AssetData = MeshAsset(DataBuffer<ShaderLayoutItem>(vertices2.data(), 4, m_BasicShader->GetShaderLayout()), { 0, 1, 2, 2, 3, 0 });
 
 //	mesh2.Vertices = DataBuffer<ShaderLayoutItem>(vertices2.data(), 4, m_BasicShader->GetShaderLayout());
 //	mesh2.Indices = { 0, 1, 2, 2, 3, 0 };

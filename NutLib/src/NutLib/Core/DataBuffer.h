@@ -114,6 +114,15 @@ namespace Nut
 		DataBuffer(DataBuffer&& rhs)
 		{
 //			LOG_CORE_TRACE("DataBuffer() move constructor: {0}", (uint64_t)rhs.m_Buffer);
+
+			m_Size = rhs.m_Size;
+			m_Count = rhs.m_Count;
+			m_Position = rhs.m_Position;
+			m_BufferLayout = rhs.m_BufferLayout;
+
+			m_Buffer = std::move(rhs.m_Buffer);
+			rhs.m_Buffer = nullptr;
+
 		}
 
 		DataBuffer(uint32_t count, DataBufferLayout<T> layout)

@@ -28,6 +28,7 @@ namespace Nut
 
 
 
+
 	class Renderer
 	{
 	public:
@@ -53,6 +54,7 @@ namespace Nut
 		static inline Scope<Renderer> s_Renderer = nullptr;
 
 		RenderStats m_RenderStats;
+
 	};
 
 

@@ -37,8 +37,10 @@ namespace Nut
 
 	struct TransformComponent
 	{
+		glm::mat4 Transform;
 
 		TransformComponent()
+			: Transform(glm::mat4(1.0f))
 		{
 
 		}
@@ -63,8 +65,10 @@ namespace Nut
 //		DataBuffer<ShaderLayoutItem> Vertices;
 //		std::vector<uint32_t> Indices;
 
-		MeshAsset AssetData;
+		Ref<MeshAsset> AssetData;
 		Ref<Pipeline> Pipeline;
+		
+		UUID MeshID;
 
 		MeshComponent()
 			: AssetData()
@@ -79,9 +83,19 @@ namespace Nut
 //		MeshComponent(uint32_t* indices)
 //			: Indices(indices)
 		MeshComponent(DataBuffer<ShaderLayoutItem> vertices, const std::vector<uint32_t>& indices)
-			: AssetData(vertices, indices)
+			: AssetData(CreateRef<MeshAsset>(vertices, indices))
 		{
 
+		}
+
+		MeshComponent(MeshComponent& component)
+		{
+//			AssetData.SetVertexData(component.AssetData.Vertices());
+//			AssetData.SetIndexData(component.AssetData.Indices());
+			AssetData = component.AssetData;
+			Pipeline = component.Pipeline;
+
+			MeshID = component.MeshID;
 		}
 
 	};

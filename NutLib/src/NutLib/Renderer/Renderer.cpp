@@ -27,4 +27,5 @@ namespace Nut
 		s_Renderer->EndSceneImplementation();
 	}
 
+
 }

@@ -11,6 +11,13 @@ namespace Nut
 {
 
 
+	enum class MeshType
+	{
+		Static = 0,
+		Dynamic,
+	};
+
+
 	class MeshAsset : public Asset
 	{
 	public:
@@ -51,7 +58,12 @@ namespace Nut
 		void SetVertexData(const DataBuffer<ShaderLayoutItem>& vertices);
 		void SetIndexData(const std::vector<uint32_t>& indices);
 
+		MeshType Type() const { return m_Type; }
+		void SetType(MeshType type) { m_Type = type; }
+
 	private:
+
+		MeshType m_Type = MeshType::Static;
 
 		DataBuffer<ShaderLayoutItem> m_Vertices;
 		std::vector<uint32_t> m_Indices;
