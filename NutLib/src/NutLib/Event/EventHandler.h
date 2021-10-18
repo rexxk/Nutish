@@ -4,6 +4,8 @@
 
 #include "Event.h"
 
+#include <mutex>
+
 
 namespace Nut
 {
@@ -51,6 +53,7 @@ namespace Nut
 	public:
 		void AddEvent(Ref<Event> event)
 		{
+			std::lock_guard<std::mutex> mtx(m_EventMutex);
 			m_Events.emplace(event);
 		}
 
@@ -58,6 +61,8 @@ namespace Nut
 		{
 			if (m_Events.size() > 0)
 			{
+				std::lock_guard<std::mutex> mtx(m_EventMutex);
+
 				auto event = m_Events.front();
 				m_Events.pop();
 
@@ -67,10 +72,16 @@ namespace Nut
 			return nullptr;
 		}
 
-		size_t Size() const { return m_Events.size(); }
+		const size_t Size()
+		{ 
+			std::lock_guard<std::mutex> mtx(m_EventMutex);
+			return m_Events.size(); 
+		}
 
 	private:
 		std::queue<Ref<Event>> m_Events;
+
+		std::mutex m_EventMutex;
 	};
 
 	template<typename T, typename Fn>
