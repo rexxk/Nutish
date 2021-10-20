@@ -70,7 +70,7 @@ void MainWindow::OnAttach()
 	};
 
 	std::vector<uint32_t> indices =	{ 0, 1, 2, 2, 3, 0 };
-	triangleMesh.AssetData = CreateRef<MeshAsset>(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), indices);
+	triangleMesh.MeshData = CreateRef<MeshSource>(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), indices, m_Scene);
 
 //	triangleMesh.AssetData.SetVertexData(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()));
 //	triangleMesh.AssetData.SetIndexData({0, 1, 2, 2, 3, 0});

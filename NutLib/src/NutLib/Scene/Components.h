@@ -8,7 +8,7 @@
 #include "NutLib/Renderer/Pipeline.h"
 #include "NutLib/Renderer/Shader.h"
 
-#include "NutLib/Asset/MeshAsset.h"
+#include "NutLib/Asset/MeshSource.h"
 
 #include <vector>
 
@@ -65,13 +65,13 @@ namespace Nut
 //		DataBuffer<ShaderLayoutItem> Vertices;
 //		std::vector<uint32_t> Indices;
 
-		Ref<MeshAsset> AssetData;
+		Ref<MeshSource> MeshData;
 		Ref<Pipeline> Pipeline;
 		
 		UUID MeshID;
 
 		MeshComponent()
-			: AssetData()
+			: MeshData()
 		{
 
 		}
@@ -83,7 +83,7 @@ namespace Nut
 //		MeshComponent(uint32_t* indices)
 //			: Indices(indices)
 		MeshComponent(DataBuffer<ShaderLayoutItem> vertices, const std::vector<uint32_t>& indices)
-			: AssetData(CreateRef<MeshAsset>(vertices, indices))
+			: MeshData(CreateRef<MeshSource>(vertices, indices))
 		{
 
 		}
@@ -92,7 +92,7 @@ namespace Nut
 		{
 //			AssetData.SetVertexData(component.AssetData.Vertices());
 //			AssetData.SetIndexData(component.AssetData.Indices());
-			AssetData = component.AssetData;
+			MeshData = component.MeshData;
 			Pipeline = component.Pipeline;
 
 			MeshID = component.MeshID;

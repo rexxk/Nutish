@@ -1,15 +1,12 @@
 #pragma once
 
+#include "MeshSource.h"
 
-#include "Asset.h"
-
-#include "NutLib/Core/DataBuffer.h"
-#include "NutLib/Renderer/Shader.h"
+#include "NutLib/Renderer/Buffer.h"
 
 
 namespace Nut
 {
-
 
 	enum class MeshType
 	{
@@ -18,58 +15,32 @@ namespace Nut
 	};
 
 
-	class MeshAsset : public Asset
+
+	class MeshAsset
 	{
 	public:
-		MeshAsset() = default;
-		MeshAsset(DataBuffer<ShaderLayoutItem> vertices, const std::vector<uint32_t>& indices);
-		MeshAsset(MeshAsset& other)
-		{
-			m_Vertices = other.m_Vertices;
-			m_Indices = other.m_Indices;
-		}
+		MeshAsset();
 
-		MeshAsset(MeshAsset&& other)
-		{
-			LOG_CORE_TRACE("MeshAsset: Move");
-		}
 
-		MeshAsset& operator=(MeshAsset& other)
-		{
-			LOG_CORE_TRACE("MeshAsset: Copy operator");
+		const uint32_t SubmeshCount() const { return static_cast<uint32_t>(m_Submeshes.size()); }
 
-			return *this;
-		}
+		std::vector<MeshSource>& Submeshes() { return m_Submeshes; }
+		const std::vector<MeshSource>& SubMeshes() const { return m_Submeshes; }
 
-		MeshAsset& operator=(MeshAsset&& other)
-		{
-			m_Vertices = std::move(other.m_Vertices);
-			m_Indices = other.m_Indices;
+		void AddSubmesh(const DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer);
 
-			return *this;
-		}
-
-		virtual void Load() override;
-
-//		DataBuffer<ShaderLayoutItem> Vertices() { return m_Vertices; }
-		DataBuffer<ShaderLayoutItem>& Vertices() { return m_Vertices; }
-		std::vector<uint32_t> Indices() const { return m_Indices; }
-
-		void SetVertexData(const DataBuffer<ShaderLayoutItem>& vertices);
-		void SetIndexData(const std::vector<uint32_t>& indices);
 
 		MeshType Type() const { return m_Type; }
 		void SetType(MeshType type) { m_Type = type; }
 
 	private:
-
 		MeshType m_Type = MeshType::Static;
 
-		DataBuffer<ShaderLayoutItem> m_Vertices;
-		std::vector<uint32_t> m_Indices;
+		std::vector<MeshSource> m_Submeshes;
+
+		std::vector<Ref<VertexBuffer>> m_VertexBuffers;
+		std::vector<Ref<IndexBuffer>> m_IndexBuffers;
 
 	};
-
-
 
 }

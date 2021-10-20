@@ -165,8 +165,9 @@
     <ClInclude Include="src\NutLib\Renderer\Mesh.h" />
     <ClInclude Include="src\NutLib\Core\DataBuffer.h" />
     <ClInclude Include="src\NutLib\Core\DataType.h" />
-    <ClInclude Include="src\NutLib\Asset\MeshAsset.h" />
+    <ClInclude Include="src\NutLib\Asset\MeshSource.h" />
     <ClInclude Include="src\NutLib\Asset\Asset.h" />
+    <ClInclude Include="src\NutLib\Asset\MeshAsset.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NutLib\Core\Application.cpp">
@@ -260,6 +261,7 @@
     <ClCompile Include="src\NutLib\Renderer\Pipeline.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Mesh.cpp" />
     <ClCompile Include="src\NutLib\Core\DataType.cpp" />
+    <ClCompile Include="src\NutLib\Asset\MeshSource.cpp" />
     <ClCompile Include="src\NutLib\Asset\MeshAsset.cpp" />
   </ItemGroup>
 </Project>

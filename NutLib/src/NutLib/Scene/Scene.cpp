@@ -44,7 +44,7 @@ namespace Nut
 
 //			Renderer::Submit(mesh.AssetData, transform);
 
-			mesh.Pipeline->Submit(mesh.AssetData->Vertices(), mesh.AssetData->Indices());
+			mesh.Pipeline->Submit(mesh.MeshData->Vertices(), mesh.MeshData->Indices());
 //			mesh.Pipeline->Submit(mesh.FloatVertices, mesh.Indices);
 //			Renderer::Submit(mesh.Vertices, mesh.Indices);
 		}

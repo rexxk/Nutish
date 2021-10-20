@@ -2,32 +2,20 @@
 #include "MeshAsset.h"
 
 
+
 namespace Nut
 {
 
 
-	MeshAsset::MeshAsset(DataBuffer<ShaderLayoutItem> vertices, const std::vector<uint32_t>& indices)
+	MeshAsset::MeshAsset()
 	{
-		m_Vertices = vertices;
-		m_Indices = indices;
+
+
 	}
 
-	void MeshAsset::Load()
+	void MeshAsset::AddSubmesh(const DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer)
 	{
-		// TODO: Implement MeshAsset::Load()
-		LOG_CORE_WARN("MeshAsset::Load is not implemented");
+		m_Submeshes.push_back(MeshSource(vertexBuffer, indexBuffer));
+
 	}
-
-
-	void MeshAsset::SetVertexData(const DataBuffer<ShaderLayoutItem>& vertices)
-	{
-		m_Vertices = vertices;
-	}
-
-	void MeshAsset::SetIndexData(const std::vector<uint32_t>& indices)
-	{
-		m_Indices = indices;
-	}
-
-
 }
