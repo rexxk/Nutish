@@ -19,6 +19,8 @@ namespace Nut
 		virtual void BeginSceneImplementation() override;
 		virtual void EndSceneImplementation() override;
 
+		virtual void SubmitImplementation(Ref<MeshAsset> mesh, const glm::mat4& transform) override;
+		virtual void DrawImplementation() override;
 	};
 
 

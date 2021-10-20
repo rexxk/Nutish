@@ -39,12 +39,13 @@ namespace Nut
 		{
 //			Renderer::GetRenderData().
 
-			auto& mesh = Entity::GetComponent<MeshComponent>(id);
+			auto& mesh = Entity::GetComponent<MeshComponent>(id).Mesh;
 			auto& transform = Entity::GetComponent<TransformComponent>(id).Transform;
 
-//			Renderer::Submit(mesh.AssetData, transform);
 
-			mesh.Pipeline->Submit(mesh.MeshData->Vertices(), mesh.MeshData->Indices());
+			Renderer::Submit(mesh, transform);
+
+//			mesh.Pipeline->Submit(mesh.MeshData->Vertices(), mesh.MeshData->Indices());
 //			mesh.Pipeline->Submit(mesh.FloatVertices, mesh.Indices);
 //			Renderer::Submit(mesh.Vertices, mesh.Indices);
 		}

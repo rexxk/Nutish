@@ -8,7 +8,8 @@
 #include "NutLib/Renderer/Pipeline.h"
 #include "NutLib/Renderer/Shader.h"
 
-#include "NutLib/Asset/MeshSource.h"
+//#include "NutLib/Asset/MeshSource.h"
+#include "NutLib/Asset/MeshAsset.h"
 
 #include <vector>
 
@@ -65,38 +66,30 @@ namespace Nut
 //		DataBuffer<ShaderLayoutItem> Vertices;
 //		std::vector<uint32_t> Indices;
 
-		Ref<MeshSource> MeshData;
-		Ref<Pipeline> Pipeline;
-		
-		UUID MeshID;
+//		Ref<MeshSource> MeshData;
+		Ref<MeshAsset> Mesh;
+//		Ref<Pipeline> Pipeline;
 
 		MeshComponent()
-			: MeshData()
-		{
-
-		}
-
-//		MeshComponent(const std::vector<uint32_t>& indices)
-//			: Indices(indices)
-//		{
-
-//		MeshComponent(uint32_t* indices)
-//			: Indices(indices)
-		MeshComponent(DataBuffer<ShaderLayoutItem> vertices, const std::vector<uint32_t>& indices)
-			: MeshData(CreateRef<MeshSource>(vertices, indices))
+//			: MeshData()
 		{
 
 		}
 
 		MeshComponent(MeshComponent& component)
 		{
-//			AssetData.SetVertexData(component.AssetData.Vertices());
-//			AssetData.SetIndexData(component.AssetData.Indices());
-			MeshData = component.MeshData;
-			Pipeline = component.Pipeline;
-
-			MeshID = component.MeshID;
+			//			AssetData.SetVertexData(component.AssetData.Vertices());
+			//			AssetData.SetIndexData(component.AssetData.Indices());
+			Mesh = component.Mesh;
 		}
+		
+		//		MeshComponent(const std::vector<uint32_t>& indices)
+//			: Indices(indices)
+//		{
+
+//		MeshComponent(uint32_t* indices)
+//			: Indices(indices)
+
 
 	};
 

@@ -3,6 +3,7 @@
 #include "MeshSource.h"
 
 #include "NutLib/Renderer/Buffer.h"
+#include "NutLib/Renderer/Pipeline.h"
 
 
 namespace Nut
@@ -19,13 +20,13 @@ namespace Nut
 	class MeshAsset
 	{
 	public:
-		MeshAsset();
+		MeshAsset(const DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer, Ref<Pipeline> pipeline, Ref<Scene> scene);
 
 
 		const uint32_t SubmeshCount() const { return static_cast<uint32_t>(m_Submeshes.size()); }
 
 		std::vector<MeshSource>& Submeshes() { return m_Submeshes; }
-		const std::vector<MeshSource>& SubMeshes() const { return m_Submeshes; }
+		const std::vector<MeshSource>& Submeshes() const { return m_Submeshes; }
 
 		void AddSubmesh(const DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer);
 
@@ -33,14 +34,15 @@ namespace Nut
 		MeshType Type() const { return m_Type; }
 		void SetType(MeshType type) { m_Type = type; }
 
+		Ref<Pipeline> GetPipeline() const { return m_Pipeline; }
+
 	private:
 		MeshType m_Type = MeshType::Static;
 
 		std::vector<MeshSource> m_Submeshes;
 
-		std::vector<Ref<VertexBuffer>> m_VertexBuffers;
-		std::vector<Ref<IndexBuffer>> m_IndexBuffers;
-
+		Ref<Pipeline> m_Pipeline;
+		Ref<Scene> m_Scene;
 	};
 
 }

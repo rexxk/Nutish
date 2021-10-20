@@ -70,12 +70,11 @@ void MainWindow::OnAttach()
 	};
 
 	std::vector<uint32_t> indices =	{ 0, 1, 2, 2, 3, 0 };
-	triangleMesh.MeshData = CreateRef<MeshSource>(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), indices, m_Scene);
+
+	triangleMesh.Mesh = CreateRef<MeshAsset>(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), indices, m_BasicPipeline, m_Scene);
 
 //	triangleMesh.AssetData.SetVertexData(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()));
 //	triangleMesh.AssetData.SetIndexData({0, 1, 2, 2, 3, 0});
-
-	triangleMesh.Pipeline = m_BasicPipeline;
 
 	std::vector<float> vertices2 =
 	{
@@ -95,7 +94,7 @@ void MainWindow::OnAttach()
 //	mesh2.Vertices = DataBuffer<ShaderLayoutItem>(vertices2.data(), 4, m_BasicShader->GetShaderLayout());
 //	mesh2.Indices = { 0, 1, 2, 2, 3, 0 };
 
-	mesh2.Pipeline = m_BasicPipeline;
+//	mesh2.Pipeline = m_BasicPipeline;
 
 //	uint8_t texData[4] = { 128, 0, 128, 255 };
 //	m_Texture = Texture2D::Create("assets/textures/texture.png");
@@ -175,7 +174,9 @@ void MainWindow::OnRender()
 //			glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
 //		});
 
-	m_BasicPipeline->Flush();
+//	m_BasicPipeline->Flush();
+
+	Renderer::Draw();
 
 	Renderer::EndScene();
 

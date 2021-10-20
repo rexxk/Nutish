@@ -27,5 +27,14 @@ namespace Nut
 		s_Renderer->EndSceneImplementation();
 	}
 
+	void Renderer::Submit(Ref<MeshAsset> mesh, const glm::mat4& transform)
+	{
+		s_Renderer->SubmitImplementation(mesh, transform);
+	}
+
+	void Renderer::Draw()
+	{
+		s_Renderer->DrawImplementation();
+	}
 
 }

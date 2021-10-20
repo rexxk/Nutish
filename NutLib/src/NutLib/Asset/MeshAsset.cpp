@@ -7,10 +7,10 @@ namespace Nut
 {
 
 
-	MeshAsset::MeshAsset()
+	MeshAsset::MeshAsset(const DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer, Ref<Pipeline> pipeline, Ref<Scene> scene)
+		: m_Pipeline(pipeline), m_Scene(scene)
 	{
-
-
+		AddSubmesh(vertexBuffer, indexBuffer);
 	}
 
 	void MeshAsset::AddSubmesh(const DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer)

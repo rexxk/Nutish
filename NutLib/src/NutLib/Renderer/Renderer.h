@@ -27,6 +27,12 @@ namespace Nut
 	};
 
 
+	struct RenderData
+	{
+		std::unordered_map<UUID, std::vector<glm::mat4>> InstanceMap;
+		std::unordered_map<Ref<Pipeline>, std::vector<MeshBuffers>> MeshBuffers;
+	};
+
 
 
 	class Renderer
@@ -41,11 +47,18 @@ namespace Nut
 		static void BeginScene();
 		static void EndScene();
 
+		static void Submit(Ref<MeshAsset> mesh, const glm::mat4& transform);
+		static void Draw();
+
 		static RenderStats& GetRenderStats() { return s_Renderer->m_RenderStats; }
+		static RenderData& GetRenderData() { return s_Renderer->m_RenderData; }
 
 	private:
 		virtual void BeginSceneImplementation() = 0;
 		virtual void EndSceneImplementation() = 0;
+
+		virtual void SubmitImplementation(Ref<MeshAsset> mesh, const glm::mat4& transform) = 0;
+		virtual void DrawImplementation() = 0;
 
 	private:
 
@@ -54,7 +67,7 @@ namespace Nut
 		static inline Scope<Renderer> s_Renderer = nullptr;
 
 		RenderStats m_RenderStats;
-
+		RenderData m_RenderData;
 	};
 
 

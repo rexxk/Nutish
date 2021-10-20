@@ -38,5 +38,51 @@ namespace Nut
 
 	}
 
+	void OpenGLRenderer::SubmitImplementation(Ref<MeshAsset> mesh, const glm::mat4& transform)
+	{
+		// Submit sends the data to the render structure.
+
+		for (auto& submesh : mesh->Submeshes())
+		{
+			auto& renderData = Renderer::GetRenderData();
+
+			renderData.InstanceMap[submesh.ID()].push_back(transform);
+			renderData.MeshBuffers[mesh->GetPipeline()].push_back(submesh.GetMeshBuffers());
+		}
+
+	}
+
+	void OpenGLRenderer::DrawImplementation()
+	{
+		auto& renderData = Renderer::GetRenderData();
+
+		for (auto& meshBuffer : renderData.MeshBuffers)
+		{
+			Ref<Pipeline> pipeline = meshBuffer.first;
+
+			pipeline->Bind();
+			pipeline->SetBufferLayout();
+
+
+			for (auto& buffers : meshBuffer.second)
+			{
+				buffers.VertexBuffer->Bind();
+				buffers.IndexBuffer->Bind();
+
+				RenderThread::Submit([=]()
+					{
+						glDrawElements(GL_TRIANGLES, buffers.IndexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr);
+					});
+
+			}
+		}
+
+
+
+
+		renderData.InstanceMap.clear();
+		renderData.MeshBuffers.clear();
+	}
+
 
 }

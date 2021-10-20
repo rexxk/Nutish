@@ -15,6 +15,10 @@ namespace Nut
 
 		m_Vertices = vertices;
 		m_Indices = indices;
+
+		m_Buffers.VertexBuffer = VertexBuffer::Create(vertices);
+		m_Buffers.IndexBuffer = IndexBuffer::Create(indices);
+		m_Buffers.ID = m_ID;
 	}
 
 	void MeshSource::Load()
