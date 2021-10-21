@@ -28,7 +28,7 @@ namespace Nut
 		virtual void Unbind() const = 0;
 
 		virtual void SetData(const DataBuffer<ShaderLayoutItem>& dataBuffer) = 0;
-		virtual void SetData(const std::vector<glm::mat4>& matrices, BufferUsage usage = BufferUsage::Dynamic) = 0;
+		virtual void UpdateData(const std::vector<glm::mat4>& matrices, BufferUsage usage = BufferUsage::Dynamic) = 0;
 		virtual void UpdateData(const DataBuffer<ShaderLayoutItem>& dataBuffer) = 0;
 
 		virtual RendererID ID() const = 0;

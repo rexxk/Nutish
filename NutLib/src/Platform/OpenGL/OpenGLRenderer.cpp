@@ -49,12 +49,10 @@ namespace Nut
 			for (auto& objects : meshBuffer.second)
 			{
 				auto& instances = renderData.InstanceMap[objects->ObjectID()];
-//				buffers.InstanceBuffer = VertexBuffer::CreateInstanceBuffer(instances);
 
 				if (static_cast<uint32_t>(instances.size()) != objects->InstanceCount())
 				{
-					objects->InstanceBuffer()->SetData(instances, BufferUsage::Dynamic);
-//					buffers.InstanceBuffer.reset(new OpenGLVertexBuffer(instances, BufferUsage::Static));
+					objects->InstanceBuffer()->UpdateData(instances, BufferUsage::Dynamic);
 					objects->SetInstanceCount(static_cast<uint32_t>(instances.size()));
 				}
 			}
@@ -96,38 +94,8 @@ namespace Nut
 			{
 				object->Bind();
 
-				//			Ref<Pipeline> pipeline = meshBuffer.first;
-
-				//			pipeline->Bind();
-
-				//			for (auto& buffers : meshBuffer.second)
-				//			{
-				//				auto& instances = renderData.InstanceMap[buffers.ID];
-
-				//				if (static_cast<uint32_t>(instances.size()) != buffers.Instances)
-				//				{
-				//					buffers.InstanceBuffer->SetData(instances, BufferUsage::Dynamic);
-				////					buffers.InstanceBuffer.reset(new OpenGLVertexBuffer(instances, BufferUsage::Static));
-				//					buffers.Instances = static_cast<uint32_t>(instances.size());
-				//				}
-
-
-				//				buffers.VertexBuffer->Bind();
-				//				buffers.IndexBuffer->Bind();
-
-				//				pipeline->SetBufferLayout();
-
-
-				//				LOG_CORE_TRACE("VB: {0}, IB: {1}, Instance id: {2}, Instances: {3}", buffers.VertexBuffer->ID(), buffers.IndexBuffer->ID(), buffers.InstanceBuffer->ID(), buffers.Instances);
-				//				buffers.InstanceBuffer->Bind();
-
-				//				pipeline->SetInstanceLayout();
-
-
 				RenderThread::Submit([=]()
 					{
-						LOG_CORE_TRACE("Drawing: {0} ({1} instances)", object->ObjectID(), object->InstanceCount());
-//						glDrawElements(GL_TRIANGLES, object->GetIndexCount(), GL_UNSIGNED_INT, nullptr);
 						glDrawElementsInstanced(GL_TRIANGLES, object->GetIndexCount(), GL_UNSIGNED_INT, nullptr, object->InstanceCount()); // static_cast<GLsizei>(instances.size()));
 
 					});
@@ -136,8 +104,6 @@ namespace Nut
 
 			}
 		}
-
-
 
 
 	}

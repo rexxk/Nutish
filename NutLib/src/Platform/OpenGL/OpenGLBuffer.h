@@ -19,7 +19,7 @@ namespace Nut
 		virtual void Unbind() const override;
 
 		virtual void SetData(const DataBuffer<ShaderLayoutItem>& dataBuffer) override;
-		virtual void SetData(const std::vector<glm::mat4>& matrices, BufferUsage usage) override;
+		virtual void UpdateData(const std::vector<glm::mat4>& matrices, BufferUsage usage) override;
 		virtual void UpdateData(const DataBuffer<ShaderLayoutItem>& dataBuffer) override;
 
 		virtual RendererID ID() const override { return m_ID; }

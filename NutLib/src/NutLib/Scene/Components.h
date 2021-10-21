@@ -63,34 +63,18 @@ namespace Nut
 
 	struct MeshComponent
 	{
-//		DataBuffer<ShaderLayoutItem> Vertices;
-//		std::vector<uint32_t> Indices;
-
-//		Ref<MeshSource> MeshData;
 		Ref<MeshAsset> Mesh;
-//		Ref<Pipeline> Pipeline;
 
 		MeshComponent()
-//			: MeshData()
 		{
 
 		}
 
 		MeshComponent(MeshComponent& component)
 		{
-			//			AssetData.SetVertexData(component.AssetData.Vertices());
-			//			AssetData.SetIndexData(component.AssetData.Indices());
 			Mesh = component.Mesh;
 		}
 		
-		//		MeshComponent(const std::vector<uint32_t>& indices)
-//			: Indices(indices)
-//		{
-
-//		MeshComponent(uint32_t* indices)
-//			: Indices(indices)
-
-
 	};
 
 

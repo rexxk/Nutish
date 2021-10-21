@@ -112,17 +112,11 @@ namespace Nut
 
 	}
 
-	void OpenGLVertexBuffer::SetData(const std::vector<glm::mat4>& matrices, BufferUsage usage)
+	void OpenGLVertexBuffer::UpdateData(const std::vector<glm::mat4>& matrices, BufferUsage usage)
 	{
 		RenderThread::Submit([=]()
 			{
-//				LOG_CORE_TRACE("BufferData size: {0}, data (first): {1},{2},{3},{4}", matrices.size(), matrices[0][0].x, matrices[0][0].y, matrices[0][0].z, matrices[0][0].w);
-//				glBufferData(m_ID, matrices.size() * sizeof(glm::mat4), matrices.data(), BufferUsageToOpenGLUsage(usage));
-
-				LOG_CORE_TRACE("Setting buffer data: {0},{1},{2},{3}", matrices[0][0].x, matrices[0][0].y, matrices[0][0].z, matrices[0][0].w);
-				glBindBuffer(GL_ARRAY_BUFFER, m_ID);
-				glBufferSubData(m_ID, 0, matrices.size() * sizeof(glm::mat4), matrices.data());
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				glNamedBufferSubData(m_ID, 0, matrices.size() * sizeof(glm::mat4), matrices.data());
 			});
 	}
 

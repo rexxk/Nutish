@@ -39,32 +39,12 @@ namespace Nut
 
 		for (auto id : meshIDs)
 		{
-//			Renderer::GetRenderData().
 
 			auto& mesh = Entity::GetComponent<MeshComponent>(id).Mesh;
 			auto& transform = Entity::GetComponent<TransformComponent>(id).Transform;
 
 			Renderer::Submit(mesh, transform);
 
-/*
-			for (auto& submesh : mesh->Submeshes())
-			{
-				auto object = submesh.GetMeshObject();
-
-				object->Bind();
-
-
-				RenderThread::Submit([=]()
-					{
-						glDrawElements(GL_TRIANGLES, object->GetIndexCount(), GL_UNSIGNED_INT, nullptr);
-					});
-			}
-*/
-
-
-//			mesh.Pipeline->Submit(mesh.MeshData->Vertices(), mesh.MeshData->Indices());
-//			mesh.Pipeline->Submit(mesh.FloatVertices, mesh.Indices);
-//			Renderer::Submit(mesh.Vertices, mesh.Indices);
 		}
 
 	}

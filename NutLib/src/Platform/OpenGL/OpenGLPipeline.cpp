@@ -56,15 +56,6 @@ namespace Nut
 			return;
 		}
 
-//		m_RenderData.BatchVertexBuffer = VertexBuffer::Create(nullptr, PipelineRenderData::MAX_VERTICES * shader->GetShaderLayout().Stride(), BufferUsage::Dynamic);
-//		m_RenderData.BatchIndexBuffer = IndexBuffer::Create(nullptr, PipelineRenderData::MAX_TRIANGLES, BufferUsage::Dynamic);
-
-//		m_RenderData.DirectVertexBuffer = VertexBuffer::Create(nullptr, 0, BufferUsage::Static);
-//		m_RenderData.DirectIndexBuffer = IndexBuffer::Create(nullptr, 0, BufferUsage::Static);
-
-//		m_RenderData.VertexData.SetLayout(shader->GetShaderLayout());
-//		m_RenderData.VertexData.Allocate(m_RenderData.MAX_VERTICES);
-
 	}
 
 	OpenGLPipeline::~OpenGLPipeline()
@@ -79,22 +70,9 @@ namespace Nut
 
 	void OpenGLPipeline::Unbind() const
 	{
-		RenderThread::Submit([]()
-			{
-//				glBindVertexArray(0);
-			});
+		m_Shader->Unbind();
 	}
 
-/*	void OpenGLPipeline::AttachVertexBuffer(Ref<VertexBuffer> vertexBuffer)
-	{
-		m_VB = vertexBuffer;
-	}
-
-	void OpenGLPipeline::AttachIndexBuffer(Ref<IndexBuffer> indexBuffer)
-	{
-		m_IB = indexBuffer;
-	}
-*/
 
 	void OpenGLPipeline::SetBufferLayout()
 	{
@@ -134,6 +112,8 @@ namespace Nut
 					{
 						if (item.Type == DataType::Matrix4x4)
 						{
+							// TODO: Fix hardcode
+
 							glEnableVertexAttribArray(item.Location);
 							glVertexAttribPointer(item.Location, 4, GL_FLOAT, GL_FALSE, 4 * 4 * 4, (const void*)(uint64_t)0);
 							glEnableVertexAttribArray(item.Location + 1);
@@ -148,132 +128,12 @@ namespace Nut
 							glVertexAttribDivisor(item.Location + 2, 1);
 							glVertexAttribDivisor(item.Location + 3, 1);
 
-							// TODO: Fix hardcode
-
-//							glVertexAttribPointer(item.Location, DataTypeToGLSize(item.Type), DataTypeToGLType(item.Type), item.Normalized, layout.Stride(), (const void*)(uint64_t)item.Offset);
-//							glVertexAttribPointer(item.Location + 1, DataTypeToGLSize(item.Type), DataTypeToGLType(item.Type), item.Normalized, layout.Stride(), (const void*)(uint64_t)(item.Offset + (1 * DataTypeToGLSize(item.Type))));
-//							glVertexAttribPointer(item.Location + 2, DataTypeToGLSize(item.Type), DataTypeToGLType(item.Type), item.Normalized, layout.Stride(), (const void*)(uint64_t)(item.Offset + (2 * DataTypeToGLSize(item.Type))));
-//							glVertexAttribPointer(item.Location + 3, DataTypeToGLSize(item.Type), DataTypeToGLType(item.Type), item.Normalized, layout.Stride(), (const void*)(uint64_t)(item.Offset + (3 * DataTypeToGLSize(item.Type))));
-
 						}
 
 						break;
 					}
 				}
 			});
-
-	}
-
-	void OpenGLPipeline::Submit(DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer)
-	{
-		if (vertexBuffer.Count() > m_RenderData.MAX_VERTICES)
-		{
-			// Direct output
-
-			LOG_CORE_TRACE("Pipeline::Submit: Direct output, mesh exceeds {0} vertices", m_RenderData.MAX_VERTICES);
-
-			// TODO: Need a batch flush to get correct drawing order? Remove if unnecessary
-//			Flush();
-
-/*			m_RenderData.DirectVertexData = vertexBuffer;
-			m_RenderData.DirectIndexData = indexBuffer;
-
-			m_RenderData.DirectVertexBuffer->SetData(m_RenderData.DirectVertexData);
-			m_RenderData.DirectIndexBuffer->SetData(m_RenderData.DirectIndexData);
-
-			m_RenderData.DirectVertexBuffer->Bind();
-			m_RenderData.DirectIndexBuffer->Bind();
-*/
-//			SetBufferLayout();
-
-			uint32_t indexCount = m_RenderData.DirectIndexBuffer->GetIndexCount();
-
-			RenderThread::Submit([=]()
-				{
-					glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
-				});
-
-//			m_RenderData.DirectIndexBuffer.reset(new OpenGLIndexBuffer(indexBuffer, BufferUsage::Static));
-
-//			m_RenderData.DirectVertexBuffer->Bind();
-//			m_RenderData.DirectIndexBuffer->Bind();
-
-//			uint32_t indexCount = m_RenderData.DirectIndexBuffer->GetIndexCount();
-
-//			RenderThread::Submit([=]()
-//				{
-//					glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
-//				});
-
-		}
-		else
-		{
-			// Batched output
-
-			if ((m_RenderData.VertexData.Position() + vertexBuffer.Count()) > m_RenderData.MAX_VERTICES)
-			{
-				Flush();
-			}
-
-			uint32_t indexBase = m_RenderData.VertexData.Position();
-
-			for (uint32_t i = 0; i < vertexBuffer.Count(); i++)
-			{
-				for (auto& vbItem : vertexBuffer.GetLayout().Items())
-				{
-					for (auto& item : m_RenderData.VertexData.GetLayout().Items())
-					{
-						if (vbItem.Slot == item.Slot)
-						{
-							uint8_t* destination = (uint8_t*)m_RenderData.VertexData.Data() + (m_RenderData.VertexData.Position() * m_RenderData.VertexData.GetLayout().Stride() + item.Offset);
-							uint8_t* source = (uint8_t*)vertexBuffer.Data() + i * vertexBuffer.GetLayout().Stride() + vbItem.Offset;
-
-//							LOG_CORE_TRACE("Pipeline::Submit: Type match ({0}) {1}->{2}", vbItem.Name.c_str(), (uint64_t)source, (uint64_t)destination);
-
-							memcpy(destination, source, DataTypeSize(item.Type));
-
-							continue;
-						}
-
-					}
-
-				}
-
-				m_RenderData.VertexData.Position()++;
-
-			}
-
-			for (auto i : indexBuffer)
-			{
-				m_RenderData.IndexData.push_back(i + indexBase);
-			}
-
-		}
-
-	}
-
-	void OpenGLPipeline::Flush()
-	{
-		m_RenderData.BatchVertexBuffer->Bind();
-		m_RenderData.BatchIndexBuffer->Bind();
-
-		m_RenderData.BatchVertexBuffer->UpdateData(m_RenderData.VertexData);
-		m_RenderData.BatchIndexBuffer->UpdateData(m_RenderData.IndexData);
-
-		SetBufferLayout();
-
-		uint32_t indexCount = m_RenderData.BatchIndexBuffer->GetIndexCount();
-
-//		LOG_CORE_TRACE("Flushing pipeline: {0} indices", indexCount);
-
-		RenderThread::Submit([=]()
-			{
-				glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
-			});
-
-		m_RenderData.VertexData.Clear();
-		m_RenderData.VertexData.Position() = 0;
-		m_RenderData.IndexData.clear();
 
 	}
 
