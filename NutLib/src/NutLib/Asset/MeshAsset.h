@@ -21,6 +21,34 @@ namespace Nut
 	{
 	public:
 		MeshAsset(const DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer, Ref<Pipeline> pipeline, Ref<Scene> scene);
+		MeshAsset()
+		{
+			LOG_CORE_TRACE("MeshAsset()");
+		}
+		MeshAsset(MeshAsset& other)
+		{
+			LOG_CORE_TRACE("MeshAsset() copy");
+		}
+		MeshAsset(MeshAsset&& other)
+		{
+			LOG_CORE_TRACE("MeshAsset() move");
+		}
+		MeshAsset& operator=(MeshAsset& other)
+		{
+			LOG_CORE_TRACE("MeshAsset operator copy");
+			return *this;
+		}
+		MeshAsset& operator=(MeshAsset&& other)
+		{
+			m_Type = other.m_Type;
+			m_Pipeline = other.m_Pipeline;
+			m_Scene = other.m_Scene;
+
+			m_Submeshes = other.m_Submeshes;
+
+			LOG_CORE_TRACE("MeshAsset operator move");
+			return *this;
+		}
 
 
 		const uint32_t SubmeshCount() const { return static_cast<uint32_t>(m_Submeshes.size()); }

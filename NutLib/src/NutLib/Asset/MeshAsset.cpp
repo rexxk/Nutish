@@ -15,7 +15,7 @@ namespace Nut
 
 	void MeshAsset::AddSubmesh(const DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer)
 	{
-		m_Submeshes.push_back(MeshSource(vertexBuffer, indexBuffer));
+		m_Submeshes.push_back(MeshSource(vertexBuffer, indexBuffer, m_Pipeline, m_Scene));
 
 	}
 }

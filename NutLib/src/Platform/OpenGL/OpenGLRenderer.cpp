@@ -34,7 +34,7 @@ namespace Nut
 		auto& renderData = Renderer::GetRenderData();
 
 		renderData.InstanceMap.clear();
-		renderData.MeshBuffers.clear();
+		renderData.MeshObjects.clear();
 
 	}
 
@@ -44,18 +44,18 @@ namespace Nut
 
 		auto& renderData = Renderer::GetRenderData();
 
-		for (auto& meshBuffer : renderData.MeshBuffers)
+		for (auto& meshBuffer : renderData.MeshObjects)
 		{
-			for (auto& buffers : meshBuffer.second)
+			for (auto& objects : meshBuffer.second)
 			{
-				auto& instances = renderData.InstanceMap[buffers.ID];
+				auto& instances = renderData.InstanceMap[objects->ObjectID()];
 //				buffers.InstanceBuffer = VertexBuffer::CreateInstanceBuffer(instances);
 
-				if (static_cast<uint32_t>(instances.size()) != buffers.Instances)
+				if (static_cast<uint32_t>(instances.size()) != objects->InstanceCount())
 				{
-					buffers.InstanceBuffer->SetData(instances, BufferUsage::Dynamic);
+					objects->InstanceBuffer()->SetData(instances, BufferUsage::Dynamic);
 //					buffers.InstanceBuffer.reset(new OpenGLVertexBuffer(instances, BufferUsage::Static));
-					buffers.Instances = static_cast<uint32_t>(instances.size());
+					objects->SetInstanceCount(static_cast<uint32_t>(instances.size()));
 				}
 			}
 		}
@@ -65,22 +65,22 @@ namespace Nut
 	{
 		// Submit sends the data to the render structure.
 
+		auto& renderData = Renderer::GetRenderData();
+
 		for (auto& submesh : mesh->Submeshes())
 		{
-			auto& renderData = Renderer::GetRenderData();
-
-			renderData.InstanceMap[submesh.ID()].push_back(transform);
+			renderData.InstanceMap[submesh.GetMeshObject()->ObjectID()].push_back(transform);
 
 			bool meshExists = false;
 
-			for (auto& buffer : renderData.MeshBuffers[mesh->GetPipeline()])
+			for (auto& object : renderData.MeshObjects[submesh.GetMeshObject()->ObjectID()])
 			{
-				if (buffer.ID == submesh.ID())
+				if (object->ObjectID() == submesh.GetMeshObject()->ObjectID())
 					meshExists = true;
 			}
 
 			if (!meshExists)
-				renderData.MeshBuffers[mesh->GetPipeline()].push_back(submesh.GetMeshBuffers());
+				renderData.MeshObjects[submesh.GetMeshObject()->ObjectID()].push_back(submesh.GetMeshObject());
 		}
 
 	}
@@ -89,40 +89,50 @@ namespace Nut
 	{
 		auto& renderData = Renderer::GetRenderData();
 
-		for (auto& meshBuffer : renderData.MeshBuffers)
+		for (auto& meshObject : renderData.MeshObjects)
 		{
-			Ref<Pipeline> pipeline = meshBuffer.first;
 
-			pipeline->Bind();
-
-			for (auto& buffers : meshBuffer.second)
+			for (auto& object : meshObject.second)
 			{
-				auto& instances = renderData.InstanceMap[buffers.ID];
+				object->Bind();
 
-//				if (static_cast<uint32_t>(instances.size()) != buffers.Instances)
-//				{
-//					buffers.InstanceBuffer->SetData(instances, BufferUsage::Dynamic);
-////					buffers.InstanceBuffer.reset(new OpenGLVertexBuffer(instances, BufferUsage::Static));
-//					buffers.Instances = static_cast<uint32_t>(instances.size());
-//				}
+				//			Ref<Pipeline> pipeline = meshBuffer.first;
+
+				//			pipeline->Bind();
+
+				//			for (auto& buffers : meshBuffer.second)
+				//			{
+				//				auto& instances = renderData.InstanceMap[buffers.ID];
+
+				//				if (static_cast<uint32_t>(instances.size()) != buffers.Instances)
+				//				{
+				//					buffers.InstanceBuffer->SetData(instances, BufferUsage::Dynamic);
+				////					buffers.InstanceBuffer.reset(new OpenGLVertexBuffer(instances, BufferUsage::Static));
+				//					buffers.Instances = static_cast<uint32_t>(instances.size());
+				//				}
 
 
-				buffers.VertexBuffer->Bind();
-				buffers.IndexBuffer->Bind();
+				//				buffers.VertexBuffer->Bind();
+				//				buffers.IndexBuffer->Bind();
 
-				pipeline->SetBufferLayout();
+				//				pipeline->SetBufferLayout();
 
-//				LOG_CORE_TRACE("VB: {0}, IB: {1}, Instance id: {2}, Instances: {3}", buffers.VertexBuffer->ID(), buffers.IndexBuffer->ID(), buffers.InstanceBuffer->ID(), buffers.Instances);
-				buffers.InstanceBuffer->Bind();
 
-				pipeline->SetInstanceLayout();
+				//				LOG_CORE_TRACE("VB: {0}, IB: {1}, Instance id: {2}, Instances: {3}", buffers.VertexBuffer->ID(), buffers.IndexBuffer->ID(), buffers.InstanceBuffer->ID(), buffers.Instances);
+				//				buffers.InstanceBuffer->Bind();
+
+				//				pipeline->SetInstanceLayout();
 
 
 				RenderThread::Submit([=]()
 					{
-						//						glDrawElements(GL_TRIANGLES, buffers.IndexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr);
-						glDrawElementsInstanced(GL_TRIANGLES, buffers.IndexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr, static_cast<GLsizei>(buffers.Instances)); // static_cast<GLsizei>(instances.size()));
+						LOG_CORE_TRACE("Drawing: {0} ({1} instances)", object->ObjectID(), object->InstanceCount());
+//						glDrawElements(GL_TRIANGLES, object->GetIndexCount(), GL_UNSIGNED_INT, nullptr);
+						glDrawElementsInstanced(GL_TRIANGLES, object->GetIndexCount(), GL_UNSIGNED_INT, nullptr, object->InstanceCount()); // static_cast<GLsizei>(instances.size()));
+
 					});
+
+				object->Unbind();
 
 			}
 		}

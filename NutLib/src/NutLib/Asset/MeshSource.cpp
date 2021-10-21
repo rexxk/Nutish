@@ -3,12 +3,81 @@
 
 #include "NutLib/Scene/Scene.h"
 
+#include "NutLib/Renderer/RenderThread.h"
+
+#include <glad/glad.h>
+
 
 namespace Nut
 {
 
 
-	MeshSource::MeshSource(DataBuffer<ShaderLayoutItem> vertices, const std::vector<uint32_t>& indices, Ref<Scene> scene)
+	MeshObject::MeshObject(Ref<Pipeline> pipeline)
+		: m_Pipeline(pipeline)
+	{
+		RendererID& id = m_ID;
+
+		RenderThread::Submit([&id]()
+			{
+				glGenVertexArrays(1, &id);
+				glBindVertexArray(id);
+			});
+
+		m_Pipeline->Bind();
+	}
+
+	MeshObject::~MeshObject()
+	{
+		RenderThread::Submit([=]()
+			{
+				glDeleteVertexArrays(1, &m_ID);
+			});
+	}
+
+	void MeshObject::SetVertexBuffer(Ref<VertexBuffer> vertexBuffer)
+	{
+		m_VertexBuffer = vertexBuffer;
+
+		m_VertexBuffer->Bind();
+
+		m_Pipeline->SetBufferLayout();
+	}
+
+	void MeshObject::SetIndexBuffer(Ref<Nut::IndexBuffer> indexBuffer)
+	{
+		m_IndexBuffer = indexBuffer;
+
+		m_IndexBuffer->Bind();
+	}
+
+	void MeshObject::SetInstanceBuffer(Ref<VertexBuffer> instanceBuffer)
+	{
+		m_InstanceBuffer = instanceBuffer;
+
+		m_InstanceBuffer->Bind();
+
+		m_Pipeline->SetInstanceLayout();
+	}
+
+	void MeshObject::Bind() const
+	{
+		RenderThread::Submit([=]()
+			{
+				glBindVertexArray(m_ID);
+			});
+	}
+
+	void MeshObject::Unbind() const
+	{
+		RenderThread::Submit([=]()
+			{
+				glBindVertexArray(0);
+			});
+	}
+
+
+
+	MeshSource::MeshSource(DataBuffer<ShaderLayoutItem> vertices, const std::vector<uint32_t>& indices, Ref<Pipeline> pipeline, Ref<Scene> scene)
 	{
 		if (scene != nullptr)
 			m_ID = scene->CreateEntity("MeshSource");
@@ -16,11 +85,19 @@ namespace Nut
 		m_Vertices = vertices;
 		m_Indices = indices;
 
-		m_Buffers.VertexBuffer = VertexBuffer::Create(vertices);
-		m_Buffers.IndexBuffer = IndexBuffer::Create(indices);
-		m_Buffers.InstanceBuffer = VertexBuffer::Create(nullptr, 10000 * sizeof(glm::mat4), BufferUsage::Dynamic);
+		m_MeshObject = CreateRef<MeshObject>(pipeline);
 
-		m_Buffers.ID = m_ID;
+		m_MeshObject->SetVertexBuffer(VertexBuffer::Create(vertices));
+		m_MeshObject->SetIndexBuffer(IndexBuffer::Create(indices));
+		m_MeshObject->SetInstanceBuffer(VertexBuffer::Create(nullptr, 10000 * sizeof(glm::mat4), BufferUsage::Dynamic));
+
+		m_MeshObject->Unbind();
+
+//		m_Buffers.VertexBuffer = VertexBuffer::Create(vertices);
+//		m_Buffers.IndexBuffer = IndexBuffer::Create(indices);
+//		m_Buffers.InstanceBuffer = VertexBuffer::Create(nullptr, 10000 * sizeof(glm::mat4), BufferUsage::Dynamic);
+
+//		m_Buffers.ID = m_ID;
 	}
 
 	void MeshSource::Load()

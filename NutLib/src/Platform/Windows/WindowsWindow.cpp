@@ -124,8 +124,8 @@ namespace Nut
 				WGL_ALPHA_BITS_ARB, 8,
 				WGL_DEPTH_BITS_ARB, 24,
 				WGL_STENCIL_BITS_ARB, 8,
-				WGL_SAMPLE_BUFFERS_ARB, GL_TRUE,
-				WGL_SAMPLES_ARB, 4,
+//				WGL_SAMPLE_BUFFERS_ARB, GL_TRUE,
+//				WGL_SAMPLES_ARB, 4,
 				0
 			};
 
@@ -144,7 +144,7 @@ namespace Nut
 			SetPixelFormat(dc, pixelFormatID, &pfd);
 
 			const int major_min = 4;
-			const int minor_min = 0;
+			const int minor_min = 6;
 
 			const int contextAttribs[] =
 			{

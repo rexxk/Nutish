@@ -50,6 +50,7 @@ namespace Nut
 		}
 	}
 
+
 	void OpenGLVertexBuffer::Bind() const
 	{
 		RenderThread::Submit([=]()
@@ -99,7 +100,6 @@ namespace Nut
 				glGenBuffers(1, &id);
 				glBindBuffer(GL_ARRAY_BUFFER, id);
 				glBufferData(GL_ARRAY_BUFFER, instanceMatrices.size(), instanceMatrices.data(), BufferUsageToOpenGLUsage(usage));
-
 			});
 	}
 
@@ -117,8 +117,12 @@ namespace Nut
 		RenderThread::Submit([=]()
 			{
 //				LOG_CORE_TRACE("BufferData size: {0}, data (first): {1},{2},{3},{4}", matrices.size(), matrices[0][0].x, matrices[0][0].y, matrices[0][0].z, matrices[0][0].w);
-				glBufferData(m_ID, matrices.size() * sizeof(glm::mat4), matrices.data(), BufferUsageToOpenGLUsage(usage));
-//				glBufferSubData(m_ID, 0, matrices.size() * sizeof(glm::mat4), matrices.data());
+//				glBufferData(m_ID, matrices.size() * sizeof(glm::mat4), matrices.data(), BufferUsageToOpenGLUsage(usage));
+
+				LOG_CORE_TRACE("Setting buffer data: {0},{1},{2},{3}", matrices[0][0].x, matrices[0][0].y, matrices[0][0].z, matrices[0][0].w);
+				glBindBuffer(GL_ARRAY_BUFFER, m_ID);
+				glBufferSubData(m_ID, 0, matrices.size() * sizeof(glm::mat4), matrices.data());
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
 			});
 	}
 

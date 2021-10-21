@@ -30,7 +30,7 @@ namespace Nut
 	struct RenderData
 	{
 		std::unordered_map<UUID, std::vector<glm::mat4>> InstanceMap;
-		std::unordered_map<Ref<Pipeline>, std::vector<MeshBuffers>> MeshBuffers;
+		std::unordered_map<UUID, std::vector<Ref<MeshObject>>> MeshObjects;
 	};
 
 

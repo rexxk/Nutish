@@ -47,24 +47,6 @@ void MainWindow::OnAttach()
 	m_BasicPipeline->Bind();
 
 
-	m_TestEntity = m_Scene->CreateEntity("Test entity");
-	Entity::AddComponent<MeshComponent>(m_TestEntity);
-	Entity::AddComponent<TransformComponent>(m_TestEntity);
-
-	auto& transform = Entity::GetComponent<TransformComponent>(m_TestEntity).Transform;
-	transform = glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f));
-
-	auto& triangleMesh = Entity::GetComponent<MeshComponent>(m_TestEntity);
-
-
-	auto& tagView = View<TagComponent>::Get();
-
-	for (auto& t : tagView)
-	{
-		LOG_TRACE("Tag: {0} (UUID: {1})", Entity::GetComponent<TagComponent>(t).Tag.c_str(), t);
-	}
-
-
 	std::vector<float> vertices =
 	{
 		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -73,9 +55,35 @@ void MainWindow::OnAttach()
 		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
 	};
 
-	std::vector<uint32_t> indices =	{ 0, 1, 2, 2, 3, 0 };
+	std::vector<uint32_t> indices = { 0, 1, 2, 2, 3, 0 };
 
-	triangleMesh.Mesh = CreateRef<MeshAsset>(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), indices, m_BasicPipeline, m_Scene);
+//	{
+		m_TestEntity = m_Scene->CreateEntity("Test entity");
+		Entity::AddComponent<MeshComponent>(m_TestEntity);
+		Entity::AddComponent<TransformComponent>(m_TestEntity);
+
+		auto& transform = Entity::GetComponent<TransformComponent>(m_TestEntity).Transform;
+		transform = glm::translate(glm::mat4(1.0f), glm::vec3(0.25f, 0.0f, 0.0f));
+
+		auto& triangleMesh = Entity::GetComponent<MeshComponent>(m_TestEntity);
+//		triangleMesh.Mesh = MeshAsset(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), indices, m_BasicPipeline, m_Scene);
+		triangleMesh.Mesh = CreateRef<MeshAsset>(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), indices, m_BasicPipeline, m_Scene);
+
+//	}
+
+
+
+
+//	auto& tagView = View<TagComponent>::Get();
+
+//	for (auto& t : tagView)
+//	{
+//		LOG_TRACE("Tag: {0} (UUID: {1})", Entity::GetComponent<TagComponent>(t).Tag.c_str(), t);
+//	}
+
+
+
+
 
 //	triangleMesh.AssetData.SetVertexData(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()));
 //	triangleMesh.AssetData.SetIndexData({0, 1, 2, 2, 3, 0});
@@ -88,16 +96,24 @@ void MainWindow::OnAttach()
 		0.5f, 1.5f, 0.0f, 0.0f, 1.0f,
 	};
 
-	m_TestEntity2 = m_Scene->CreateEntity("Test entity 2");
-	Entity::AddComponent<MeshComponent>(m_TestEntity2, triangleMesh);
-	Entity::AddComponent<TransformComponent>(m_TestEntity2);
+	{
+		m_TestEntity2 = m_Scene->CreateEntity("Test entity 2");
+		Entity::AddComponent<MeshComponent>(m_TestEntity2, triangleMesh);
+//		Entity::AddComponent<MeshComponent>(m_TestEntity2);
+//		auto& mesh = Entity::GetComponent<MeshComponent>(m_TestEntity2).Mesh;
+//		mesh = CreateRef<MeshAsset>(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), indices, m_BasicPipeline, m_Scene);
 
-	auto& t2 = Entity::GetComponent<TransformComponent>(m_TestEntity2).Transform;
-	t2 = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, 0.5f, 0.0f));
+		Entity::AddComponent<TransformComponent>(m_TestEntity2);
+		auto& t2 = Entity::GetComponent<TransformComponent>(m_TestEntity2).Transform;
+		t2 = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, 0.5f, 0.0f));
+	}
 
-	auto& mesh2 = Entity::GetComponent<MeshComponent>(m_TestEntity2);
+	//	auto& t2 = Entity::GetComponent<TransformComponent>(m_TestEntity2).Transform;
+//	t2 = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, 0.5f, 0.0f));
 
-	mesh2.Mesh = CreateRef<MeshAsset>(DataBuffer<ShaderLayoutItem>(vertices2.data(), 4, m_BasicShader->GetShaderLayout()), indices, m_BasicPipeline, m_Scene);
+//	auto& mesh2 = Entity::GetComponent<MeshComponent>(m_TestEntity2);
+
+//	mesh2.Mesh = CreateRef<MeshAsset>(DataBuffer<ShaderLayoutItem>(vertices2.data(), 4, m_BasicShader->GetShaderLayout()), indices, m_BasicPipeline, m_Scene);
 
 //	mesh2.AssetData = MeshAsset(DataBuffer<ShaderLayoutItem>(vertices2.data(), 4, m_BasicShader->GetShaderLayout()), { 0, 1, 2, 2, 3, 0 });
 
@@ -114,7 +130,7 @@ void MainWindow::OnAttach()
 //	m_TriangleVB = VertexBuffer::Create(triangleMesh.Vertices.Data(), triangleMesh.Vertices.Size());
 //	m_TriangleIB = IndexBuffer::Create(triangleMesh.Indices.data(), static_cast<uint32_t>(triangleMesh.Indices.size()));
 
-	m_BasicPipeline->SetBufferLayout();
+//	m_BasicPipeline->SetBufferLayout();
 
 	LOG_TRACE("Available shaders:");
 
@@ -129,9 +145,9 @@ void MainWindow::OnAttach()
 	m_GradientTexture = Texture2D::Create("assets/textures/texture2.png");
 
 //	m_Rectangle = Model::Load("assets/models/rubik.fbx", m_Scene, ShaderStore::Get("Basic"));
-	m_Rectangle = Model::Load("assets/models/cube.obj", m_Scene, ShaderStore::Get("Basic"));
+//	m_Rectangle = Model::Load("assets/models/cube.obj", m_Scene, ShaderStore::Get("Basic"));
 
-	LOG_TRACE("m_Rectangle id: {0}, tag: {1}", m_Rectangle->ID(), Entity::GetComponent<TagComponent>(m_Rectangle->ID()).Tag.c_str());
+//	LOG_TRACE("m_Rectangle id: {0}, tag: {1}", m_Rectangle->ID(), Entity::GetComponent<TagComponent>(m_Rectangle->ID()).Tag.c_str());
 
 }
 
@@ -175,7 +191,7 @@ void MainWindow::OnRender()
 
 //	Renderer::Submit(m_Rectangle);
 
-	m_BasicPipeline->Bind();
+//	m_BasicPipeline->Bind();
 
 	m_Scene->Draw();
 

@@ -31,7 +31,6 @@ namespace Nut
 
 		m_Parameters.Wireframe = false;
 
-
 		SubscribeToEvent<WindowResizedEvent>([](WindowResizedEvent& event)
 			{
 				RenderThread::Submit([=]()

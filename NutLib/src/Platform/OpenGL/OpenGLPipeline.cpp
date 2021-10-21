@@ -56,14 +56,14 @@ namespace Nut
 			return;
 		}
 
-		m_RenderData.BatchVertexBuffer = VertexBuffer::Create(nullptr, PipelineRenderData::MAX_VERTICES * shader->GetShaderLayout().Stride(), BufferUsage::Dynamic);
-		m_RenderData.BatchIndexBuffer = IndexBuffer::Create(nullptr, PipelineRenderData::MAX_TRIANGLES, BufferUsage::Dynamic);
+//		m_RenderData.BatchVertexBuffer = VertexBuffer::Create(nullptr, PipelineRenderData::MAX_VERTICES * shader->GetShaderLayout().Stride(), BufferUsage::Dynamic);
+//		m_RenderData.BatchIndexBuffer = IndexBuffer::Create(nullptr, PipelineRenderData::MAX_TRIANGLES, BufferUsage::Dynamic);
 
-		m_RenderData.DirectVertexBuffer = VertexBuffer::Create(nullptr, 0, BufferUsage::Static);
-		m_RenderData.DirectIndexBuffer = IndexBuffer::Create(nullptr, 0, BufferUsage::Static);
+//		m_RenderData.DirectVertexBuffer = VertexBuffer::Create(nullptr, 0, BufferUsage::Static);
+//		m_RenderData.DirectIndexBuffer = IndexBuffer::Create(nullptr, 0, BufferUsage::Static);
 
-		m_RenderData.VertexData.SetLayout(shader->GetShaderLayout());
-		m_RenderData.VertexData.Allocate(m_RenderData.MAX_VERTICES);
+//		m_RenderData.VertexData.SetLayout(shader->GetShaderLayout());
+//		m_RenderData.VertexData.Allocate(m_RenderData.MAX_VERTICES);
 
 	}
 
@@ -102,7 +102,6 @@ namespace Nut
 		auto& layout = m_Shader->GetShaderLayout();
 		auto& items = layout.Items();
 
-
 		RenderThread::Submit([=]()
 			{
 				for (ShaderLayoutItem item : items)
@@ -136,26 +135,29 @@ namespace Nut
 						if (item.Type == DataType::Matrix4x4)
 						{
 							glEnableVertexAttribArray(item.Location);
+							glVertexAttribPointer(item.Location, 4, GL_FLOAT, GL_FALSE, 4 * 4 * 4, (const void*)(uint64_t)0);
 							glEnableVertexAttribArray(item.Location + 1);
+							glVertexAttribPointer(item.Location + 1, 4, GL_FLOAT, GL_FALSE, 4 * 4 * 4, (const void*)(uint64_t)(1 * 4 * 4));
 							glEnableVertexAttribArray(item.Location + 2);
+							glVertexAttribPointer(item.Location + 2, 4, GL_FLOAT, GL_FALSE, 4 * 4 * 4, (const void*)(uint64_t)(2 * 4 * 4));
 							glEnableVertexAttribArray(item.Location + 3);
+							glVertexAttribPointer(item.Location + 3, 4, GL_FLOAT, GL_FALSE, 4 * 4 * 4, (const void*)(uint64_t)(3 * 4 * 4));
+
+							glVertexAttribDivisor(item.Location, 1);
+							glVertexAttribDivisor(item.Location + 1, 1);
+							glVertexAttribDivisor(item.Location + 2, 1);
+							glVertexAttribDivisor(item.Location + 3, 1);
 
 							// TODO: Fix hardcode
-							glVertexAttribPointer(item.Location, 4, GL_FLOAT, GL_FALSE, 4 * 4 * 4, (const void*)(uint64_t)0);
-							glVertexAttribPointer(item.Location + 1, 4, GL_FLOAT, GL_FALSE, 4 * 4 * 4, (const void*)(uint64_t)(1 * 4 * 4));
-							glVertexAttribPointer(item.Location + 2, 4, GL_FLOAT, GL_FALSE, 4 * 4 * 4, (const void*)(uint64_t)(2 * 4 * 4));
-							glVertexAttribPointer(item.Location + 3, 4, GL_FLOAT, GL_FALSE, 4 * 4 * 4, (const void*)(uint64_t)(3 * 4 * 4));
 
 //							glVertexAttribPointer(item.Location, DataTypeToGLSize(item.Type), DataTypeToGLType(item.Type), item.Normalized, layout.Stride(), (const void*)(uint64_t)item.Offset);
 //							glVertexAttribPointer(item.Location + 1, DataTypeToGLSize(item.Type), DataTypeToGLType(item.Type), item.Normalized, layout.Stride(), (const void*)(uint64_t)(item.Offset + (1 * DataTypeToGLSize(item.Type))));
 //							glVertexAttribPointer(item.Location + 2, DataTypeToGLSize(item.Type), DataTypeToGLType(item.Type), item.Normalized, layout.Stride(), (const void*)(uint64_t)(item.Offset + (2 * DataTypeToGLSize(item.Type))));
 //							glVertexAttribPointer(item.Location + 3, DataTypeToGLSize(item.Type), DataTypeToGLType(item.Type), item.Normalized, layout.Stride(), (const void*)(uint64_t)(item.Offset + (3 * DataTypeToGLSize(item.Type))));
 
-							glVertexAttribDivisor(item.Location, 1);
-							glVertexAttribDivisor(item.Location + 1, 1);
-							glVertexAttribDivisor(item.Location + 2, 1);
-							glVertexAttribDivisor(item.Location + 3, 1);
 						}
+
+						break;
 					}
 				}
 			});
