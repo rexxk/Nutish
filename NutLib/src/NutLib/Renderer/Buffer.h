@@ -20,6 +20,7 @@ namespace Nut
 	public:
 		static Ref<VertexBuffer> Create(void* data, uint32_t size, BufferUsage usage = BufferUsage::Static);
 		static Ref<VertexBuffer> Create(const DataBuffer<ShaderLayoutItem>& dataBuffer, BufferUsage usage = BufferUsage::Static);
+		static Ref<VertexBuffer> CreateInstanceBuffer(const std::vector<glm::mat4>& instanceMatrices, BufferUsage usage = BufferUsage::Static);
 
 		virtual ~VertexBuffer() {}
 
@@ -27,6 +28,7 @@ namespace Nut
 		virtual void Unbind() const = 0;
 
 		virtual void SetData(const DataBuffer<ShaderLayoutItem>& dataBuffer) = 0;
+		virtual void SetData(const std::vector<glm::mat4>& matrices, BufferUsage usage = BufferUsage::Dynamic) = 0;
 		virtual void UpdateData(const DataBuffer<ShaderLayoutItem>& dataBuffer) = 0;
 
 		virtual RendererID ID() const = 0;

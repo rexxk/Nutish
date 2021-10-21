@@ -10,6 +10,10 @@
 
 #include <glad/glad.h>
 
+#include "Platform/OpenGL/glext.h"
+#include "Platform/OpenGL/wglext.h"
+
+
 
 namespace Nut
 {
@@ -62,6 +66,41 @@ namespace Nut
 			return;
 		}
 
+		PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB;
+		PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB;
+
+		HWND fakeWindow;
+		HDC fakeDC;
+		HGLRC fakeRC;
+
+		if (Renderer::API() == RendererAPIType::OpenGL)
+		{
+			fakeWindow = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"Nut", L"Fake window", WS_OVERLAPPEDWINDOW, 0, 0, 1, 1, NULL, NULL, GetModuleHandle(NULL), NULL);
+
+			fakeDC = GetDC(fakeWindow);
+
+			PIXELFORMATDESCRIPTOR fakePFD;
+			ZeroMemory(&fakePFD, sizeof(PIXELFORMATDESCRIPTOR));
+			fakePFD.nSize = sizeof(fakePFD);
+			fakePFD.nVersion = 1;
+			fakePFD.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+			fakePFD.iPixelType = PFD_TYPE_RGBA;
+			fakePFD.cColorBits = 32;
+			fakePFD.cAlphaBits = 8;
+			fakePFD.cDepthBits = 24;
+
+			const int fakePFDID = ChoosePixelFormat(fakeDC, &fakePFD);
+			SetPixelFormat(fakeDC, fakePFDID, &fakePFD);
+
+			fakeRC = wglCreateContext(fakeDC);
+
+			wglMakeCurrent(fakeDC, fakeRC);
+
+			wglChoosePixelFormatARB = reinterpret_cast<PFNWGLCHOOSEPIXELFORMATARBPROC>(wglGetProcAddress("wglChoosePixelFormatARB"));
+			wglCreateContextAttribsARB = reinterpret_cast<PFNWGLCREATECONTEXTATTRIBSARBPROC>(wglGetProcAddress("wglCreateContextAttribsARB"));
+		}
+
+
 
 		wchar_t title[MAX_PATH];
 		std::mbstowcs(title, m_Properties.Title.c_str(), MAX_PATH);
@@ -69,6 +108,69 @@ namespace Nut
 		m_Window = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"Nut", title, WS_OVERLAPPEDWINDOW,
 			CW_USEDEFAULT, CW_USEDEFAULT, m_Properties.Width, m_Properties.Height,
 			NULL, NULL, GetModuleHandle(NULL), NULL);
+
+		if (Renderer::API() == RendererAPIType::OpenGL)
+		{
+			HDC dc = GetDC(m_Window);
+
+			const int pixelAttribs[] =
+			{
+				WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
+				WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
+				WGL_DOUBLE_BUFFER_ARB, GL_TRUE,
+				WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
+				WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
+				WGL_COLOR_BITS_ARB, 32,
+				WGL_ALPHA_BITS_ARB, 8,
+				WGL_DEPTH_BITS_ARB, 24,
+				WGL_STENCIL_BITS_ARB, 8,
+				WGL_SAMPLE_BUFFERS_ARB, GL_TRUE,
+				WGL_SAMPLES_ARB, 4,
+				0
+			};
+
+			int pixelFormatID;
+			uint32_t numFormats;
+
+			const bool status = wglChoosePixelFormatARB(dc, pixelAttribs, nullptr, 1, &pixelFormatID, &numFormats);
+
+			if (status == false || numFormats == 0)
+			{
+				LOG_CORE_ERROR("wglChoosePixelFormatARB() failed");
+			}
+
+			PIXELFORMATDESCRIPTOR pfd;
+			DescribePixelFormat(dc, pixelFormatID, sizeof(pfd), &pfd);
+			SetPixelFormat(dc, pixelFormatID, &pfd);
+
+			const int major_min = 4;
+			const int minor_min = 0;
+
+			const int contextAttribs[] =
+			{
+				WGL_CONTEXT_MAJOR_VERSION_ARB, major_min,
+				WGL_CONTEXT_MINOR_VERSION_ARB, minor_min,
+				WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+				0,
+			};
+
+			HGLRC rc = wglCreateContextAttribsARB(dc, 0, contextAttribs);
+
+			if (rc == NULL)
+			{
+				LOG_CORE_ERROR("wglCreateContextAttribsARB() failed");
+			}
+
+			wglMakeCurrent(NULL, NULL);
+			wglDeleteContext(fakeRC);
+			ReleaseDC(fakeWindow, fakeDC);
+			DestroyWindow(fakeWindow);
+
+			wglMakeCurrent(dc, rc);
+
+			NUT_ASSERT(gladLoadGL(), "Failed to init OpenGL library (Glad)");
+
+		}
 
 		SetWindowLongPtr(m_Window, GWLP_USERDATA, (LONG_PTR)&m_Properties);
 
@@ -153,8 +255,9 @@ namespace Nut
 				break;
 			}
 
-			case WM_CREATE:
-			{
+//			case WM_CREATE:
+//			{
+/*
 				if (Renderer::API() == RendererAPIType::OpenGL)
 				{
 					PIXELFORMATDESCRIPTOR pfd =
@@ -179,21 +282,65 @@ namespace Nut
 
 					HDC currentDeviceContext = GetDC(wnd);
 
+					
 					int pixelFormat = ChoosePixelFormat(currentDeviceContext, &pfd);
 					SetPixelFormat(currentDeviceContext, pixelFormat, &pfd);
 
 					HGLRC renderContext = wglCreateContext(currentDeviceContext);
 					wglMakeCurrent(currentDeviceContext, renderContext);
 
-					NUT_ASSERT(gladLoadGL(), "Failed to init OpenGL library (Glad)");
-				}
+					using PFNWGLCHOOSEPIXELFORMATARB = bool(*)(HDC, const int*, const float*, uint32_t, int*, uint32_t*);
+					PFNWGLCHOOSEPIXELFORMATARB wglChoosePixelFormatARB;
+					wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATARB)wglGetProcAddress("wglChoosePixelFormatARB");
+					
+					using PFNCREATECONTEXTATTRIBSARB = HGLRC(*)(HDC, HGLRC, const int*);
+					PFNCREATECONTEXTATTRIBSARB wglCreateContextAttribsARB;
+					wglCreateContextAttribsARB = (PFNCREATECONTEXTATTRIBSARB)wglGetProcAddress("wglCreateContextAttribsARB");
 
-				break;
-			}
+					wglDeleteContext(renderContext);
+					wglMakeCurrent(NULL, NULL);
+
+					const int attribList[] =
+					{
+						
+						WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
+						WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
+						WGL_DOUBLE_BUFFER_ARB, GL_TRUE,
+						WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
+						WGL_COLOR_BITS_ARB, 32,
+						WGL_DEPTH_BITS_ARB, 24,
+						WGL_STENCIL_BITS_ARB, 8,
+					};
+
+					int pFormat[1];
+
+					uint32_t numFormats;
+					NUT_CORE_ASSERT(wglChoosePixelFormatARB(currentDeviceContext, attribList, nullptr, 1, pFormat, &numFormats), "Unable to find a suitable pixel format for OpenGL!");
+
+					NUT_CORE_ASSERT(SetPixelFormat(currentDeviceContext, pFormat[0], &pfd), "Unable to set pixel format!");
+
+					const int versionList[] =
+					{
+						WGL_CONTEXT_MAJOR_VERSION_ARB,
+						4,
+						WGL_CONTEXT_MINOR_VERSION_ARB,
+						5,
+					};
+
+					renderContext = wglCreateContextAttribsARB(currentDeviceContext, 0, versionList);
+					wglMakeCurrent(currentDeviceContext, renderContext);
+
+					NUT_ASSERT(gladLoadGL(), "Failed to init OpenGL library (Glad)");
+
+
+				}
+*/
+//				break;
+//			}
 
 			case WM_DESTROY:
 			{
-				AddEvent(MakeEvent<WindowClosedEvent>());
+				AddEvent(MakeEvent<WindowClosedEvent>(wnd));
 
 				PostQuitMessage(0);
 

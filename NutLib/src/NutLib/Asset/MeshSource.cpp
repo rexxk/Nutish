@@ -18,6 +18,8 @@ namespace Nut
 
 		m_Buffers.VertexBuffer = VertexBuffer::Create(vertices);
 		m_Buffers.IndexBuffer = IndexBuffer::Create(indices);
+		m_Buffers.InstanceBuffer = VertexBuffer::Create(nullptr, 10000 * sizeof(glm::mat4), BufferUsage::Dynamic);
+
 		m_Buffers.ID = m_ID;
 	}
 

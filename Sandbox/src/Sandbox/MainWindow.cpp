@@ -49,6 +49,10 @@ void MainWindow::OnAttach()
 
 	m_TestEntity = m_Scene->CreateEntity("Test entity");
 	Entity::AddComponent<MeshComponent>(m_TestEntity);
+	Entity::AddComponent<TransformComponent>(m_TestEntity);
+
+	auto& transform = Entity::GetComponent<TransformComponent>(m_TestEntity).Transform;
+	transform = glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f));
 
 	auto& triangleMesh = Entity::GetComponent<MeshComponent>(m_TestEntity);
 
@@ -86,8 +90,14 @@ void MainWindow::OnAttach()
 
 	m_TestEntity2 = m_Scene->CreateEntity("Test entity 2");
 	Entity::AddComponent<MeshComponent>(m_TestEntity2, triangleMesh);
+	Entity::AddComponent<TransformComponent>(m_TestEntity2);
+
+	auto& t2 = Entity::GetComponent<TransformComponent>(m_TestEntity2).Transform;
+	t2 = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, 0.5f, 0.0f));
 
 	auto& mesh2 = Entity::GetComponent<MeshComponent>(m_TestEntity2);
+
+	mesh2.Mesh = CreateRef<MeshAsset>(DataBuffer<ShaderLayoutItem>(vertices2.data(), 4, m_BasicShader->GetShaderLayout()), indices, m_BasicPipeline, m_Scene);
 
 //	mesh2.AssetData = MeshAsset(DataBuffer<ShaderLayoutItem>(vertices2.data(), 4, m_BasicShader->GetShaderLayout()), { 0, 1, 2, 2, 3, 0 });
 
@@ -176,9 +186,10 @@ void MainWindow::OnRender()
 
 //	m_BasicPipeline->Flush();
 
+	Renderer::EndScene();
+
 	Renderer::Draw();
 
-	Renderer::EndScene();
 
 
 }

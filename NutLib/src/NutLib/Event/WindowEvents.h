@@ -12,11 +12,16 @@ namespace Nut
 	class WindowClosedEvent : public Event
 	{
 	public:
-		WindowClosedEvent()
-			: Event(EventType::WindowClose)
+		WindowClosedEvent(void* windowHandle)
+			: Event(EventType::WindowClose), m_WindowHandle(windowHandle)
 		{
 
 		}
+
+		void* Handle() { return m_WindowHandle; }
+		
+	private:
+		void* m_WindowHandle;
 	};
 
 	class WindowResizedEvent : public Event

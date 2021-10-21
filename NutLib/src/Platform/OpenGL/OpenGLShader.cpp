@@ -20,6 +20,7 @@ namespace Nut
 		if (name == "a_TexCoord") return ShaderLayoutItem::ShaderSlot::TexCoord;
 		if (name == "a_Normal") return ShaderLayoutItem::ShaderSlot::Normal;
 		if (name == "a_Color") return ShaderLayoutItem::ShaderSlot::Color;
+		if (name == "a_InstanceMatrix") return ShaderLayoutItem::ShaderSlot::InstanceMatrix;
 
 		return ShaderLayoutItem::ShaderSlot::Unknown;
 	}

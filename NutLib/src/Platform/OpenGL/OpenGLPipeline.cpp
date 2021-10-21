@@ -25,6 +25,28 @@ namespace Nut
 		return GL_INVALID_ENUM;
 	}
 
+	uint32_t DataTypeToGLSize(DataType type)
+	{
+		switch (type)
+		{
+			case DataType::Bool: return 1;
+			case DataType::Int: return 4;
+			case DataType::UInt: return 4;
+			case DataType::Float: return 4;
+			case DataType::Double: return 4;
+			case DataType::Vec2: return 4 * 2;
+			case DataType::Vec3: return 4 * 3;
+			case DataType::Vec4: return 4 * 4;
+			case DataType::Matrix3x3: return 4;
+			case DataType::Matrix4x4: return 4;
+
+			case DataType::Texture2D: return 4;
+			case DataType::TextureCube: return 4;
+		}
+
+		return GL_INVALID_ENUM;
+	}
+
 	OpenGLPipeline::OpenGLPipeline(Ref<Shader> shader)
 		: m_Shader(shader)
 	{
@@ -85,12 +107,56 @@ namespace Nut
 			{
 				for (ShaderLayoutItem item : items)
 				{
+					if (item.Slot == ShaderLayoutItem::ShaderSlot::InstanceMatrix)
+						continue;
+
 					glEnableVertexAttribArray(item.Location);
 
 					if (item.Type == DataType::Int || item.Type == DataType::UInt)
 						glVertexAttribIPointer(item.Location, DataTypeCount(item.Type), DataTypeToGLType(item.Type), layout.Stride(), (const void*)(uint64_t)item.Offset);
 					else
 						glVertexAttribPointer(item.Location, DataTypeCount(item.Type), DataTypeToGLType(item.Type), item.Normalized, layout.Stride(), (const void*)(uint64_t)item.Offset);
+				}
+			});
+
+	}
+
+	void OpenGLPipeline::SetInstanceLayout()
+	{
+		auto& layout = m_Shader->GetShaderLayout();
+		auto& items = layout.Items();
+
+
+		RenderThread::Submit([=]()
+			{
+				for (ShaderLayoutItem item : items)
+				{
+					if (item.Slot == ShaderLayoutItem::ShaderSlot::InstanceMatrix)
+					{
+						if (item.Type == DataType::Matrix4x4)
+						{
+							glEnableVertexAttribArray(item.Location);
+							glEnableVertexAttribArray(item.Location + 1);
+							glEnableVertexAttribArray(item.Location + 2);
+							glEnableVertexAttribArray(item.Location + 3);
+
+							// TODO: Fix hardcode
+							glVertexAttribPointer(item.Location, 4, GL_FLOAT, GL_FALSE, 4 * 4 * 4, (const void*)(uint64_t)0);
+							glVertexAttribPointer(item.Location + 1, 4, GL_FLOAT, GL_FALSE, 4 * 4 * 4, (const void*)(uint64_t)(1 * 4 * 4));
+							glVertexAttribPointer(item.Location + 2, 4, GL_FLOAT, GL_FALSE, 4 * 4 * 4, (const void*)(uint64_t)(2 * 4 * 4));
+							glVertexAttribPointer(item.Location + 3, 4, GL_FLOAT, GL_FALSE, 4 * 4 * 4, (const void*)(uint64_t)(3 * 4 * 4));
+
+//							glVertexAttribPointer(item.Location, DataTypeToGLSize(item.Type), DataTypeToGLType(item.Type), item.Normalized, layout.Stride(), (const void*)(uint64_t)item.Offset);
+//							glVertexAttribPointer(item.Location + 1, DataTypeToGLSize(item.Type), DataTypeToGLType(item.Type), item.Normalized, layout.Stride(), (const void*)(uint64_t)(item.Offset + (1 * DataTypeToGLSize(item.Type))));
+//							glVertexAttribPointer(item.Location + 2, DataTypeToGLSize(item.Type), DataTypeToGLType(item.Type), item.Normalized, layout.Stride(), (const void*)(uint64_t)(item.Offset + (2 * DataTypeToGLSize(item.Type))));
+//							glVertexAttribPointer(item.Location + 3, DataTypeToGLSize(item.Type), DataTypeToGLType(item.Type), item.Normalized, layout.Stride(), (const void*)(uint64_t)(item.Offset + (3 * DataTypeToGLSize(item.Type))));
+
+							glVertexAttribDivisor(item.Location, 1);
+							glVertexAttribDivisor(item.Location + 1, 1);
+							glVertexAttribDivisor(item.Location + 2, 1);
+							glVertexAttribDivisor(item.Location + 3, 1);
+						}
+					}
 				}
 			});
 

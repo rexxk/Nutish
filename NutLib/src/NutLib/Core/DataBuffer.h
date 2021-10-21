@@ -56,6 +56,9 @@ namespace Nut
 
 			for (auto& item : m_Items)
 			{
+				if (item.Type == DataType::Matrix4x4)
+					continue;
+
 				item.Offset += offset;
 
 				m_Stride += DataTypeSize(item.Type);

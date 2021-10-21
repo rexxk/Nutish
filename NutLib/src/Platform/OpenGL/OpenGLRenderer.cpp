@@ -31,11 +31,34 @@ namespace Nut
 				glClear(GL_COLOR_BUFFER_BIT);
 			});
 
+		auto& renderData = Renderer::GetRenderData();
+
+		renderData.InstanceMap.clear();
+		renderData.MeshBuffers.clear();
+
 	}
 
 	void OpenGLRenderer::EndSceneImplementation()
 	{
+		// Create instance buffer etc before drawing.
 
+		auto& renderData = Renderer::GetRenderData();
+
+		for (auto& meshBuffer : renderData.MeshBuffers)
+		{
+			for (auto& buffers : meshBuffer.second)
+			{
+				auto& instances = renderData.InstanceMap[buffers.ID];
+//				buffers.InstanceBuffer = VertexBuffer::CreateInstanceBuffer(instances);
+
+				if (static_cast<uint32_t>(instances.size()) != buffers.Instances)
+				{
+					buffers.InstanceBuffer->SetData(instances, BufferUsage::Dynamic);
+//					buffers.InstanceBuffer.reset(new OpenGLVertexBuffer(instances, BufferUsage::Static));
+					buffers.Instances = static_cast<uint32_t>(instances.size());
+				}
+			}
+		}
 	}
 
 	void OpenGLRenderer::SubmitImplementation(Ref<MeshAsset> mesh, const glm::mat4& transform)
@@ -47,7 +70,17 @@ namespace Nut
 			auto& renderData = Renderer::GetRenderData();
 
 			renderData.InstanceMap[submesh.ID()].push_back(transform);
-			renderData.MeshBuffers[mesh->GetPipeline()].push_back(submesh.GetMeshBuffers());
+
+			bool meshExists = false;
+
+			for (auto& buffer : renderData.MeshBuffers[mesh->GetPipeline()])
+			{
+				if (buffer.ID == submesh.ID())
+					meshExists = true;
+			}
+
+			if (!meshExists)
+				renderData.MeshBuffers[mesh->GetPipeline()].push_back(submesh.GetMeshBuffers());
 		}
 
 	}
@@ -61,17 +94,34 @@ namespace Nut
 			Ref<Pipeline> pipeline = meshBuffer.first;
 
 			pipeline->Bind();
-			pipeline->SetBufferLayout();
-
 
 			for (auto& buffers : meshBuffer.second)
 			{
+				auto& instances = renderData.InstanceMap[buffers.ID];
+
+//				if (static_cast<uint32_t>(instances.size()) != buffers.Instances)
+//				{
+//					buffers.InstanceBuffer->SetData(instances, BufferUsage::Dynamic);
+////					buffers.InstanceBuffer.reset(new OpenGLVertexBuffer(instances, BufferUsage::Static));
+//					buffers.Instances = static_cast<uint32_t>(instances.size());
+//				}
+
+
 				buffers.VertexBuffer->Bind();
 				buffers.IndexBuffer->Bind();
 
+				pipeline->SetBufferLayout();
+
+//				LOG_CORE_TRACE("VB: {0}, IB: {1}, Instance id: {2}, Instances: {3}", buffers.VertexBuffer->ID(), buffers.IndexBuffer->ID(), buffers.InstanceBuffer->ID(), buffers.Instances);
+				buffers.InstanceBuffer->Bind();
+
+				pipeline->SetInstanceLayout();
+
+
 				RenderThread::Submit([=]()
 					{
-						glDrawElements(GL_TRIANGLES, buffers.IndexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr);
+						//						glDrawElements(GL_TRIANGLES, buffers.IndexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr);
+						glDrawElementsInstanced(GL_TRIANGLES, buffers.IndexBuffer->GetIndexCount(), GL_UNSIGNED_INT, nullptr, static_cast<GLsizei>(buffers.Instances)); // static_cast<GLsizei>(instances.size()));
 					});
 
 			}
@@ -80,8 +130,6 @@ namespace Nut
 
 
 
-		renderData.InstanceMap.clear();
-		renderData.MeshBuffers.clear();
 	}
 
 

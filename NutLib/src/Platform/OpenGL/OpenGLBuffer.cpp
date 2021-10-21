@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 
 
+
 namespace Nut
 {
 
@@ -31,6 +32,11 @@ namespace Nut
 	OpenGLVertexBuffer::OpenGLVertexBuffer(const DataBuffer<ShaderLayoutItem>& vertexBuffer, BufferUsage usage)
 	{
 		CreateBuffer(vertexBuffer, usage);
+	}
+
+	OpenGLVertexBuffer::OpenGLVertexBuffer(const std::vector<glm::mat4>& instanceMatrices, BufferUsage usage)
+	{
+		CreateBuffer(instanceMatrices, usage);
 	}
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
@@ -84,11 +90,35 @@ namespace Nut
 			});
 	}
 
+	void OpenGLVertexBuffer::CreateBuffer(const std::vector<glm::mat4>& instanceMatrices, BufferUsage usage)
+	{
+		RendererID& id = m_ID;
+
+		RenderThread::Submit([=, &id]()
+			{
+				glGenBuffers(1, &id);
+				glBindBuffer(GL_ARRAY_BUFFER, id);
+				glBufferData(GL_ARRAY_BUFFER, instanceMatrices.size(), instanceMatrices.data(), BufferUsageToOpenGLUsage(usage));
+
+			});
+	}
+
 	void OpenGLVertexBuffer::SetData(const DataBuffer<ShaderLayoutItem>& dataBuffer)
 	{
 		RenderThread::Submit([=]()
 			{
 				glBufferData(m_ID, dataBuffer.Size(), dataBuffer.Data(), GL_STATIC_DRAW);
+			});
+
+	}
+
+	void OpenGLVertexBuffer::SetData(const std::vector<glm::mat4>& matrices, BufferUsage usage)
+	{
+		RenderThread::Submit([=]()
+			{
+//				LOG_CORE_TRACE("BufferData size: {0}, data (first): {1},{2},{3},{4}", matrices.size(), matrices[0][0].x, matrices[0][0].y, matrices[0][0].z, matrices[0][0].w);
+				glBufferData(m_ID, matrices.size() * sizeof(glm::mat4), matrices.data(), BufferUsageToOpenGLUsage(usage));
+//				glBufferSubData(m_ID, 0, matrices.size() * sizeof(glm::mat4), matrices.data());
 			});
 	}
 

@@ -12,12 +12,14 @@ namespace Nut
 	public:
 		OpenGLVertexBuffer(void* data, uint32_t size, BufferUsage usage);
 		OpenGLVertexBuffer(const DataBuffer<ShaderLayoutItem>& vertexBuffer, BufferUsage usage);
+		OpenGLVertexBuffer(const std::vector<glm::mat4>& instanceMatrices, BufferUsage usage);
 		virtual ~OpenGLVertexBuffer();
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
 		virtual void SetData(const DataBuffer<ShaderLayoutItem>& dataBuffer) override;
+		virtual void SetData(const std::vector<glm::mat4>& matrices, BufferUsage usage) override;
 		virtual void UpdateData(const DataBuffer<ShaderLayoutItem>& dataBuffer) override;
 
 		virtual RendererID ID() const override { return m_ID; }
@@ -25,6 +27,7 @@ namespace Nut
 	private:
 		void CreateBuffer(void* data, uint32_t size, BufferUsage usage);
 		void CreateBuffer(const DataBuffer<ShaderLayoutItem>& vertexBuffer, BufferUsage usage);
+		void CreateBuffer(const std::vector<glm::mat4>& instanceMatrices, BufferUsage usage);
 
 	private:
 		RendererID m_ID = 0;

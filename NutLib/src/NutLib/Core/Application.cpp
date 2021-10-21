@@ -46,7 +46,9 @@ namespace Nut
 
 		SubscribeToEvent<WindowClosedEvent>([&](WindowClosedEvent& event)
 			{
-				m_IsRunning = false;
+				if (event.Handle() == m_Window->GetNativeHandle())
+					m_IsRunning = false;
+
 				return true;
 			});
 	}

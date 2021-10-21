@@ -39,6 +39,7 @@ namespace Nut
 			TexCoord,
 			Normal,
 			Color,
+			InstanceMatrix,
 		};
 
 		ShaderSlot Slot = ShaderSlot::Unknown;

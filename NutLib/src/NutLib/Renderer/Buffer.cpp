@@ -35,6 +35,20 @@ namespace Nut
 		return nullptr;
 	}
 
+	Ref<VertexBuffer> VertexBuffer::CreateInstanceBuffer(const std::vector<glm::mat4>& instanceMatrices, BufferUsage usage)
+	{
+		switch (Renderer::API())
+		{
+			case RendererAPIType::OpenGL: return CreateRef<OpenGLVertexBuffer>(instanceMatrices, usage);
+
+		}
+
+		LOG_CORE_WARN("[VertexBuffer]: No api defined.");
+
+		return nullptr;
+
+	}
+
 
 
 	Ref<IndexBuffer> IndexBuffer::Create(void* data, uint32_t count, BufferUsage usage)

@@ -23,6 +23,7 @@ namespace Nut
 //		void AttachIndexBuffer(Ref<IndexBuffer> indexBuffer);
 
 		virtual void SetBufferLayout() override;
+		virtual void SetInstanceLayout() override;
 
 		virtual void Submit(DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer) override;
 //		virtual void FlushBatch() override;

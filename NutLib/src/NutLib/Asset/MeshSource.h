@@ -19,8 +19,10 @@ namespace Nut
 	struct MeshBuffers
 	{
 		UUID ID;
-		Ref<VertexBuffer> VertexBuffer;
-		Ref<IndexBuffer> IndexBuffer;
+		Ref<Nut::VertexBuffer> VertexBuffer;
+		Ref<Nut::IndexBuffer> IndexBuffer;
+		Ref<Nut::VertexBuffer> InstanceBuffer;
+		uint32_t Instances = 0;
 	};
 
 	class MeshSource : public Asset
@@ -62,6 +64,8 @@ namespace Nut
 
 			m_ID = other.m_ID;
 
+			m_Buffers = other.m_Buffers;
+
 			return *this;
 		}
 
@@ -74,7 +78,8 @@ namespace Nut
 		void SetVertexData(const DataBuffer<ShaderLayoutItem>& vertices);
 		void SetIndexData(const std::vector<uint32_t>& indices);
 
-		MeshBuffers& GetMeshBuffers() { return m_Buffers; }
+		MeshBuffers GetMeshBuffers() { return m_Buffers; }
+//		MeshBuffers& GetMeshBuffers() { return m_Buffers; }
 
 		UUID ID() const { return m_ID; }
 

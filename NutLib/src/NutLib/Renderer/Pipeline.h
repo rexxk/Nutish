@@ -59,6 +59,7 @@ namespace Nut
 		virtual void Unbind() const = 0;
 
 		virtual void SetBufferLayout() = 0;
+		virtual void SetInstanceLayout() = 0;
 
 		virtual void Submit(DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer) = 0;
 //		virtual void FlushBatch() = 0;
