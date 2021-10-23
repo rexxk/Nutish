@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Object.h"
-#include "NutLib/Renderer/Shader.h"
+#include "NutLib/Renderer/Pipeline.h"
 #include "NutLib/Renderer/Mesh.h"
 
 namespace Nut
@@ -11,7 +11,7 @@ namespace Nut
 	class Model : public Object
 	{
 	public:
-		static Ref<Model> Load(const std::string& filepath, Ref<Scene> scene, Ref<Shader> shader);
+		static Ref<Model> Load(const std::string& filepath, Ref<Scene> scene, Ref<Pipeline> pipeline);
 
 		Model(Ref<Scene> scene, const std::string& tag = "model");
 		virtual ~Model();

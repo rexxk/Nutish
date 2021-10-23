@@ -12,49 +12,6 @@ namespace Nut
 
 
 
-	struct ShaderMaterialItem : public DataBufferLayoutItem
-	{
-		int32_t Location = 0;
-		uint32_t Size = 0;
-
-		bool Resolved = false;
-
-		ShaderMaterialItem()
-			: DataBufferLayoutItem(DataType::Unknown, "<unknown>")
-		{
-			Location = -1;
-			Size = 0;
-
-			Resolved = false;
-		}
-
-	};
-
-	struct ShaderLayoutItem : public DataBufferLayoutItem
-	{
-		enum class ShaderSlot
-		{
-			Unknown = -1,
-			Vertex,
-			TexCoord,
-			Normal,
-			Color,
-			InstanceMatrix,
-		};
-
-		ShaderSlot Slot = ShaderSlot::Unknown;
-		int Location = 0;
-
-		bool Normalized = false;
-
-		ShaderLayoutItem()
-			: DataBufferLayoutItem(DataType::Unknown, "<unknown>")
-		{
-			Location = -1;
-			Normalized = false;
-		}
-
-	};
 
 
 	class Shader

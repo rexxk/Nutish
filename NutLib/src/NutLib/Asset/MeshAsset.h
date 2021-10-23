@@ -20,7 +20,6 @@ namespace Nut
 	class MeshAsset
 	{
 	public:
-		MeshAsset(const DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer, Ref<Pipeline> pipeline, Ref<Scene> scene);
 		MeshAsset()
 		{
 			LOG_CORE_TRACE("MeshAsset()");
@@ -33,6 +32,11 @@ namespace Nut
 		{
 			LOG_CORE_TRACE("MeshAsset() move");
 		}
+		
+		MeshAsset(const DataBuffer<ShaderLayoutItem>& vertexBuffer, const std::vector<uint32_t>& indexBuffer, Ref<Pipeline> pipeline, Ref<Scene> scene);
+
+		MeshAsset(Ref<Pipeline>, Ref<Scene>);
+
 		MeshAsset& operator=(MeshAsset& other)
 		{
 			LOG_CORE_TRACE("MeshAsset operator copy");

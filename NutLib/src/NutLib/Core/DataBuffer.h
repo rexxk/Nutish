@@ -2,10 +2,12 @@
 
 #include "DataType.h"
 
+#include <glm/glm.hpp>
 
 
 namespace Nut
 {
+
 
 	struct DataBufferLayoutItem
 	{
@@ -21,6 +23,52 @@ namespace Nut
 		}
 
 	};
+
+
+	struct ShaderMaterialItem : public DataBufferLayoutItem
+	{
+		int32_t Location = 0;
+		uint32_t Size = 0;
+
+		bool Resolved = false;
+
+		ShaderMaterialItem()
+			: DataBufferLayoutItem(DataType::Unknown, "<unknown>")
+		{
+			Location = -1;
+			Size = 0;
+
+			Resolved = false;
+		}
+
+	};
+
+	struct ShaderLayoutItem : public DataBufferLayoutItem
+	{
+		enum class ShaderSlot
+		{
+			Unknown = -1,
+			Vertex,
+			TexCoord,
+			Normal,
+			Color,
+			InstanceMatrix,
+		};
+
+		ShaderSlot Slot = ShaderSlot::Unknown;
+		int Location = 0;
+
+		bool Normalized = false;
+
+		ShaderLayoutItem()
+			: DataBufferLayoutItem(DataType::Unknown, "<unknown>")
+		{
+			Location = -1;
+			Normalized = false;
+		}
+
+	};
+
 
 	template<typename T>
 	class DataBufferLayout
@@ -69,6 +117,19 @@ namespace Nut
 		std::vector<T>& Items() { return m_Items; }
 
 		uint32_t Stride() const { return m_Stride; }
+
+		uint32_t FindSlot(ShaderLayoutItem::ShaderSlot slot) const
+		{
+			for (auto item : m_Items)
+			{
+				if (item.Slot == slot)
+				{
+					return item.Offset;
+				}
+			}
+
+			return 0;
+		}
 
 	private:
 		std::vector<T> m_Items;
@@ -274,6 +335,45 @@ namespace Nut
 			memset(m_Buffer, 0, m_Size);
 		}
 
+		void SetPosition(ShaderLayoutItem::ShaderSlot slot, uint32_t index, const glm::vec2& vector)
+		{
+			// Find position, and store data there
+			uint32_t location = GetSlotPosition(slot);
+			uint32_t stride = m_BufferLayout.Stride();
+
+			unsigned char* ptr = (unsigned char*)m_Buffer + ((index * stride) + location);
+			memcpy(ptr, (const void*)&vector, sizeof(glm::vec2));
+
+//			LOG_CORE_TRACE("Copied vec2");
+
+		}
+
+		void SetPosition(ShaderLayoutItem::ShaderSlot slot, uint32_t index, const glm::vec3& vector)
+		{
+			// Find position, and store data there
+			uint32_t location = GetSlotPosition(slot);
+			uint32_t stride = m_BufferLayout.Stride();
+
+			unsigned char* ptr = (unsigned char*)m_Buffer + ((index * stride) + location);
+			memcpy(ptr, (const void*)&vector, sizeof(glm::vec3));
+
+//			LOG_CORE_TRACE("Copied vec3");
+
+		}
+
+		void SetPosition(ShaderLayoutItem::ShaderSlot slot, uint32_t index, const glm::vec4& vector)
+		{
+			// Find position, and store data there
+			uint32_t location = GetSlotPosition(slot);
+			uint32_t stride = m_BufferLayout.Stride();
+
+			unsigned char* ptr = (unsigned char*)m_Buffer + ((index * stride) + location);
+			memcpy(ptr, (const void*)&vector, sizeof(glm::vec4));
+
+			//			LOG_CORE_TRACE("Copied vec3");
+
+		}
+
 		void* Data() { return m_Buffer; }
 		const void* Data() const { return m_Buffer; }
 
@@ -286,6 +386,13 @@ namespace Nut
 		DataBufferLayout<T>& GetLayout() { return m_BufferLayout; }
 
 		void SetLayout(DataBufferLayout<T> layout) { m_BufferLayout = layout; }
+
+	private:
+		uint32_t GetSlotPosition(ShaderLayoutItem::ShaderSlot slot)
+		{
+			return m_BufferLayout.FindSlot(slot);
+		}
+
 
 	private:
 		void* m_Buffer = nullptr;
