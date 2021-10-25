@@ -141,14 +141,15 @@ void MainWindow::OnAttach()
 		LOG_TRACE(" - {0}", shaderName.c_str());
 	}
 
-	m_Texture = Texture2D::Create("assets/textures/texture.png");
+//	m_Texture = Texture2D::Create("assets/textures/texture.png");
+	m_Texture = Texture2D::Create("assets/textures/v90.png");
 	m_GradientTexture = Texture2D::Create("assets/textures/texture2.png");
 
 //	m_Rectangle = Model::Load("assets/models/rubik.fbx", m_Scene, m_BasicPipeline);
 //	m_Rectangle = Model::Load("assets/models/cube.obj", m_Scene, m_BasicPipeline);
-	m_Rectangle = Model::Load("assets/models/sponza.fbx", m_Scene, m_BasicPipeline);
+//	m_Rectangle = Model::Load("assets/models/sponza.fbx", m_Scene, m_BasicPipeline);
 
-	LOG_TRACE("m_Rectangle id: {0}, tag: {1}", m_Rectangle->ID(), Entity::GetComponent<TagComponent>(m_Rectangle->ID()).Tag.c_str());
+//	LOG_TRACE("m_Rectangle id: {0}, tag: {1}", m_Rectangle->ID(), Entity::GetComponent<TagComponent>(m_Rectangle->ID()).Tag.c_str());
 
 }
 
@@ -171,10 +172,11 @@ void MainWindow::OnUpdate(Timestep ts)
 	//	m_Texture->Bind(0);
 
 
-//	auto orthoMatrix = glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f, 0.0f, 1.0f);
-	auto orthoMatrix = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
-	m_BasicShader->Set("u_ViewProjection", orthoMatrix);
+//	auto orthoMatrix = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+//	m_BasicShader->Set("u_ViewProjection", orthoMatrix);
 	
+	m_BasicShader->Set("u_ViewProjection", m_Camera.GetViewProjection());
+
 
 //	m_Texture->Bind(m_Texture->ID());
 

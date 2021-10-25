@@ -144,7 +144,7 @@ namespace Nut
 			SetPixelFormat(dc, pixelFormatID, &pfd);
 
 			const int major_min = 4;
-			const int minor_min = 6;
+			const int minor_min = 5;
 
 			const int contextAttribs[] =
 			{

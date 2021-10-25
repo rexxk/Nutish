@@ -69,4 +69,16 @@ namespace Nut
 		return false;
 	}
 
+	std::pair<int32_t, int32_t> Input::MouseDelta()
+	{
+		return std::make_pair(s_Instance->m_MouseDeltaX, s_Instance->m_MouseDeltaY);
+	}
+
+	std::pair<int32_t, int32_t> Input::MousePosition()
+	{
+		return std::make_pair(s_Instance->m_CurrentMouseX, s_Instance->m_CurrentMouseY);
+	}
+
+
+
 }

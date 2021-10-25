@@ -168,6 +168,7 @@
     <ClInclude Include="src\NutLib\Asset\MeshSource.h" />
     <ClInclude Include="src\NutLib\Asset\Asset.h" />
     <ClInclude Include="src\NutLib\Asset\MeshAsset.h" />
+    <ClInclude Include="src\NutLib\Renderer\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NutLib\Core\Application.cpp">
@@ -263,5 +264,6 @@
     <ClCompile Include="src\NutLib\Core\DataType.cpp" />
     <ClCompile Include="src\NutLib\Asset\MeshSource.cpp" />
     <ClCompile Include="src\NutLib\Asset\MeshAsset.cpp" />
+    <ClCompile Include="src\NutLib\Renderer\Camera.cpp" />
   </ItemGroup>
 </Project>

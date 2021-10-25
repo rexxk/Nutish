@@ -67,18 +67,21 @@ namespace Nut
 
 		for (auto& submesh : mesh->Submeshes())
 		{
-			renderData.InstanceMap[submesh.GetMeshObject()->ObjectID()].push_back(transform);
+			renderData.InstanceMap[submesh.GetMeshObject()->ObjectID()].emplace_back(transform);
 
 			bool meshExists = false;
 
 			for (auto& object : renderData.MeshObjects[submesh.GetMeshObject()->ObjectID()])
 			{
 				if (object->ObjectID() == submesh.GetMeshObject()->ObjectID())
+				{
 					meshExists = true;
+					break;
+				}
 			}
 
 			if (!meshExists)
-				renderData.MeshObjects[submesh.GetMeshObject()->ObjectID()].push_back(submesh.GetMeshObject());
+				renderData.MeshObjects[submesh.GetMeshObject()->ObjectID()].emplace_back(submesh.GetMeshObject());
 		}
 
 	}

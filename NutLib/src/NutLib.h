@@ -22,6 +22,8 @@
 #include <NutLib/Renderer/Shader.h>
 #include <NutLib/Renderer/Texture.h>
 
+#include <NutLib/Renderer/Camera.h>
+
 #include <NutLib/Renderer/ShaderStore.h>
 
 #include <NutLib/Renderer/RenderThread.h>

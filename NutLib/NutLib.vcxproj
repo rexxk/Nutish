@@ -123,6 +123,7 @@
     <ClInclude Include="src\NutLib\Event\WindowEvents.h" />
     <ClInclude Include="src\NutLib\ImGui\ImGuiContext.h" />
     <ClInclude Include="src\NutLib\Renderer\Buffer.h" />
+    <ClInclude Include="src\NutLib\Renderer\Camera.h" />
     <ClInclude Include="src\NutLib\Renderer\Mesh.h" />
     <ClInclude Include="src\NutLib\Renderer\Pipeline.h" />
     <ClInclude Include="src\NutLib\Renderer\RenderThread.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="src\NutLib\Renderer\Renderer.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Shader.cpp" />
     <ClCompile Include="src\NutLib\Renderer\ShaderStore.cpp" />
+    <ClCompile Include="src\NutLib\Renderer\Camera.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Texture.cpp" />
     <ClCompile Include="src\NutLib\Scene\Model.cpp" />
     <ClCompile Include="src\NutLib\Scene\Object.cpp" />
