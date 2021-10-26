@@ -36,6 +36,8 @@ private:
 	Nut::UUID m_TestEntity2;
 
 	Ref<Nut::Camera> m_Camera;
+
+	glm::vec3 m_LightDirection;
 };
 
 

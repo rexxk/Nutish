@@ -24,7 +24,7 @@ namespace Nut
 		: m_Position(position), m_Rotation(0.0f), m_LookAt(0.0f)
 	{
 		auto [width, height] = Application::Get().GetWindow()->GetWindowSize();
-		m_ProjectionMatrix = glm::perspective(glm::radians(45.0f), static_cast<float>(width) / static_cast<float>(height), 0.1f, 1000.0f);
+		m_ProjectionMatrix = glm::perspective(glm::radians(45.0f), static_cast<float>(width) / static_cast<float>(height), 0.1f, 10000.0f);
 
 		m_Distance = glm::distance(m_Position, m_LookAt);
 
@@ -58,7 +58,7 @@ namespace Nut
 
 				m_Distance = std::max(0.5f, m_Distance -= direction * zoomSpeed);
 
-				LOG_CORE_TRACE("ZoomSpeed: {0}", zoomSpeed);
+//				LOG_CORE_TRACE("ZoomSpeed: {0}", zoomSpeed);
 
 				CalculateViewMatrix();
 

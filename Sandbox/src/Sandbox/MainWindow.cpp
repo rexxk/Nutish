@@ -49,10 +49,11 @@ void MainWindow::OnAttach()
 
 	std::vector<float> vertices =
 	{
-		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-		0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+		// Vertex, TexCoord, Normal
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+		0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+		0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
 	};
 
 	std::vector<uint32_t> indices = { 0, 1, 2, 2, 3, 0 };
@@ -90,6 +91,7 @@ void MainWindow::OnAttach()
 
 	std::vector<float> vertices2 =
 	{
+		// Vertex, TexCoord
 		0.5f, 0.5f, 0.0f, 0.0f, 0.0f,
 		1.5f, 0.5f, 0.0f, 1.0f, 0.0f,
 		1.5f, 1.5f, 0.0f, 1.0f, 1.0f,
@@ -147,11 +149,13 @@ void MainWindow::OnAttach()
 
 //	m_Rectangle = Model::Load("assets/models/rubik.fbx", m_Scene, m_BasicPipeline);
 //	m_Rectangle = Model::Load("assets/models/cube.obj", m_Scene, m_BasicPipeline);
-//	m_Rectangle = Model::Load("assets/models/sponza.fbx", m_Scene, m_BasicPipeline);
+	m_Rectangle = Model::Load("assets/models/sponza.fbx", m_Scene, m_BasicPipeline);
 
 //	LOG_TRACE("m_Rectangle id: {0}, tag: {1}", m_Rectangle->ID(), Entity::GetComponent<TagComponent>(m_Rectangle->ID()).Tag.c_str());
 
 	m_Camera = Camera::Create({ 0.0f, 3.0f, 5.0f });
+
+	m_LightDirection = glm::vec3(-0.5f, 0.5f, -0.5f);
 }
 
 void MainWindow::OnDetach()
@@ -164,8 +168,9 @@ void MainWindow::OnUpdate(Timestep ts)
 //	LOG_TRACE("Timestep: {0}", (double)ts);
 
 	m_BasicShader->Bind();
-	m_BasicShader->Set("u_Texture1", 5);
-	m_BasicShader->Set("u_Texture2", 3);
+//	m_BasicShader->Set("u_Texture1", 5);
+//	m_BasicShader->Set("u_Texture2", 3);
+	m_BasicShader->Set("u_LightDirection", m_LightDirection);
 	m_Texture->Bind(5);
 	m_GradientTexture->Bind(3);
 

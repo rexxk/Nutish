@@ -15,7 +15,11 @@ namespace Nut
 	{
 		Assimp::Importer importer;
 
-		const aiScene* aiscene = importer.ReadFile(filepath, aiProcess_OptimizeMeshes);
+		const aiScene* aiscene = importer.ReadFile(filepath, aiProcess_OptimizeMeshes | aiProcess_Triangulate);
+
+//		aiProcess_Triangulate
+
+//			aiPrimitiveType
 
 		Ref<Model> newModel = CreateRef<Model>(scene);
 		Entity::GetComponent<TagComponent>(newModel->ID()).Tag = aiscene->mName.C_Str();
@@ -44,14 +48,12 @@ namespace Nut
 
 					if (item.Slot == ShaderLayoutItem::ShaderSlot::Vertex)
 					{
-						LOG_CORE_TRACE("Model loader: loading vertices");
+						LOG_CORE_TRACE("Model loader: loading vertices (num vertices: {0})", aiscene->mMeshes[i]->mNumVertices);
 						for (uint32_t j = 0; j < aiscene->mMeshes[i]->mNumVertices; j++)
 						{
 							auto& vertex = aiscene->mMeshes[i]->mVertices[j];
 							dataBuffer.SetPosition(ShaderLayoutItem::ShaderSlot::Vertex, j, glm::vec3(vertex.x, vertex.y, vertex.z));
-
 						}
-
 					}
 
 					if (item.Slot == ShaderLayoutItem::ShaderSlot::TexCoord)
