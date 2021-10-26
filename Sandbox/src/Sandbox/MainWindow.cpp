@@ -153,7 +153,7 @@ void MainWindow::OnAttach()
 
 //	LOG_TRACE("m_Rectangle id: {0}, tag: {1}", m_Rectangle->ID(), Entity::GetComponent<TagComponent>(m_Rectangle->ID()).Tag.c_str());
 
-	m_Camera = Camera::Create({ 0.0f, 3.0f, 5.0f });
+	m_Camera = Camera::Create({ 0.0f, 3.0f, 150.0f });
 
 	m_LightDirection = glm::vec3(-0.5f, 0.5f, -0.5f);
 }
@@ -168,8 +168,8 @@ void MainWindow::OnUpdate(Timestep ts)
 //	LOG_TRACE("Timestep: {0}", (double)ts);
 
 	m_BasicShader->Bind();
-//	m_BasicShader->Set("u_Texture1", 5);
-//	m_BasicShader->Set("u_Texture2", 3);
+	m_BasicShader->Set("u_Texture1", 5);
+	m_BasicShader->Set("u_Texture2", 3);
 	m_BasicShader->Set("u_LightDirection", m_LightDirection);
 	m_Texture->Bind(5);
 	m_GradientTexture->Bind(3);

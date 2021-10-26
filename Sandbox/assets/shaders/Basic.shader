@@ -33,8 +33,8 @@ in vec3 v_Normal;
 
 uniform vec4 u_Color;
 uniform vec3 u_LightDirection;
-//uniform sampler2D u_Texture1;
-//uniform sampler2D u_Texture2;
+uniform sampler2D u_Texture1;
+uniform sampler2D u_Texture2;
 
 
 void main()
@@ -48,10 +48,10 @@ void main()
 
 	vec3 ibl = ambient + diffuse;
 
-//	o_Color = mix(texture(u_Texture1, v_TexCoord), texture(u_Texture2, v_TexCoord), 0.5);
+	vec4 textureColor = mix(texture(u_Texture1, v_TexCoord), texture(u_Texture2, v_TexCoord), 0.5);
 //	o_Color = texture(u_Texture1, v_TexCoord);
 
-	o_Color = vec4(ibl, 1.0);
+	o_Color = vec4(ibl, 1.0) * textureColor;
 
 //	o_Color = vec4(0.2, 0.35, 0.75, 1.0);
 }

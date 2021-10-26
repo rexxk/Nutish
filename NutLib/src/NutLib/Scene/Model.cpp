@@ -15,12 +15,8 @@ namespace Nut
 	{
 		Assimp::Importer importer;
 
-		const aiScene* aiscene = importer.ReadFile(filepath, aiProcess_OptimizeMeshes | aiProcess_Triangulate);
-
-//		aiProcess_Triangulate
-
-//			aiPrimitiveType
-
+		const aiScene* aiscene = importer.ReadFile(filepath, aiProcess_OptimizeMeshes | aiProcess_Triangulate | aiProcess_TransformUVCoords);
+//		aiMaterial
 		Ref<Model> newModel = CreateRef<Model>(scene);
 		Entity::GetComponent<TagComponent>(newModel->ID()).Tag = aiscene->mName.C_Str();
 		Entity::AddComponent<TransformComponent>(newModel->m_ID);
@@ -37,6 +33,8 @@ namespace Nut
 
 		auto shader = pipeline->GetShader();
 
+		// Load meshes
+
 		if (aiscene->HasMeshes())
 		{
 			for (uint32_t i = 0; i < aiscene->mNumMeshes; i++)
@@ -48,7 +46,7 @@ namespace Nut
 
 					if (item.Slot == ShaderLayoutItem::ShaderSlot::Vertex)
 					{
-						LOG_CORE_TRACE("Model loader: loading vertices (num vertices: {0})", aiscene->mMeshes[i]->mNumVertices);
+//						LOG_CORE_TRACE("Model loader: loading vertices (num vertices: {0})", aiscene->mMeshes[i]->mNumVertices);
 						for (uint32_t j = 0; j < aiscene->mMeshes[i]->mNumVertices; j++)
 						{
 							auto& vertex = aiscene->mMeshes[i]->mVertices[j];
@@ -61,12 +59,12 @@ namespace Nut
 
 						if (aiscene->mMeshes[i]->HasTextureCoords(0))
 						{
-							LOG_CORE_TRACE("Model loader: loading texture coordinates");
+//							LOG_CORE_TRACE("Model loader: loading texture coordinates");
 
 							for (uint32_t j = 0; j < aiscene->mMeshes[i]->mNumVertices; j++)
 							{
-								auto& textureCoord = aiscene->mMeshes[i]->mTextureCoords[j];
-//								dataBuffer.SetPosition(ShaderLayoutItem::ShaderSlot::TexCoord, j, glm::vec2(textureCoord->x, textureCoord->y));
+								auto& textureCoord = aiscene->mMeshes[i]->mTextureCoords[0];
+								dataBuffer.SetPosition(ShaderLayoutItem::ShaderSlot::TexCoord, j, glm::vec2(textureCoord->x, textureCoord->y));
 							}
 						}
 						else
@@ -85,7 +83,7 @@ namespace Nut
 
 						if (aiscene->mMeshes[i]->HasNormals())
 						{
-							LOG_CORE_TRACE("Model loader: loading normal coordinates");
+//							LOG_CORE_TRACE("Model loader: loading normal coordinates");
 
 							for (uint32_t j = 0; j < aiscene->mMeshes[i]->mNumVertices; j++)
 							{
@@ -98,7 +96,7 @@ namespace Nut
 
 					if (item.Slot == ShaderLayoutItem::ShaderSlot::Color)
 					{
-						LOG_CORE_TRACE("Model loader: loading colors");
+//						LOG_CORE_TRACE("Model loader: loading colors");
 						
 						for (uint32_t j = 0; j < aiscene->mMeshes[i]->mNumVertices; j++)
 						{
@@ -118,13 +116,52 @@ namespace Nut
 					}
 				}
 
-				LOG_CORE_TRACE("Added submesh: {0}", aiscene->mMeshes[i]->mName.C_Str());
+//				LOG_CORE_TRACE("Added submesh: {0}", aiscene->mMeshes[i]->mName.C_Str());
 				meshAsset->AddSubmesh(dataBuffer, indexBuffer); // = CreateRef<MeshAsset>(newModel->m_ID, (DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), indices, m_BasicPipeline, m_Scene);
 
 			}
 
 		}
 
+		// Load materials
+
+		if (aiscene->HasMaterials())
+		{
+			std::vector<aiMaterial> materials;
+
+			for (auto i = 0; i < aiscene->mNumMaterials; i++)
+			{
+				aiMaterial* material = aiscene->mMaterials[i];
+
+				for (auto j = 0; j < material->mNumProperties; j++)
+				{
+					auto prop = material->mProperties[j];
+
+					LOG_CORE_TRACE("Loading material {0}: {1}  (prop: {2})", i, material->GetName().C_Str(), prop->mKey.C_Str());
+
+					if (prop->mKey == aiString("$clr.diffuse"))
+					{
+						aiColor3D diffuse;
+						material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+						LOG_CORE_TRACE("Found diffuse color: {0},{1},{2}", diffuse.r, diffuse.g, diffuse.b);
+					}
+					if (prop->mKey == aiString("$clr.ambient"))
+					{
+						aiColor3D ambient;
+						material->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
+						LOG_CORE_TRACE("Found ambient color: {0},{1},{2}", ambient.r, ambient.g, ambient.b);
+					}
+					if (prop->mKey == aiString("$clr.transparent"))
+					{
+						aiColor3D transparent;
+						material->Get(AI_MATKEY_COLOR_TRANSPARENT, transparent);
+						LOG_CORE_TRACE("Found transparent color: {0},{1},{2}", transparent.r, transparent.g, transparent.b);
+					}
+				}
+
+
+			}
+		}
 
 
 
