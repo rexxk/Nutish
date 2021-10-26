@@ -37,12 +37,35 @@ namespace Nut
 			{
 				s_Instance->m_ButtonState[event.Button()] = true;
 
+				s_Instance->m_MouseDeltaX = s_Instance->m_CurrentMouseX - event.X();
+				s_Instance->m_MouseDeltaY = s_Instance->m_CurrentMouseY - event.Y();
+
+				s_Instance->m_CurrentMouseX = event.X();
+				s_Instance->m_CurrentMouseY = event.Y();
+
 				return false;
 			});
 
 		SubscribeToEvent<MouseButtonReleased>([&](MouseButtonReleased& event)
 			{
 				s_Instance->m_ButtonState[event.Button()] = false;
+
+				s_Instance->m_MouseDeltaX = s_Instance->m_CurrentMouseX - event.X();
+				s_Instance->m_MouseDeltaY = s_Instance->m_CurrentMouseY - event.Y();
+
+				s_Instance->m_CurrentMouseX = event.X();
+				s_Instance->m_CurrentMouseY = event.Y();
+
+				return false;
+			});
+
+		SubscribeToEvent<MouseMovedEvent>([&](MouseMovedEvent& event)
+			{
+				s_Instance->m_MouseDeltaX = s_Instance->m_CurrentMouseX - event.X();
+				s_Instance->m_MouseDeltaY = s_Instance->m_CurrentMouseY - event.Y();
+
+				s_Instance->m_CurrentMouseX = event.X();
+				s_Instance->m_CurrentMouseY = event.Y();
 
 				return false;
 			});

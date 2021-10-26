@@ -151,6 +151,7 @@ void MainWindow::OnAttach()
 
 //	LOG_TRACE("m_Rectangle id: {0}, tag: {1}", m_Rectangle->ID(), Entity::GetComponent<TagComponent>(m_Rectangle->ID()).Tag.c_str());
 
+	m_Camera = Camera::Create({ 0.0f, 3.0f, 5.0f });
 }
 
 void MainWindow::OnDetach()
@@ -175,7 +176,7 @@ void MainWindow::OnUpdate(Timestep ts)
 //	auto orthoMatrix = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
 //	m_BasicShader->Set("u_ViewProjection", orthoMatrix);
 	
-	m_BasicShader->Set("u_ViewProjection", m_Camera.GetViewProjection());
+	m_BasicShader->Set("u_ViewProjection", m_Camera->GetViewProjectionMatrix());
 
 
 //	m_Texture->Bind(m_Texture->ID());

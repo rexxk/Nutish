@@ -35,7 +35,7 @@ private:
 	Nut::UUID m_TestEntity;
 	Nut::UUID m_TestEntity2;
 
-	Nut::Camera m_Camera;
+	Ref<Nut::Camera> m_Camera;
 };
 
 
