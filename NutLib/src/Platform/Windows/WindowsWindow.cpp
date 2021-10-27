@@ -350,21 +350,21 @@ namespace Nut
 			case WM_MOUSEWHEEL:
 			{
 				int16_t delta = HIWORD(wParam);
-				AddEvent(MakeEvent<MouseScrolledEvent>((int32_t)delta > 0 ? 1 : -1, LOWORD(lParam), HIWORD(lParam)));
+				AddEvent(MakeEvent<MouseScrolledEvent>((int32_t)delta > 0 ? 1 : -1, static_cast<int16_t>(LOWORD(lParam)), static_cast<int16_t>(HIWORD(lParam))));
 
 				break;
 			}
 
 			case WM_MOUSEMOVE:
 			{
-				AddEvent(MakeEvent<MouseMovedEvent>(LOWORD(lParam), HIWORD(lParam)));
+				AddEvent(MakeEvent<MouseMovedEvent>(static_cast<int16_t>(LOWORD(lParam)), static_cast<int16_t>(HIWORD(lParam))));
 
 				break;
 			}
 
 			case WM_LBUTTONDOWN:
 			{
-				AddEvent(MakeEvent<MouseButtonPressed>(LeftButton, (int16_t)LOWORD(lParam), (int16_t)HIWORD(lParam)));
+				AddEvent(MakeEvent<MouseButtonPressed>(LeftButton, static_cast<int16_t>(LOWORD(lParam)), static_cast<int16_t>(HIWORD(lParam))));
 
 				SetCapture(wnd);
 
@@ -373,7 +373,7 @@ namespace Nut
 
 			case WM_RBUTTONDOWN:
 			{
-				AddEvent(MakeEvent<MouseButtonPressed>(RightButton, (int16_t)LOWORD(lParam), (int16_t)HIWORD(lParam)));
+				AddEvent(MakeEvent<MouseButtonPressed>(RightButton, static_cast<int16_t>(LOWORD(lParam)), static_cast<int16_t>(HIWORD(lParam))));
 
 				SetCapture(wnd);
 
@@ -382,7 +382,7 @@ namespace Nut
 
 			case WM_MBUTTONDOWN:
 			{
-				AddEvent(MakeEvent<MouseButtonPressed>(MiddleButton, (int16_t)LOWORD(lParam), (int16_t)HIWORD(lParam)));
+				AddEvent(MakeEvent<MouseButtonPressed>(MiddleButton, static_cast<int16_t>(LOWORD(lParam)), static_cast<int16_t>(HIWORD(lParam))));
 
 				SetCapture(wnd);
 
@@ -391,7 +391,7 @@ namespace Nut
 
 			case WM_LBUTTONUP:
 			{
-				AddEvent(MakeEvent<MouseButtonReleased>(LeftButton, (int16_t)LOWORD(lParam), (int16_t)HIWORD(lParam)));
+				AddEvent(MakeEvent<MouseButtonReleased>(LeftButton, static_cast<int16_t>(LOWORD(lParam)), static_cast<int16_t>(HIWORD(lParam))));
 
 				ReleaseCapture();
 
@@ -400,7 +400,7 @@ namespace Nut
 
 			case WM_RBUTTONUP:
 			{
-				AddEvent(MakeEvent<MouseButtonReleased>(RightButton, (int16_t)LOWORD(lParam), (int16_t)HIWORD(lParam)));
+				AddEvent(MakeEvent<MouseButtonReleased>(RightButton, static_cast<int16_t>(LOWORD(lParam)), static_cast<int16_t>(HIWORD(lParam))));
 
 				ReleaseCapture();
 
@@ -409,7 +409,7 @@ namespace Nut
 
 			case WM_MBUTTONUP:
 			{
-				AddEvent(MakeEvent<MouseButtonReleased>(MiddleButton, (int16_t)LOWORD(lParam), (int16_t)HIWORD(lParam)));
+				AddEvent(MakeEvent<MouseButtonReleased>(MiddleButton, static_cast<int16_t>(LOWORD(lParam)), static_cast<int16_t>(HIWORD(lParam))));
 
 				ReleaseCapture();
 
