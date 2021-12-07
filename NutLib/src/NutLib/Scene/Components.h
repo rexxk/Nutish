@@ -13,6 +13,8 @@
 
 #include <vector>
 
+
+
 namespace Nut
 {
 	class Model;
@@ -65,6 +67,7 @@ namespace Nut
 	{
 		Ref<MeshAsset> Mesh;
 
+
 		MeshComponent()
 		{
 
@@ -74,6 +77,11 @@ namespace Nut
 		{
 			Mesh = component.Mesh;
 		}
+
+//		MeshComponent(MeshComponent&& component)
+//		{
+//			Mesh = component.Mesh;
+//		}
 		
 	};
 

@@ -18,11 +18,13 @@ namespace Nut
 		const aiScene* aiscene = importer.ReadFile(filepath, aiProcess_OptimizeMeshes | aiProcess_Triangulate | aiProcess_TransformUVCoords | aiProcess_EmbedTextures);
 
 		Ref<Model> newModel = CreateRef<Model>(scene);
-		Entity::GetComponent<TagComponent>(newModel->ID()).Tag = aiscene->mName.C_Str();
-		Entity::AddComponent<TransformComponent>(newModel->m_ID);
 
-		Entity::AddComponent<MeshComponent>(newModel->m_ID);
-		auto& meshAsset = Entity::GetComponent<MeshComponent>(newModel->m_ID).Mesh;
+		Entity entity = newModel->GetEntity();
+		ECS::EntitySystem::GetComponent<TagComponent>(entity.ID()).Tag = aiscene->mName.C_Str();
+		entity.AddComponent<TransformComponent>();
+		entity.AddComponent<MeshComponent>();
+
+		auto& meshAsset = ECS::EntitySystem::GetComponent<MeshComponent>(entity.ID()).Mesh;
 		meshAsset = CreateRef<MeshAsset>(pipeline, scene);
 
 		if (!aiscene)
@@ -129,11 +131,11 @@ namespace Nut
 		{
 			std::vector<aiMaterial> materials;
 
-			for (auto i = 0; i < aiscene->mNumMaterials; i++)
+			for (uint32_t i = 0; i < aiscene->mNumMaterials; i++)
 			{
 				aiMaterial* material = aiscene->mMaterials[i];
 
-				for (auto j = 0; j < material->mNumProperties; j++)
+				for (uint32_t j = 0; j < material->mNumProperties; j++)
 				{
 					auto prop = material->mProperties[j];
 
@@ -194,7 +196,7 @@ namespace Nut
 
 		if (aiscene->HasTextures())
 		{
-			for (auto i = 0; i < aiscene->mNumTextures; i++)
+			for (uint32_t i = 0; i < aiscene->mNumTextures; i++)
 			{
 				aiTexture* texture = aiscene->mTextures[i];
 
@@ -216,9 +218,8 @@ namespace Nut
 
 
 	Model::Model(Ref<Scene> scene, const std::string& tag)
-		: Object(scene, tag)
 	{
-
+		m_Entity = scene->CreateEntity(tag);
 	}
 
 	Model::~Model()

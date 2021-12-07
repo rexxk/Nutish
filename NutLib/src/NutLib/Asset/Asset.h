@@ -5,6 +5,8 @@
 namespace Nut
 {
 
+	class Entity;
+
 	class Asset
 	{
 	public:

@@ -1,14 +1,15 @@
 #pragma once
 
-#include "Object.h"
 #include "NutLib/Renderer/Pipeline.h"
 #include "NutLib/Renderer/Mesh.h"
+
+#include "NutLib/Scene/Entity.h"
 
 namespace Nut
 {
 
 
-	class Model : public Object
+	class Model
 	{
 	public:
 		static Ref<Model> Load(const std::string& filepath, Ref<Scene> scene, Ref<Pipeline> pipeline);
@@ -20,8 +21,10 @@ namespace Nut
 
 		std::string Name() const { return m_Name; }
 
+		Entity GetEntity() const { return m_Entity; }
+
 	private:
-		UUID m_ID;
+		Entity m_Entity;
 
 		std::vector<Mesh> m_Meshes;
 		std::string m_Name;

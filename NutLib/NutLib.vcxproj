@@ -61,7 +61,6 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -114,6 +113,7 @@
     <ClInclude Include="src\NutLib\Core\Timestep.h" />
     <ClInclude Include="src\NutLib\Core\UUID.h" />
     <ClInclude Include="src\NutLib\Core\Window.h" />
+    <ClInclude Include="src\NutLib\ECS\ECS.h" />
     <ClInclude Include="src\NutLib\Event\Event.h" />
     <ClInclude Include="src\NutLib\Event\EventHandler.h" />
     <ClInclude Include="src\NutLib\Event\Events.h" />
@@ -126,8 +126,8 @@
     <ClInclude Include="src\NutLib\Renderer\Camera.h" />
     <ClInclude Include="src\NutLib\Renderer\Mesh.h" />
     <ClInclude Include="src\NutLib\Renderer\Pipeline.h" />
-    <ClInclude Include="src\NutLib\Renderer\RenderThread.h" />
     <ClInclude Include="src\NutLib\Renderer\RenderContext.h" />
+    <ClInclude Include="src\NutLib\Renderer\RenderThread.h" />
     <ClInclude Include="src\NutLib\Renderer\Renderer.h" />
     <ClInclude Include="src\NutLib\Renderer\Shader.h" />
     <ClInclude Include="src\NutLib\Renderer\ShaderStore.h" />
@@ -135,16 +135,17 @@
     <ClInclude Include="src\NutLib\Scene\Components.h" />
     <ClInclude Include="src\NutLib\Scene\Entity.h" />
     <ClInclude Include="src\NutLib\Scene\Model.h" />
-    <ClInclude Include="src\NutLib\Scene\Object.h" />
     <ClInclude Include="src\NutLib\Scene\Scene.h" />
     <ClInclude Include="src\NutLib\Tools\ShaderFile.h" />
     <ClInclude Include="src\NutLib\Tools\StringHelpers.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLPipeline.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLPipeline.h" />
+    <ClInclude Include="src\Platform\OpenGL\glext.h" />
+    <ClInclude Include="src\Platform\OpenGL\wglext.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\nutpch.h" />
   </ItemGroup>
@@ -163,26 +164,26 @@
     <ClCompile Include="src\NutLib\Event\EventHandler.cpp" />
     <ClCompile Include="src\NutLib\ImGui\ImGuiContext.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\NutLib\Renderer\Camera.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Mesh.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Pipeline.cpp" />
     <ClCompile Include="src\NutLib\Renderer\RenderContext.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Renderer.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Shader.cpp" />
     <ClCompile Include="src\NutLib\Renderer\ShaderStore.cpp" />
-    <ClCompile Include="src\NutLib\Renderer\Camera.cpp" />
     <ClCompile Include="src\NutLib\Renderer\Texture.cpp" />
+    <ClCompile Include="src\NutLib\Scene\Entity.cpp" />
     <ClCompile Include="src\NutLib\Scene\Model.cpp" />
-    <ClCompile Include="src\NutLib\Scene\Object.cpp" />
     <ClCompile Include="src\NutLib\Scene\Scene.cpp" />
     <ClCompile Include="src\NutLib\Tools\STBImage.cpp" />
     <ClCompile Include="src\NutLib\Tools\ShaderFile.cpp" />
     <ClCompile Include="src\NutLib\Tools\StringHelpers.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLPipeline.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLPipeline.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\nutpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

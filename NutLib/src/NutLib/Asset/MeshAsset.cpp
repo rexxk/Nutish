@@ -1,6 +1,9 @@
 #include "nutpch.h"
 #include "MeshAsset.h"
 
+#include "MeshSource.h"
+
+#include "NutLib/Scene/Scene.h"
 
 
 namespace Nut

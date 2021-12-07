@@ -5,6 +5,7 @@
 #include "NutLib/Renderer/Buffer.h"
 #include "NutLib/Scene/Model.h"
 
+#include "NutLib/Scene/Entity.h"
 
 namespace Nut
 {

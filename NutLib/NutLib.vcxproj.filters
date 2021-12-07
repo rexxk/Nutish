@@ -4,8 +4,14 @@
     <Filter Include="NutLib">
       <UniqueIdentifier>{F38557C6-DF27-829C-C8E2-95F0B42309ED}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NutLib\Asset">
+      <UniqueIdentifier>{C2A42A71-AE07-BA15-578D-F2CB43CF8598}</UniqueIdentifier>
+    </Filter>
     <Filter Include="NutLib\Core">
       <UniqueIdentifier>{2B5A21CD-970F-9AC2-2004-94998CB890C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NutLib\ECS">
+      <UniqueIdentifier>{BD3BDA91-A9F3-1BDF-12FB-F43AFED1B6CF}</UniqueIdentifier>
     </Filter>
     <Filter Include="NutLib\Event">
       <UniqueIdentifier>{84717471-70D4-0316-195A-3CCC059CCF98}</UniqueIdentifier>
@@ -34,10 +40,25 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\NutLib.h" />
+    <ClInclude Include="src\NutLib\Asset\Asset.h">
+      <Filter>NutLib\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Asset\MeshAsset.h">
+      <Filter>NutLib\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Asset\MeshSource.h">
+      <Filter>NutLib\Asset</Filter>
+    </ClInclude>
     <ClInclude Include="src\NutLib\Core\Application.h">
       <Filter>NutLib\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\NutLib\Core\Base.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Core\DataBuffer.h">
+      <Filter>NutLib\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Core\DataType.h">
       <Filter>NutLib\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\NutLib\Core\Entrypoint.h">
@@ -73,6 +94,9 @@
     <ClInclude Include="src\NutLib\Core\Window.h">
       <Filter>NutLib\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\NutLib\ECS\ECS.h">
+      <Filter>NutLib\ECS</Filter>
+    </ClInclude>
     <ClInclude Include="src\NutLib\Event\Event.h">
       <Filter>NutLib\Event</Filter>
     </ClInclude>
@@ -100,10 +124,19 @@
     <ClInclude Include="src\NutLib\Renderer\Buffer.h">
       <Filter>NutLib\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\NutLib\Renderer\RenderThread.h">
+    <ClInclude Include="src\NutLib\Renderer\Camera.h">
+      <Filter>NutLib\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Renderer\Mesh.h">
+      <Filter>NutLib\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Renderer\Pipeline.h">
       <Filter>NutLib\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\NutLib\Renderer\RenderContext.h">
+      <Filter>NutLib\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NutLib\Renderer\RenderThread.h">
       <Filter>NutLib\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\NutLib\Renderer\Renderer.h">
@@ -127,9 +160,6 @@
     <ClInclude Include="src\NutLib\Scene\Model.h">
       <Filter>NutLib\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\NutLib\Scene\Object.h">
-      <Filter>NutLib\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="src\NutLib\Scene\Scene.h">
       <Filter>NutLib\Scene</Filter>
     </ClInclude>
@@ -140,6 +170,9 @@
       <Filter>NutLib\Tools</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLPipeline.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderContext.h">
@@ -154,24 +187,28 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\OpenGL\OpenGLPipeline.h">
+    <ClInclude Include="src\Platform\OpenGL\glext.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\wglext.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\nutpch.h" />
-    <ClInclude Include="src\NutLib\Renderer\Pipeline.h" />
-    <ClInclude Include="src\NutLib\Renderer\Mesh.h" />
-    <ClInclude Include="src\NutLib\Core\DataBuffer.h" />
-    <ClInclude Include="src\NutLib\Core\DataType.h" />
-    <ClInclude Include="src\NutLib\Asset\MeshSource.h" />
-    <ClInclude Include="src\NutLib\Asset\Asset.h" />
-    <ClInclude Include="src\NutLib\Asset\MeshAsset.h" />
-    <ClInclude Include="src\NutLib\Renderer\Camera.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\NutLib\Asset\MeshAsset.cpp">
+      <Filter>NutLib\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Asset\MeshSource.cpp">
+      <Filter>NutLib\Asset</Filter>
+    </ClCompile>
     <ClCompile Include="src\NutLib\Core\Application.cpp">
+      <Filter>NutLib\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Core\DataType.cpp">
       <Filter>NutLib\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\NutLib\Core\Entrypoint.cpp">
@@ -204,6 +241,15 @@
     <ClCompile Include="src\NutLib\Renderer\Buffer.cpp">
       <Filter>NutLib\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\NutLib\Renderer\Camera.cpp">
+      <Filter>NutLib\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Renderer\Mesh.cpp">
+      <Filter>NutLib\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NutLib\Renderer\Pipeline.cpp">
+      <Filter>NutLib\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\NutLib\Renderer\RenderContext.cpp">
       <Filter>NutLib\Renderer</Filter>
     </ClCompile>
@@ -219,10 +265,10 @@
     <ClCompile Include="src\NutLib\Renderer\Texture.cpp">
       <Filter>NutLib\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\NutLib\Scene\Model.cpp">
+    <ClCompile Include="src\NutLib\Scene\Entity.cpp">
       <Filter>NutLib\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\NutLib\Scene\Object.cpp">
+    <ClCompile Include="src\NutLib\Scene\Model.cpp">
       <Filter>NutLib\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\NutLib\Scene\Scene.cpp">
@@ -240,6 +286,9 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLPipeline.cpp">
+      <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderContext.cpp">
       <Filter>Platform\OpenGL</Filter>
     </ClCompile>
@@ -252,18 +301,9 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp">
       <Filter>Platform\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\OpenGL\OpenGLPipeline.cpp">
-      <Filter>Platform\OpenGL</Filter>
-    </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\nutpch.cpp" />
-    <ClCompile Include="src\NutLib\Renderer\Pipeline.cpp" />
-    <ClCompile Include="src\NutLib\Renderer\Mesh.cpp" />
-    <ClCompile Include="src\NutLib\Core\DataType.cpp" />
-    <ClCompile Include="src\NutLib\Asset\MeshSource.cpp" />
-    <ClCompile Include="src\NutLib\Asset\MeshAsset.cpp" />
-    <ClCompile Include="src\NutLib\Renderer\Camera.cpp" />
   </ItemGroup>
 </Project>

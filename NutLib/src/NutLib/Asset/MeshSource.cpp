@@ -1,9 +1,9 @@
 #include "nutpch.h"
 #include "MeshSource.h"
 
-#include "NutLib/Scene/Scene.h"
-
 #include "NutLib/Renderer/RenderThread.h"
+
+#include "NutLib/Scene/Scene.h"
 
 #include <glad/glad.h>
 
@@ -12,9 +12,11 @@ namespace Nut
 {
 
 
-	MeshObject::MeshObject(Ref<Pipeline> pipeline)
+	MeshObject::MeshObject(Ref<Pipeline> pipeline, Ref<Scene> scene)
 		: m_Pipeline(pipeline)
 	{
+		m_Entity = scene->CreateEntity("MeshObject");
+
 		RendererID& id = m_ID;
 
 		RenderThread::Submit([&id]()
@@ -79,13 +81,13 @@ namespace Nut
 
 	MeshSource::MeshSource(DataBuffer<ShaderLayoutItem> vertices, const std::vector<uint32_t>& indices, Ref<Pipeline> pipeline, Ref<Scene> scene)
 	{
-		if (scene != nullptr)
-			m_ID = scene->CreateEntity("MeshSource");
+//		if (scene != nullptr)
+//			m_Entity = scene->CreateEntity("MeshSource");
 
 		m_Vertices = vertices;
 		m_Indices = indices;
 
-		m_MeshObject = CreateRef<MeshObject>(pipeline);
+		m_MeshObject = CreateRef<MeshObject>(pipeline, scene);
 
 		m_MeshObject->SetVertexBuffer(VertexBuffer::Create(vertices));
 		m_MeshObject->SetIndexBuffer(IndexBuffer::Create(indices));

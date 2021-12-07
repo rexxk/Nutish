@@ -1,8 +1,9 @@
 #ifndef __NUTLIB_SCENE_H
 #define __NUTLIB_SCENE_H
 
-#include "Entity.h"
 
+#include "NutLib/Scene/Entity.h"
+#include "NutLib/Scene/Components.h"
 
 
 namespace Nut
@@ -14,16 +15,18 @@ namespace Nut
 		Scene();
 		virtual ~Scene();
 
-		UUID CreateEntity(const std::string& tag);
-		void DeleteEntity(UUID id);
+		Entity CreateEntity(const std::string& tag);
+		void DeleteEntity(const Entity& entity);
 
 		void Draw();
 
 
+		Ref<ECS::Registry> GetRegistry() { return m_Registry; }
+
 	private:
 
-		Ref<Registry> m_Registry;
-		Ref<Entity> m_Entity;
+		Ref<ECS::Registry> m_Registry;
+		Ref<ECS::EntitySystem> m_EntitySystem;
 
 	};
 

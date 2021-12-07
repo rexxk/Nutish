@@ -60,13 +60,18 @@ void MainWindow::OnAttach()
 
 //	{
 		m_TestEntity = m_Scene->CreateEntity("Test entity");
-		Entity::AddComponent<MeshComponent>(m_TestEntity);
-		Entity::AddComponent<TransformComponent>(m_TestEntity);
+		m_TestEntity.AddComponent<MeshComponent>();
+//		Entity::AddComponent<MeshComponent>(m_TestEntity);
+		m_TestEntity.AddComponent<TransformComponent>();
+//		Entity::AddComponent<TransformComponent>(m_TestEntity);
 
-		auto& transform = Entity::GetComponent<TransformComponent>(m_TestEntity).Transform;
+		auto& transform = m_TestEntity.GetComponent<TransformComponent>().Transform;
+
+//		auto& transform = ECS::EntitySystem::GetComponent<TransformComponent>(m_TestEntity.ID()).Transform;
 		transform = glm::translate(glm::mat4(1.0f), glm::vec3(0.25f, 0.0f, 0.0f));
 
-		auto& triangleMesh = Entity::GetComponent<MeshComponent>(m_TestEntity);
+		auto& triangleMesh = m_TestEntity.GetComponent<MeshComponent>();
+//		auto& triangleMesh = ECS::EntitySystem::GetComponent<MeshComponent>(m_TestEntity.ID());
 //		triangleMesh.Mesh = MeshAsset(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), indices, m_BasicPipeline, m_Scene);
 		triangleMesh.Mesh = CreateRef<MeshAsset>(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), indices, m_BasicPipeline, m_Scene);
 
@@ -100,13 +105,17 @@ void MainWindow::OnAttach()
 
 	{
 		m_TestEntity2 = m_Scene->CreateEntity("Test entity 2");
-		Entity::AddComponent<MeshComponent>(m_TestEntity2, triangleMesh);
+//		ECS::EntitySystem::AddComponent<MeshComponent>(m_TestEntity2.ID(), triangleMesh);
+		m_TestEntity2.AddComponent<MeshComponent>(triangleMesh);
+//		Entity::AddComponent<MeshComponent>(m_TestEntity2, triangleMesh);
 //		Entity::AddComponent<MeshComponent>(m_TestEntity2);
 //		auto& mesh = Entity::GetComponent<MeshComponent>(m_TestEntity2).Mesh;
 //		mesh = CreateRef<MeshAsset>(DataBuffer<ShaderLayoutItem>(vertices.data(), 4, m_BasicShader->GetShaderLayout()), indices, m_BasicPipeline, m_Scene);
 
-		Entity::AddComponent<TransformComponent>(m_TestEntity2);
-		auto& t2 = Entity::GetComponent<TransformComponent>(m_TestEntity2).Transform;
+		m_TestEntity2.AddComponent<TransformComponent>();
+		auto& t2 = m_TestEntity2.GetComponent<TransformComponent>().Transform;
+//		ECS::EntitySystem::AddComponent<TransformComponent>(m_TestEntity2.ID());
+//		auto& t2 = ECS::EntitySystem::GetComponent<TransformComponent>(m_TestEntity2.ID()).Transform;
 		t2 = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, 0.5f, 0.0f));
 	}
 
@@ -159,7 +168,7 @@ void MainWindow::OnAttach()
 
 //	LOG_TRACE("m_Rectangle id: {0}, tag: {1}", m_Rectangle->ID(), Entity::GetComponent<TagComponent>(m_Rectangle->ID()).Tag.c_str());
 
-	m_Camera = Camera::Create({ 0.0f, 3.0f, 150.0f });
+	m_Camera = Camera::Create({ 0.0f, 3.0f, 15.0f });
 
 	m_LightDirection = glm::vec3(-0.5f, 0.5f, -0.5f);
 }

@@ -8,9 +8,8 @@ namespace Nut
 
 
 	Mesh::Mesh(Ref<Scene> scene)
-		: Object(scene)
 	{
-		
+		m_Entity = scene->CreateEntity("mesh");
 	}
 
 	Mesh::~Mesh()

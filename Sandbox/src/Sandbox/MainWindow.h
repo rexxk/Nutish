@@ -32,8 +32,8 @@ private:
 
 	Ref<Nut::Model> m_Rectangle;
 
-	Nut::UUID m_TestEntity;
-	Nut::UUID m_TestEntity2;
+	Nut::Entity m_TestEntity;
+	Nut::Entity m_TestEntity2;
 
 	Ref<Nut::Camera> m_Camera;
 

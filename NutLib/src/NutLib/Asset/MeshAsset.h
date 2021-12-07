@@ -2,6 +2,8 @@
 
 #include "MeshSource.h"
 
+//#include "NutLib/Scene/Scene.h"
+
 #include "NutLib/Renderer/Buffer.h"
 #include "NutLib/Renderer/Pipeline.h"
 
@@ -15,6 +17,10 @@ namespace Nut
 		Dynamic,
 	};
 
+
+//	class MeshSource;
+	class Scene;
+//	class Entity;
 
 
 	class MeshAsset

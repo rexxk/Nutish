@@ -4,22 +4,25 @@
 #include "Asset.h"
 
 #include "NutLib/Core/DataBuffer.h"
-#include "NutLib/Core/UUID.h"
+
 #include "NutLib/Renderer/Shader.h"
 #include "NutLib/Renderer/Buffer.h"
 #include "NutLib/Renderer/Pipeline.h"
+
+#include "NutLib/Scene/Entity.h"
 
 
 namespace Nut
 {
 
 	class Scene;
+//	class Entity;
 
 	class MeshObject
 	{
 	public:
 		MeshObject() = default;
-		MeshObject(Ref<Pipeline> pipeline);
+		MeshObject(Ref<Pipeline> pipeline, Ref<Scene> scene);
 		~MeshObject();
 
 		void SetVertexBuffer(Ref<VertexBuffer> vertexBuffer);
@@ -32,7 +35,7 @@ namespace Nut
 		void Bind() const;
 		void Unbind() const;
 
-		UUID ObjectID() const { return m_ObjectID; }
+		UUID ObjectID() const { return m_Entity.ID(); }
 
 		RendererID ID() const { return m_ID; }
 
@@ -44,7 +47,7 @@ namespace Nut
 	private:
 		RendererID m_ID;
 
-		UUID m_ObjectID;
+		Entity m_Entity;
 		Ref<VertexBuffer> m_VertexBuffer;
 		Ref<Nut::IndexBuffer> m_IndexBuffer;
 		Ref<VertexBuffer> m_InstanceBuffer;
@@ -64,17 +67,13 @@ namespace Nut
 			m_Vertices = other.m_Vertices;
 			m_Indices = other.m_Indices;
 
-			m_ID = other.m_ID;
-
 			m_MeshObject = other.m_MeshObject;
 		}
 
-		MeshSource(MeshSource&& other)
+		MeshSource(MeshSource&& other) noexcept
 		{
 			m_Vertices = other.m_Vertices;
 			m_Indices = other.m_Indices;
-
-			m_ID = other.m_ID;
 
 			m_MeshObject = other.m_MeshObject;
 		}
@@ -86,12 +85,10 @@ namespace Nut
 			return *this;
 		}
 
-		MeshSource& operator=(MeshSource&& other)
+		MeshSource& operator=(MeshSource&& other) noexcept
 		{
 			m_Vertices = std::move(other.m_Vertices);
 			m_Indices = other.m_Indices;
-
-			m_ID = other.m_ID;
 
 			m_MeshObject = other.m_MeshObject;
 
@@ -110,15 +107,10 @@ namespace Nut
 //		MeshBuffers GetMeshBuffers() { return m_Buffers; }
 		Ref<MeshObject> GetMeshObject() { return m_MeshObject; }
 
-		UUID ID() const { return m_ID; }
-
 	private:
-
 
 		DataBuffer<ShaderLayoutItem> m_Vertices;
 		std::vector<uint32_t> m_Indices;
-
-		UUID m_ID;
 
 		Ref<MeshObject> m_MeshObject;
 

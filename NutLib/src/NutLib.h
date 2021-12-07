@@ -29,4 +29,5 @@
 #include <NutLib/Renderer/RenderThread.h>
 
 #include <NutLib/Scene/Scene.h>
+#include <NutLib/Scene/Entity.h>
 #include <NutLib/Scene/Model.h>

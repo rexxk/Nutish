@@ -62,12 +62,10 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <Profile>true</Profile>
     </Link>
     <PostBuildEvent>
       <Command>IF EXIST "..\Nutlib\vendor\assimp\bin\assimp-vc142-mtd.dll"\ (xcopy /Q /E /Y /I "..\Nutlib\vendor\assimp\bin\assimp-vc142-mtd.dll" "..\bin\Debug-windows-x86_64\Sandbox" &gt; nul) ELSE (xcopy /Q /Y /I "..\Nutlib\vendor\assimp\bin\assimp-vc142-mtd.dll" "..\bin\Debug-windows-x86_64\Sandbox" &gt; nul)</Command>
