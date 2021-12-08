@@ -72,16 +72,16 @@ namespace Nut
 				if (Input::IsMouseButtonPressed(MiddleButton))
 				{
 					// Pan
-					m_LookAt += -GetRightDirection() * static_cast<float>(dX) * m_Distance * m_MouseSpeed;
-					m_LookAt += GetUpDirection() * static_cast<float>(dY) * m_Distance * m_MouseSpeed;
+					m_LookAt -= -GetRightDirection() * static_cast<float>(dX) * m_Distance * m_MouseSpeed;
+					m_LookAt -= GetUpDirection() * static_cast<float>(dY) * m_Distance * m_MouseSpeed;
 				}
 
 				if (Input::IsMouseButtonPressed(RightButton))
 				{
 					// Rotate
 					float yawSign = GetUpDirection().y < 0 ? -1.0f : 1.0f;
-					m_Yaw += yawSign * static_cast<float>(dX) * m_MouseSpeed;
-					m_Pitch += static_cast<float>(dY) * m_MouseSpeed;
+					m_Yaw -= yawSign * static_cast<float>(dX) * m_MouseSpeed;
+					m_Pitch -= static_cast<float>(dY) * m_MouseSpeed;
 				}
 
 				CalculateViewMatrix();
