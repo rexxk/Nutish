@@ -156,19 +156,19 @@ void MainWindow::OnAttach()
 	m_Texture = Texture2D::Create("assets/textures/v90.png");
 	m_GradientTexture = Texture2D::Create("assets/textures/texture2.png");
 
-//	m_Rectangle = Model::Load("assets/models/rubik.fbx", m_Scene, m_BasicPipeline);
-//	m_Rectangle = Model::Load("assets/models/cube.obj", m_Scene, m_BasicPipeline);
-//	m_Rectangle = Model::Load("assets/models/sponza.fbx", m_Scene, m_BasicPipeline);
-//	m_Rectangle = Model::Load("assets/models/Mandalorian.fbx", m_Scene, m_BasicPipeline);
-//	m_Rectangle = Model::Load("assets/models/Anna_FBX.FBX", m_Scene, m_BasicPipeline);
-//	m_Rectangle = Model::Load("assets/models/Anna_FBX_2.FBX", m_Scene, m_BasicPipeline);
-//	m_Rectangle = Model::Load("assets/models/a599e.fbx", m_Scene, m_BasicPipeline);
-//	m_Rectangle = Model::Load("assets/models/sponza/Sponza.gltf", m_Scene, m_BasicPipeline);
-	m_Rectangle = Model::Load("assets/models/stormtrooper/silly_dancing.fbx", m_Scene, m_BasicPipeline);
+	m_Model = Model::Load("assets/models/rubik.fbx", m_Scene, m_BasicPipeline);
+//	m_Model = Model::Load("assets/models/cube.obj", m_Scene, m_BasicPipeline);
+//	m_Model = Model::Load("assets/models/sponza.fbx", m_Scene, m_BasicPipeline);
+//	m_Model = Model::Load("assets/models/Mandalorian.fbx", m_Scene, m_BasicPipeline);
+//	m_Model = Model::Load("assets/models/Anna_FBX.FBX", m_Scene, m_BasicPipeline);
+//	m_Model = Model::Load("assets/models/Anna_FBX_2.FBX", m_Scene, m_BasicPipeline);
+//	m_Model = Model::Load("assets/models/a599e.fbx", m_Scene, m_BasicPipeline);
+//	m_Model = Model::Load("assets/models/sponza/Sponza.gltf", m_Scene, m_BasicPipeline);
+//	m_Model = Model::Load("assets/models/stormtrooper/silly_dancing.fbx", m_Scene, m_BasicPipeline);
 
 //	LOG_TRACE("m_Rectangle id: {0}, tag: {1}", m_Rectangle->ID(), Entity::GetComponent<TagComponent>(m_Rectangle->ID()).Tag.c_str());
 
-	m_Camera = Camera::Create({ 0.0f, 3.0f, 15.0f });
+	m_Camera = Camera::Create({ 0.0f, 3.0f, 150.0f });
 
 	m_LightDirection = glm::vec3(-0.5f, 0.5f, -0.5f);
 }

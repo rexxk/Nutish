@@ -11,15 +11,15 @@
 namespace Nut
 {
 
-	Ref<Model> Model::Load(const std::string& filepath, Ref<Scene> scene, Ref<Pipeline> pipeline)
+	Entity Model::Load(const std::string& filepath, Ref<Scene> scene, Ref<Pipeline> pipeline)
 	{
 		Assimp::Importer importer;
 
 		const aiScene* aiscene = importer.ReadFile(filepath, aiProcess_OptimizeMeshes | aiProcess_Triangulate | aiProcess_TransformUVCoords | aiProcess_EmbedTextures);
 
-		Ref<Model> newModel = CreateRef<Model>(scene);
+//		Ref<Model> newModel = CreateRef<Model>(scene);
 
-		Entity entity = newModel->GetEntity();
+		Entity entity(scene->GetRegistry(), "Model"); // = newModel->GetEntity();
 		ECS::EntitySystem::GetComponent<TagComponent>(entity.ID()).Tag = aiscene->mName.C_Str();
 		entity.AddComponent<TransformComponent>();
 		entity.AddComponent<MeshComponent>();
@@ -30,7 +30,7 @@ namespace Nut
 		if (!aiscene)
 		{
 			LOG_CORE_ERROR("Model::Load: Unable to load mesh file {0}", filepath.c_str());
-			return nullptr;
+			return Entity();
 		}
 
 		auto shader = pipeline->GetShader();
@@ -210,21 +210,7 @@ namespace Nut
 
 
 
-
-		return newModel;
-//		return CreateRef<Model>(scene, aiscene->mMeshes[0]->mName.C_Str());
-	}
-
-
-
-	Model::Model(Ref<Scene> scene, const std::string& tag)
-	{
-		m_Entity = scene->CreateEntity(tag);
-	}
-
-	Model::~Model()
-	{
-
+		return entity;
 	}
 
 

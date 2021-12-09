@@ -30,7 +30,7 @@ private:
 	Ref<Nut::Texture2D> m_Texture;
 	Ref<Nut::Texture2D> m_GradientTexture;
 
-	Ref<Nut::Model> m_Rectangle;
+	Nut::Entity m_Model;
 
 	Nut::Entity m_TestEntity;
 	Nut::Entity m_TestEntity2;
