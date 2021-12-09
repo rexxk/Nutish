@@ -14,7 +14,9 @@ namespace Nut
 		while ((nextPos = str.find_first_of(delimiter, pos)) != std::string::npos)
 		{
 			std::string token = str.substr(pos, nextPos - pos);
-			tokens.emplace_back(token);
+
+			if (token.size() > 0)
+				tokens.emplace_back(token);
 
 			pos = nextPos + 1;
 		}
@@ -22,7 +24,9 @@ namespace Nut
 		if (pos > 0)
 		{
 			std::string token = str.substr(pos);
-			tokens.emplace_back(token);
+
+			if (token.size() > 0)
+				tokens.emplace_back(token);
 		}
 
 		return tokens;

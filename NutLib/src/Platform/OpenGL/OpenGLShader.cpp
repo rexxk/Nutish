@@ -128,37 +128,142 @@ namespace Nut
 
 	void OpenGLShader::Reflect(const std::string& source)
 	{
-		// Find uniforms and resolve the locations
+		// Find uniforms and structs and resolve the locations
 
-		size_t pos = 0;
-
-		while ((pos = source.find("uniform", pos)) != std::string::npos)
 		{
-			std::string line;
+			size_t pos = 0;
 
-			size_t endpos = source.find_first_of(';', pos);
-
-			line = source.substr(pos, endpos - pos);
-
-			auto tokens = Tokenize(line, " ");
-
-			if (tokens[0] == "uniform")
+			while ((pos = source.find("struct", pos)) != std::string::npos)
 			{
-				std::string type = tokens[1];
-				std::string name = tokens[2];
+				size_t endpos = source.find('{', pos);
 
-				ShaderMaterialItem item;
-				item.Name = name;
-				item.Type = StringToDataType(type);
+				std::string line = source.substr(pos, endpos - pos);
 
-				NUT_CORE_ASSERT((item.Type != DataType::Unknown), "GLSL syntax error, type is not valid!");
+				auto tokens = Tokenize(line, " ");
 
-				item.Size = DataTypeSize(item.Type);
+				if (tokens[0] == "struct")
+				{
+					std::string structName = tokens[1];
 
-				m_ShaderMaterialLayout.Items().emplace_back(item);
+					// Find block of members
+					auto endBracket = source.find("}", endpos);
+
+					std::string structMembers = source.substr(endpos + 1, endBracket - (endpos + 1));
+
+					auto structTokens = Tokenize(structMembers, " \n\t;");
+
+					DataBufferLayout<ShaderMaterialItem> structDataBuffer;
+
+					for (size_t i = 0; i < structTokens.size(); i += 2)
+					{
+						std::string type = structTokens[i];
+						std::string name = structTokens[i + 1];
+
+						ShaderMaterialItem item;
+
+						item.Name = name;
+						item.Type = StringToDataType(type);
+
+						structDataBuffer.Items().push_back(item);
+
+					}
+
+					structDataBuffer.UpdateOffsets();
+
+					m_ShaderStructLayouts[structName] = structDataBuffer;
+				}
+
+				pos = endpos;
 			}
 
-			pos = endpos;
+		}
+
+		{
+			size_t pos = 0;
+
+			while ((pos = source.find("uniform", pos)) != std::string::npos)
+			{
+				std::string line;
+
+				size_t endpos = source.find_first_of(';', pos);
+
+				line = source.substr(pos, endpos - pos);
+
+				auto tokens = Tokenize(line, " ");
+
+				if (tokens[0] == "uniform")
+				{
+					std::string type = tokens[1];
+					std::string name = tokens[2];
+
+					bool validDataType = false;
+
+					if (StringToDataType(type) == DataType::Unknown)
+					{
+						if (m_ShaderStructLayouts.find(type) != m_ShaderStructLayouts.end())
+						{
+							validDataType = true;
+
+							auto& structLayout = m_ShaderStructLayouts[type];
+
+							// Check for array ( [] in name )
+							size_t leftbracket = name.find("[");
+
+							uint32_t itemCount;
+
+							if (leftbracket != std::string::npos)
+							{
+								size_t rightbracket = name.find("]");
+								std::string arraySizeString = name.substr(leftbracket + 1, rightbracket - (leftbracket + 1));
+
+								name = name.substr(0, leftbracket);
+
+								itemCount = std::stoi(arraySizeString);
+							}
+
+							for (uint32_t i = 0; i < itemCount; i++)
+							{
+								for (auto& layout : structLayout.Items())
+								{
+									ShaderMaterialItem item;
+									item.Type = DataType::CustomType;
+									item.Name = name + "[" + std::to_string(i) + "]." + layout.Name;
+									item.Size = DataTypeSize(layout.Type);
+
+//									LOG_CORE_TRACE("item.Name: {0} (size: {1})", item.Name.c_str(), item.Size);
+
+									m_ShaderMaterialLayout.Items().emplace_back(item);
+								}
+
+							}
+
+
+//							LOG_CORE_TRACE("Uniform: {0}[{1}].{1}, {2}, ({3})", name.c_str(), name.c_str(), type.c_str(), item.Count);
+
+
+						}
+						else
+							LOG_CORE_WARN("Shader: Unknown datatype - {0}", type.c_str());
+					}
+					else
+					{
+						validDataType = true;
+
+						ShaderMaterialItem item;
+						item.Name = name;
+						item.Type = StringToDataType(type);
+						item.Size = DataTypeSize(item.Type);
+
+						m_ShaderMaterialLayout.Items().emplace_back(item);
+					}
+
+					NUT_CORE_ASSERT(validDataType, "GLSL syntax error, type is not valid!");
+
+				}
+
+				pos = endpos;
+			}
+
 		}
 
 	}

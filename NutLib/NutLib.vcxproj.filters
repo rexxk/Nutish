@@ -197,6 +197,7 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\nutpch.h" />
+    <ClInclude Include="src\NutLib\Renderer\Light.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NutLib\Asset\MeshAsset.cpp">
@@ -305,5 +306,6 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\nutpch.cpp" />
+    <ClCompile Include="src\NutLib\Renderer\Light.cpp" />
   </ItemGroup>
 </Project>

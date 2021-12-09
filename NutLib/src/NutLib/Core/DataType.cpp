@@ -23,6 +23,7 @@ namespace Nut
 
 			case DataType::Texture2D: return 4;
 			case DataType::TextureCube: return 4;
+
 		}
 
 		return 1;
@@ -69,7 +70,9 @@ namespace Nut
 		if (type == "sampler2D") return DataType::Texture2D;
 		if (type == "samplerCube") return DataType::TextureCube;
 
-		LOG_CORE_WARN("Unknown datatype: {0}", type.c_str());
+		if (type == "custom") return DataType::CustomType;
+
+//		LOG_CORE_WARN("Unknown datatype: {0}", type.c_str());
 
 		return DataType::Unknown;
 	}
@@ -93,6 +96,8 @@ namespace Nut
 
 			case DataType::Texture2D: return "sampler2D";
 			case DataType::TextureCube: return "samplerCube";
+
+			case DataType::CustomType: return "custom";
 		}
 
 		return "<unknown datatype>";

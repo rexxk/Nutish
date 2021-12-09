@@ -30,6 +30,9 @@ namespace Nut
 		int32_t Location = 0;
 		uint32_t Size = 0;
 
+		// Array size
+		uint32_t Count = 1;
+
 		bool Resolved = false;
 
 		ShaderMaterialItem()
@@ -37,6 +40,8 @@ namespace Nut
 		{
 			Location = -1;
 			Size = 0;
+
+			Count = 1;
 
 			Resolved = false;
 		}

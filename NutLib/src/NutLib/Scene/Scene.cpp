@@ -39,6 +39,20 @@ namespace Nut
 
 	void Scene::Draw()
 	{
+		// Setup lights
+		auto [lightIDs] = ECS::EntitySystem::GetView<LightComponent>();
+
+		for (auto lightID : lightIDs)
+		{
+			auto& light = ECS::EntitySystem::GetComponent<LightComponent>(lightID).LightSource;
+			auto& props = light.GetProperties();
+			// Put light sources into .. some lightmap for the renderer?
+
+			auto& transform = ECS::EntitySystem::GetComponent<TransformComponent>(lightID).Transform;
+
+			
+		}
+
 
 		// Mesh Components
 		auto [meshIDs] = ECS::EntitySystem::GetView<MeshComponent>();

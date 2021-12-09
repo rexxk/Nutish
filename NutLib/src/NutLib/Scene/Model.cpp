@@ -6,6 +6,7 @@
 #include "assimp/postprocess.h"
 
 #include "NutLib/Renderer/Renderer.h"
+#include "NutLib/Renderer/Light.h"
 
 
 namespace Nut
@@ -17,14 +18,38 @@ namespace Nut
 		switch (type)
 		{
 			case aiLightSource_AMBIENT: return "ambient";
-			case aiLightSource_SPOT: return "spot";
 			case aiLightSource_AREA: return "area";
 			case aiLightSource_DIRECTIONAL: return "directional";
 			case aiLightSource_POINT: return "point";
+			case aiLightSource_SPOT: return "spot";
 		}
+
 		return "undefined";
 	}
 
+	LightType aiLightTypeToLightType(aiLightSourceType type)
+	{
+		switch (type)
+		{
+			case aiLightSource_AMBIENT: return LightType::Ambient;
+			case aiLightSource_AREA: return LightType::Area;
+			case aiLightSource_DIRECTIONAL: return LightType::Directional;
+			case aiLightSource_POINT: return LightType::Point;
+			case aiLightSource_SPOT: return LightType::Spot;
+		}
+
+		return LightType::Unknown;
+	}
+
+	glm::vec3 aiVector3DToGlmVec3(const aiVector3D& vec3)
+	{
+		return glm::vec3(vec3.x, vec3.y, vec3.z);
+	}
+
+	glm::vec3 aiColor3DToGlmVec3(const aiColor3D& vec3)
+	{
+		return glm::vec3(vec3.r, vec3.g, vec3.b);
+	}
 
 
 	Entity Model::Load(const std::string& filepath, Ref<Scene> scene, Ref<Pipeline> pipeline)
@@ -232,25 +257,82 @@ namespace Nut
 
 			for (uint32_t i = 0; i < aiscene->mNumLights; i++)
 			{
+				auto& light = aiscene->mLights[i];
+
 				LOG_CORE_TRACE(" - light {0}: {1} ({2})", i, aiscene->mLights[i]->mName.C_Str(), aiLightTypeToString(aiscene->mLights[i]->mType).c_str());
+
+				LightProperties props;
+
+				props.Type = aiLightTypeToLightType(light->mType);
+				props.Ambient = aiColor3DToGlmVec3(light->mColorAmbient);
+				props.Diffuse = aiColor3DToGlmVec3(light->mColorDiffuse);
+				props.Specular = aiColor3DToGlmVec3(light->mColorSpecular);
+				props.Direction = aiVector3DToGlmVec3(light->mDirection);
+				props.Position = aiVector3DToGlmVec3(light->mPosition);
+
+				props.AngleInnerCone = light->mAngleInnerCone;
+				props.AngleOuterCone = light->mAngleOuterCone;
+
+				props.AttenuationConstant = light->mAttenuationConstant;
+				props.AttenuationLinear = light->mAttenuationLinear;
+				props.AttenuationQuadratic = light->mAttenuationQuadratic;
+
+				Light newLight(props);
+
+				Entity newLightEntity = Entity(scene->GetRegistry(), light->mName.C_Str());
+				newLightEntity.AddComponent<LightComponent>(newLight);
+
+				glm::mat4 transformMatrix = glm::mat4(1.0f);
+
+				// Find the translate, rotation and scale nodes for the light.
+
+				aiNode* returnNode = nullptr;
+
+				glm::mat4 translationMatrix = FindMatrix(std::string(light->mName.C_Str()) + "_$AssimpFbx$_Translation", aiscene->mRootNode, &returnNode);
+				glm::mat4 rotationMatrix = FindMatrix(std::string(light->mName.C_Str()) + "_$AssimpFbx$_Rotation", returnNode, &returnNode);
+				glm::mat4 postRotationMatrix = FindMatrix(std::string(light->mName.C_Str()) + "_$AssimpFbx$_PostRotation", returnNode, &returnNode);
+				glm::mat4 scaleMatrix = FindMatrix(std::string(light->mName.C_Str()) + "_$AssimpFbx$_Scaling", returnNode, &returnNode);
+
+				transformMatrix = translationMatrix * rotationMatrix * postRotationMatrix * scaleMatrix;
+
+				newLightEntity.AddComponent<TransformComponent>(transformMatrix);
+
 			}
-		}
 
-		// Load Materials
-
-		if (aiscene->HasMaterials())
-		{
-			LOG_CORE_TRACE("Loading {0} materials", aiscene->mNumMaterials);
-
-			for (uint32_t i = 0; i < aiscene->mNumMaterials; i++)
-			{
-				LOG_CORE_TRACE(" - material {0}: {1}", i, aiscene->mMaterials[i]->GetName().C_Str());
-			}
 		}
 
 		return entity;
 	}
 
+
+	glm::mat4 Model::FindMatrix(const std::string& name, aiNode* node, aiNode** returnNode)
+	{
+//		LOG_CORE_TRACE("Looking for node {0}", name.c_str());
+
+		for (uint32_t i = 0; i < node->mNumChildren; i++)
+		{
+			if (name == node->mChildren[i]->mName.C_Str())
+			{
+//				LOG_CORE_TRACE("Found node {0}", node->mChildren[i]->mName.C_Str());
+
+				*returnNode = node->mChildren[i];
+
+				auto t = node->mChildren[i]->mTransformation;
+
+				return glm::mat4(t.a1, t.b1, t.c1, t.d1, t.a2, t.b2, t.c2, t.d2, t.a3, t.b3, t.c3, t.d3, t.a4, t.b4, t.c4, t.d4);
+			}
+
+//			LOG_CORE_TRACE("Node name: {0}", node->mChildren[i]->mName.C_Str());
+
+//			_$AssimpFbx$_Translation
+//			_$AssimpFbx$_Rotation
+//			_$AssimpFbx$_PostRotation
+//			_$AssimpFbx$_Scaling
+
+		}
+
+		return glm::mat4(1.0f);
+	}
 
 
 }

@@ -21,6 +21,8 @@ namespace Nut
 
 		Texture2D,
 		TextureCube,
+
+		CustomType,
 	};
 
 

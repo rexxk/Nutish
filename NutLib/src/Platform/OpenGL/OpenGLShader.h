@@ -62,6 +62,8 @@ namespace Nut
 		DataBufferLayout<ShaderMaterialItem> m_ShaderMaterialLayout;
 //		std::unordered_map<ShaderLayoutDescriptor::Slot, ShaderLayoutDescriptor> m_LayoutDescriptors;
 		DataBufferLayout<ShaderLayoutItem> m_ShaderLayout;
+
+		std::unordered_map<std::string, DataBufferLayout<ShaderMaterialItem>> m_ShaderStructLayouts;
 	};
 
 

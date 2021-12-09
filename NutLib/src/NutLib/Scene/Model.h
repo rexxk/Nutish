@@ -5,6 +5,11 @@
 
 #include "NutLib/Scene/Entity.h"
 
+
+
+struct aiNode;
+
+
 namespace Nut
 {
 
@@ -14,6 +19,9 @@ namespace Nut
 	public:
 		static Entity Load(const std::string& filepath, Ref<Scene> scene, Ref<Pipeline> pipeline);
 
+
+	private:
+		static glm::mat4 FindMatrix(const std::string& name, aiNode* node, aiNode** returnNode);
 	};
 
 

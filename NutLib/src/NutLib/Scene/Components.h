@@ -8,6 +8,8 @@
 #include "NutLib/Renderer/Pipeline.h"
 #include "NutLib/Renderer/Shader.h"
 
+#include "NutLib/Renderer/Light.h"
+
 //#include "NutLib/Asset/MeshSource.h"
 #include "NutLib/Asset/MeshAsset.h"
 
@@ -48,6 +50,12 @@ namespace Nut
 
 		}
 
+		TransformComponent(glm::mat4& transform)
+			: Transform(transform)
+		{
+
+		}
+
 	};
 
 
@@ -68,6 +76,27 @@ namespace Nut
 		
 	};
 
+	struct LightComponent
+	{
+		Light LightSource;
+
+		LightComponent()
+		{
+
+		}
+
+		LightComponent(LightComponent& component)
+		{
+			LightSource = component.LightSource;
+		}
+
+		LightComponent(const Light& light)
+			: LightSource(light)
+		{
+
+		}
+
+	};
 
 }
 
