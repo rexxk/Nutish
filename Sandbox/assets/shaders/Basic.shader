@@ -17,8 +17,8 @@ void main()
 	gl_Position = u_ViewProjection * a_InstanceMatrix * vec4(a_Position, 1.0);
 //	gl_Position = vec4(a_Position, 1.0);
 
-	v_Normal = mat3(u_ViewProjection) * a_Normal;
-
+	v_Normal = a_Normal * mat3(u_ViewProjection); // *a_Normal;
+	v_Normal = a_Normal;
 	v_TexCoord = a_TexCoord;
 }
 
@@ -41,7 +41,7 @@ void main()
 {
 //	o_Color = u_Color;
 
-	vec3 ambient = vec3(0.2, 0.2, 0.2);
+	vec3 ambient = vec3(0.25, 0.25, 0.30);
 
 	float diff = max(dot(v_Normal, u_LightDirection), 0.0);
 	vec3 diffuse = diff * vec3(1.0, 1.0, 1.0);
@@ -51,7 +51,8 @@ void main()
 	vec4 textureColor = mix(texture(u_Texture1, v_TexCoord), texture(u_Texture2, v_TexCoord), 0.5);
 //	o_Color = texture(u_Texture1, v_TexCoord);
 
-	o_Color = vec4(ibl, 1.0) * textureColor;
+	o_Color = vec4(ibl, 1.0);
+//	o_Color = vec4(ibl, 1.0) * textureColor;
 
 //	o_Color = vec4(0.2, 0.35, 0.75, 1.0);
 }

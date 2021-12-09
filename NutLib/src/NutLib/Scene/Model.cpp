@@ -11,6 +11,22 @@
 namespace Nut
 {
 
+
+	std::string aiLightTypeToString(aiLightSourceType type)
+	{
+		switch (type)
+		{
+			case aiLightSource_AMBIENT: return "ambient";
+			case aiLightSource_SPOT: return "spot";
+			case aiLightSource_AREA: return "area";
+			case aiLightSource_DIRECTIONAL: return "directional";
+			case aiLightSource_POINT: return "point";
+		}
+		return "undefined";
+	}
+
+
+
 	Entity Model::Load(const std::string& filepath, Ref<Scene> scene, Ref<Pipeline> pipeline)
 	{
 		Assimp::Importer importer;
@@ -208,7 +224,29 @@ namespace Nut
 			LOG_CORE_TRACE("No textures in file");
 		}
 
+		// Load lights
 
+		if (aiscene->HasLights())
+		{
+			LOG_CORE_TRACE("Loading {0} lights", aiscene->mNumLights);
+
+			for (uint32_t i = 0; i < aiscene->mNumLights; i++)
+			{
+				LOG_CORE_TRACE(" - light {0}: {1} ({2})", i, aiscene->mLights[i]->mName.C_Str(), aiLightTypeToString(aiscene->mLights[i]->mType).c_str());
+			}
+		}
+
+		// Load Materials
+
+		if (aiscene->HasMaterials())
+		{
+			LOG_CORE_TRACE("Loading {0} materials", aiscene->mNumMaterials);
+
+			for (uint32_t i = 0; i < aiscene->mNumMaterials; i++)
+			{
+				LOG_CORE_TRACE(" - material {0}: {1}", i, aiscene->mMaterials[i]->GetName().C_Str());
+			}
+		}
 
 		return entity;
 	}

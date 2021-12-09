@@ -51,18 +51,6 @@ namespace Nut
 	};
 
 
-	struct ModelComponent
-	{
-		Ref<Model> GraphicsModel;
-
-		ModelComponent(Ref<Model> model)
-			: GraphicsModel(model)
-		{
-
-		}
-
-	};
-
 	struct MeshComponent
 	{
 		Ref<MeshAsset> Mesh;
@@ -77,11 +65,6 @@ namespace Nut
 		{
 			Mesh = component.Mesh;
 		}
-
-//		MeshComponent(MeshComponent&& component)
-//		{
-//			Mesh = component.Mesh;
-//		}
 		
 	};
 

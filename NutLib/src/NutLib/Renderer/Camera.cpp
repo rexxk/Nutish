@@ -35,7 +35,7 @@ namespace Nut
 				if (e.Width() == 0 || e.Height() == 0)
 					return false;
 
-				m_ProjectionMatrix = glm::perspective(glm::radians(45.0f), static_cast<float>(e.Width()) / static_cast<float>(e.Height()), 0.1f, 1000.0f);
+				m_ProjectionMatrix = glm::perspective(glm::radians(45.0f), static_cast<float>(e.Width()) / static_cast<float>(e.Height()), 0.1f, 10000.0f);
 
 				CalculateViewMatrix();
 

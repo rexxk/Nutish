@@ -14,7 +14,7 @@ using namespace Nut;
 
 
 MainWindow::MainWindow(const std::string& name)
-	: Layer(name)
+	: Layer(name), m_LightDirection(glm::vec3(0.0f))
 {
 	SubscribeToEvent<KeyReleasedEvent>([&](KeyReleasedEvent& event)
 		{
@@ -156,9 +156,9 @@ void MainWindow::OnAttach()
 	m_Texture = Texture2D::Create("assets/textures/v90.png");
 	m_GradientTexture = Texture2D::Create("assets/textures/texture2.png");
 
-	m_Model = Model::Load("assets/models/rubik.fbx", m_Scene, m_BasicPipeline);
+//	m_Model = Model::Load("assets/models/rubik.fbx", m_Scene, m_BasicPipeline);
 //	m_Model = Model::Load("assets/models/cube.obj", m_Scene, m_BasicPipeline);
-//	m_Model = Model::Load("assets/models/sponza.fbx", m_Scene, m_BasicPipeline);
+	m_Model = Model::Load("assets/models/sponza.fbx", m_Scene, m_BasicPipeline);
 //	m_Model = Model::Load("assets/models/Mandalorian.fbx", m_Scene, m_BasicPipeline);
 //	m_Model = Model::Load("assets/models/Anna_FBX.FBX", m_Scene, m_BasicPipeline);
 //	m_Model = Model::Load("assets/models/Anna_FBX_2.FBX", m_Scene, m_BasicPipeline);
@@ -183,8 +183,8 @@ void MainWindow::OnUpdate(Timestep ts)
 //	LOG_TRACE("Timestep: {0}", (double)ts);
 
 	m_BasicShader->Bind();
-	m_BasicShader->Set("u_Texture1", 5);
-	m_BasicShader->Set("u_Texture2", 3);
+//	m_BasicShader->Set("u_Texture1", 5);
+//	m_BasicShader->Set("u_Texture2", 3);
 	m_BasicShader->Set("u_LightDirection", m_LightDirection);
 	m_Texture->Bind(5);
 	m_GradientTexture->Bind(3);
