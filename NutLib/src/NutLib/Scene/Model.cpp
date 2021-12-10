@@ -277,6 +277,18 @@ namespace Nut
 				props.AttenuationLinear = light->mAttenuationLinear;
 				props.AttenuationQuadratic = light->mAttenuationQuadratic;
 
+				props.Ambient.r = props.Ambient.r / 255.0f;
+				props.Ambient.g = props.Ambient.g / 255.0f;
+				props.Ambient.b = props.Ambient.b / 255.0f;
+
+				props.Diffuse.r = props.Diffuse.r / 255.0f;
+				props.Diffuse.g = props.Diffuse.g / 255.0f;
+				props.Diffuse.b = props.Diffuse.b / 255.0f;
+
+				props.Specular.r = props.Specular.r / 255.0f;
+				props.Specular.g = props.Specular.g / 255.0f;
+				props.Specular.b = props.Specular.b / 255.0f;
+
 				Light newLight(props);
 
 				Entity newLightEntity = Entity(scene->GetRegistry(), light->mName.C_Str());
@@ -319,6 +331,7 @@ namespace Nut
 
 				auto t = node->mChildren[i]->mTransformation;
 
+//				return glm::mat4(t.a1, t.a2, t.a3, t.a4, t.b1, t.b2, t.b3, t.b4, t.c1, t.c2, t.c3, t.c4, t.d1, t.d2, t.d3, t.d4);
 				return glm::mat4(t.a1, t.b1, t.c1, t.d1, t.a2, t.b2, t.c2, t.d2, t.a3, t.b3, t.c3, t.d3, t.a4, t.b4, t.c4, t.d4);
 			}
 

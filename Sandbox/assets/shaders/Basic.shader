@@ -10,12 +10,17 @@ uniform mat4 u_ViewProjection;
 
 out vec2 v_TexCoord;
 out vec3 v_Normal;
+out vec3 v_FragPos;
 
 void main()
 {
 //	gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 	gl_Position = u_ViewProjection * a_InstanceMatrix * vec4(a_Position, 1.0);
 //	gl_Position = vec4(a_Position, 1.0);
+
+	v_FragPos = vec3(a_InstanceMatrix * vec4(a_Position, 1.0));
+
+//	v_FragPos = a_Position;
 
 	v_Normal = a_Normal * mat3(u_ViewProjection); // *a_Normal;
 	v_Normal = a_Normal;
@@ -30,12 +35,13 @@ layout(location = 0) out vec4 o_Color;
 
 in vec2 v_TexCoord;
 in vec3 v_Normal;
+in vec3 v_FragPos;
 
 struct Light {
 	int LightType;
 
-	vec3 Position;
 	vec3 Direction;
+	vec3 Position;
 
 	vec3 Ambient;
 	vec3 Diffuse;
@@ -61,21 +67,65 @@ uniform int u_LightCount;
 
 vec3 LightCalc(Light light)
 {
+	vec3 ambient = vec3(0.25, 0.25, 0.3); //light.Ambient;
+//	vec3 specular = light.Specular;
+	vec3 diffuse = light.Diffuse;
+
 	switch (light.LightType)
 	{
-	case 1:
-	case 2:
-	case 3:
-	case 4:
-	case 5:
+	case 1:	// Ambient
+		ambient = light.Ambient;
+
+		break;
+
+	case 2: // Area
+
+		break;
+
+	case 3: // Directional
+
+		break;
+
+	case 4: // Point
+	{
+		float diff = max(dot(v_Normal, light.Direction), 0.0);
+		diffuse *= diff;
+
+		float distance = length(light.Position - v_FragPos);
+		float attenuation = 1.0 / (light.AttenuationConstant + light.AttenuationLinear * distance + light.AttenuationQuadratic * (distance * distance));
+
+		ambient *= attenuation;
+		diffuse *= attenuation;
+
 		break;
 	}
+	
+	case 5: // Spot
+	{
+		float diff = max(dot(v_Normal, light.Direction), 0.0);
 
-	vec3 ambient = vec3(0.25, 0.25, 0.30);
+		vec3 reflectDir = reflect(-light.Direction, v_Normal);
 
-	float diff = max(dot(v_Normal, u_LightDirection), 0.0);
-	vec3 diffuse = diff * vec3(1.0, 1.0, 1.0);
+//		float spec = pow(max(dot()))
 
+		float distance = length(light.Position - v_FragPos);
+		float attenuation = 1.0 / (light.AttenuationConstant + light.AttenuationLinear * distance + light.AttenuationQuadratic * (distance * distance));
+
+		float epsilon = light.AngleInnerCone - light.AngleOuterCone;
+		float intensity = clamp((light.AngleOuterCone) / epsilon, 0.0, 1.0);
+
+		diffuse *= diff;
+
+		ambient *= attenuation; // *intensity;
+		diffuse *= attenuation; // *intensity;
+
+		break;
+
+	}
+	}
+
+//	vec3 diffuse = diff * light.Diffuse;
+	
 	vec3 ibl = ambient + diffuse;
 
 	return ibl;

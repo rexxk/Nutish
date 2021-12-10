@@ -32,12 +32,17 @@ private:
 
 	Nut::Entity m_Model;
 
+	Nut::Entity m_AmbientLight;
+
 	Nut::Entity m_TestEntity;
 	Nut::Entity m_TestEntity2;
 
 	Ref<Nut::Camera> m_Camera;
 
 	glm::vec3 m_LightDirection;
+
+
+	uint32_t m_VisibleLights = 0;
 };
 
 
